@@ -3,48 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | Final Fixed</title>
+    <title>M-ZONE | Ultimate Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #ff0000; --bg: #050505; --card: #121212; --text: #ffffff; --secret: #ff007f; --header: #0a0a0a; --gold: #ffd700; --input: #1a1a1a; }
+        :root { --primary: #ff0000; --bg: #000000; --card: #121212; --text: #ffffff; --secret: #ff007f; --header: #000000; --gold: #ffd700; --input: #1a1a1a; }
         .light-mode { --bg: #f4f4f4; --card: #ffffff; --text: #111; --header: #ffffff; --input: #e0e0e0; }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; transition: 0.3s background; }
         body { background: var(--bg); color: var(--text); padding-top: 135px; overflow-x: hidden; }
         
-        /* Header & Search Layer Fix */
-        header { background: var(--header); height: 65px; width: 100%; position: fixed; top: 0; left: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid rgba(128,128,128,0.2); }
-        .search-container { position: fixed; top: 65px; left: 0; width: 100%; background: var(--header); padding: 10px 15px; z-index: 999; border-bottom: 1px solid rgba(128,128,128,0.1); }
-        .search-bar { width: 100%; padding: 12px 15px; border-radius: 25px; border: 1px solid #333; background: var(--input); color: var(--text); outline: none; }
+        header { background: var(--header); height: 65px; width: 100%; position: fixed; top: 0; left: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #222; }
+        .search-container { position: fixed; top: 65px; left: 0; width: 100%; background: var(--header); padding: 10px 15px; z-index: 999; }
+        .search-bar { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #333; background: var(--input); color: var(--text); outline: none; }
         
-        /* Sidebar Layer Fix (Z-index 4000) */
-        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--card); z-index: 4000; transition: 0.4s; padding: 25px; overflow-y: auto; }
+        /* Slider Styles */
+        .slider-container { width: 100%; height: 200px; position: relative; overflow: hidden; margin-bottom: 25px; border-radius: 12px; }
+        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: 0.8s; }
+        .slide.active { opacity: 1; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
+        .slide-text { position: absolute; bottom: 15px; left: 15px; color: white; font-family: 'Oswald'; font-size: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
+
+        /* Grid & Badges */
+        .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .card { background: transparent; cursor: pointer; }
+        .card img { width: 100%; height: 210px; object-fit: cover; border-radius: 12px; }
+        .hot-badge { background: #ff0000; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+
+        /* Back Button & Sidebar (Screenshot Style) */
+        .back-btn { width: 42px; height: 42px; background: #ff0000; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; position: fixed; top: 15px; left: 15px; z-index: 5001; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #0c0c0c; z-index: 4000; transition: 0.3s; padding: 25px; overflow-y: auto; }
         .sidebar.active { right: 0; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3500; }
         .overlay.active { display: block; }
 
-        /* Pages & Back Button Fix (Z-index 2000) */
-        #detailsPage, .modal, #readPage { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 2000; overflow-y: auto; padding: 20px; }
-        .back-btn { width: 45px; height: 45px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; position: fixed; top: 15px; left: 15px; z-index: 2100; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        
-        .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: var(--card); border-radius: 12px; overflow: hidden; cursor: pointer; border: 1px solid rgba(128,128,128,0.1); }
-        .card img { width: 100%; height: 210px; object-fit: cover; }
-        
-        .ch-item { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(128,128,128,0.1); cursor: pointer; }
-        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; }
-        
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; background: var(--input); color: var(--text); border: 1px solid #444; }
+        /* Admin Layout (Screenshot Style) */
+        .admin-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 5000; padding: 20px; overflow-y: auto; }
+        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; background: #1a1a1a; color: #fff; border: 1px solid #333; }
+        .btn-red { background: #ff0000; color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-gold { background: #ffd700; color: black; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        #detailsPage { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 2000; overflow-y: auto; padding: 20px; padding-top: 70px; }
+        .ch-item { background: #121212; padding: 18px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
+        #readPage { display: none; position: fixed; inset: 0; background: #000; z-index: 6000; overflow-y: auto; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo" onclick="location.reload()">M-ZONE</div>
-        <div style="display:flex; align-items:center; gap:15px;">
+        <div style="display:flex; align-items:center; gap:18px;">
             <div id="coinDisp" style="color:var(--gold); font-weight:bold; font-size:13px; display:none;"><i class="fa fa-coins"></i> <span id="userCoins">0</span></div>
-            <i id="themeBtn" class="fa-solid fa-moon" onclick="toggleTheme()" style="cursor:pointer; font-size:20px;"></i>
+            <i class="fa-solid fa-moon" id="themeBtn" onclick="toggleTheme()" style="cursor:pointer; font-size:20px;"></i>
             <i class="fa fa-bars" onclick="openSidebar()" style="font-size:24px; cursor:pointer;"></i>
         </div>
     </header>
@@ -56,65 +66,98 @@
     <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
     <div class="container">
-        <div id="manga-list" class="manga-grid" style="margin-top: 20px;"></div>
+        <div class="slider-container" id="slider"></div>
+
+        <h2 style="margin: 15px 0; color: #ff0000; font-family: Oswald;"><i class="fa fa-fire"></i> HOT MANGA</h2>
+        <div id="hot-list" class="manga-grid" style="margin-bottom: 30px;"></div>
+
+        <h2 style="margin: 15px 0; font-family: Oswald; color: var(--text);">LATEST UPDATES</h2>
+        <div id="manga-list" class="manga-grid"></div>
     </div>
 
     <div class="sidebar" id="sidebar">
-        <h3 style="color:red; margin-bottom:20px;">MENU</h3>
-        <div id="userProfile" style="display:none; border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:15px;">
-            <p style="font-size:10px; color:gray;">UID: <span id="myUID"></span></p>
-            <div style="background:rgba(255,215,0,0.1); padding:10px; border-radius:10px; margin:10px 0;">
-                <input type="text" id="promoKey" placeholder="Promo Code" style="margin:0; font-size:11px;">
-                <button onclick="redeemKey()" style="background:var(--gold); border:none; width:100%; margin-top:5px; border-radius:5px; font-weight:bold; padding:5px; font-size:11px; cursor:pointer;">REDEEM</button>
-            </div>
-            <button onclick="logout()" style="color:red; background:none; border:none; cursor:pointer; font-size:12px;">Logout</button>
+        <p style="font-size:11px; color:gray; margin-bottom:15px;">UID: <span id="myUID">---</span></p>
+        
+        <div id="userProfile" style="display:none; background:#161616; padding:15px; border-radius:12px; margin-bottom:20px;">
+            <input type="text" id="promoKey" placeholder="Promo Code" style="background:#000; font-size:12px; margin-bottom:10px;">
+            <button onclick="redeemKey()" class="btn-gold" style="padding:8px; font-size:12px;">REDEEM</button>
+            <p onclick="logout()" style="color:red; text-align:center; margin-top:15px; cursor:pointer; font-size:13px;">Logout</p>
         </div>
-        <button id="loginBtn" class="nav-btn" onclick="openModal('authModal')">Login / Signup</button>
-        <div id="genreList" style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-top:15px;"></div>
-        <div onclick="openModal('secretModal')" style="margin-top:20px; background:var(--secret); color:white; padding:12px; text-align:center; border-radius:10px; cursor:pointer; font-weight:bold;">🔞 HENTAI</div>
-        <div onclick="openAdmin()" style="margin-top:40px; color:gray; font-size:10px; cursor:pointer;">Admin Dashboard</div>
+
+        <button id="loginBtn" class="btn-red" onclick="openModal('authModal')" style="margin-bottom:20px;">Login / Signup</button>
+        
+        <div onclick="location.reload()" style="margin-bottom:20px; cursor:pointer;"><i class="fa fa-home"></i> Home</div>
+        
+        <p style="color:red; font-size:13px; font-weight:bold; margin-bottom:12px;">GENRES</p>
+        <div id="genreList" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;"></div>
+        
+        <button onclick="openModal('secretModal')" style="margin-top:25px; background:#ff007f; color:white; width:100%; padding:14px; border-radius:10px; border:none; font-weight:bold; cursor:pointer;">🔞 HENTAI</button>
+        
+        <p onclick="openAdmin()" style="margin-top:40px; color:#333; font-size:11px; cursor:pointer;">Admin Dashboard</p>
     </div>
 
     <div id="detailsPage">
         <button class="back-btn" onclick="closeAll()"><i class="fa fa-arrow-left"></i></button>
-        <div style="margin-top: 65px; max-width: 800px; margin: auto;">
-            <div style="display:flex; gap:15px; margin-bottom:20px;">
-                <img id="detImg" style="width:110px; height:160px; border-radius:10px; object-fit:cover; border:2px solid var(--primary);">
-                <div><h2 id="detTitle" style="font-family:'Oswald';"></h2><p id="detCat" style="color:var(--primary); font-size:13px; font-weight:bold;"></p></div>
+        <div style="max-width: 700px; margin: auto;">
+            <div style="display:flex; gap:18px; margin-bottom:25px;">
+                <img id="detImg" style="width:130px; height:190px; border-radius:12px; object-fit:cover;">
+                <div>
+                    <h1 id="detTitle" style="font-family:'Oswald'; font-size:26px;"></h1>
+                    <p id="detCat" style="color:red; font-weight:bold; margin:5px 0;"></p>
+                    <p id="detDesc" style="color:gray; font-size:13px;"></p>
+                </div>
             </div>
-            <p id="detDesc" style="color:gray; font-size:13px; margin-bottom:25px;"></p>
             <div id="chapterList"></div>
         </div>
     </div>
 
-    <div id="adminModal" class="modal">
-        <div class="modal-content" style="max-width:450px; margin:auto; position:relative;">
-            <i class="fa fa-times" onclick="closeAll()" style="position:absolute; top:0; right:0; font-size:22px; cursor:pointer;"></i>
-            <h3 style="color:red; margin-bottom:15px;">ADMIN PANEL</h3>
+    <div id="adminModal" class="admin-modal">
+        <div style="max-width:450px; margin:auto;">
+            <h2 style="color:red; text-align:center; margin-bottom:20px;">ADMIN PANEL</h2>
             <input type="text" id="upName" placeholder="Manga Title">
-            <textarea id="upDesc" placeholder="Description"></textarea>
+            <textarea id="upDesc" placeholder="Description" rows="2"></textarea>
             <input type="number" id="upCh" placeholder="Chapter Number">
             <select id="upCat"></select>
             <select id="upPrice"><option value="0">Free</option><option value="10">10 Coins</option></select>
             <p style="font-size:11px;">Cover Image:</p><input type="file" id="upCover">
-            <p style="font-size:11px;">Chapter Pages:</p><input type="file" id="upFiles" multiple>
-            <button class="nav-btn" id="uploadBtn">UPLOAD</button>
-            <hr style="margin:20px 0; opacity:0.2;">
-            <h3 style="color:var(--gold);">KEY GENERATOR</h3>
-            <input type="number" id="keyAmt" placeholder="Coins"><input type="number" id="keyQty" placeholder="Quantity">
-            <input type="password" id="adminKeyPass" placeholder="Admin Pass">
-            <button class="nav-btn" onclick="generateKeys()" style="background:var(--gold); color:#000;">GENERATE KEYS</button>
-            <div id="keyDisplay" style="margin-top:10px; background:#000; padding:10px; color:var(--gold); display:none; font-size:11px; white-space:pre-wrap;"></div>
-            <hr style="margin:20px 0; opacity:0.2;">
-            <div id="adminChapterList" style="max-height:150px; overflow-y:auto; font-size:11px;"></div>
+            <p style="font-size:11px;">Pages:</p><input type="file" id="upFiles" multiple>
+            <button class="btn-red" id="uploadBtn">PUBLISH</button>
+            
+            <div style="margin-top:35px; border-top:1px solid #222; padding-top:20px;">
+                <h3 style="color:var(--gold);">KEY GENERATOR</h3>
+                <input type="number" id="keyAmt" placeholder="Coins">
+                <input type="number" id="keyQty" placeholder="Quantity">
+                <input type="password" id="adminKeyPass" placeholder="Admin Password">
+                <button class="btn-gold" onclick="generateKeys()">GENERATE</button>
+                <div id="keyDisplay" style="margin-top:10px; background:#111; padding:10px; color:#ffd700; display:none; font-size:11px; white-space:pre-wrap;"></div>
+            </div>
+            <button onclick="closeAll()" style="color:gray; width:100%; margin-top:20px; background:none; border:none; cursor:pointer;">Back to Home</button>
+            <div id="adminChapterList" style="margin-top:20px;"></div>
         </div>
     </div>
 
-    <div id="authModal" class="modal"><div class="modal-content" style="max-width:350px; margin:auto; position:relative;"><i class="fa fa-times" onclick="closeAll()" style="position:absolute; top:0; right:0; cursor:pointer;"></i><h3>Access</h3><input type="email" id="email" placeholder="Email"><input type="password" id="pass" placeholder="Password"><button class="nav-btn" onclick="handleAuth('login')">LOGIN</button><button class="nav-btn" style="background:#333;" onclick="handleAuth('signup')">SIGN UP</button></div></div>
-    <div id="secretModal" class="modal"><div class="modal-content" style="max-width:350px; margin:auto; position:relative;"><i class="fa fa-times" onclick="closeAll()" style="position:absolute; top:0; right:0; cursor:pointer;"></i><h3>Secret Mode</h3><input type="password" id="secPass" placeholder="Secret Key"><button onclick="checkSecret()" class="nav-btn">UNLOCK</button></div></div>
+    <div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:7000; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:#111; padding:25px; border-radius:15px; width:100%; max-width:340px;">
+            <h3>Access Account</h3>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="pass" placeholder="Password">
+            <button class="btn-red" onclick="handleAuth('login')">LOGIN</button>
+            <button class="btn-red" style="background:#222; margin-top:10px;" onclick="handleAuth('signup')">SIGN UP</button>
+            <p onclick="document.getElementById('authModal').style.display='none'" style="text-align:center; color:gray; margin-top:15px; cursor:pointer;">Cancel</p>
+        </div>
+    </div>
+
+    <div id="secretModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:7000; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:#111; padding:25px; border-radius:15px; width:100%; max-width:340px;">
+            <h3 style="color:#ff007f;">SECRET KEY</h3>
+            <input type="password" id="secPass" placeholder="Key Here...">
+            <button onclick="checkSecret()" class="btn-red" style="background:#ff007f;">UNLOCK</button>
+            <p onclick="document.getElementById('secretModal').style.display='none'" style="text-align:center; color:gray; margin-top:15px; cursor:pointer;">Close</p>
+        </div>
+    </div>
 
     <div id="readPage">
-        <div style="background:rgba(0,0,0,0.9); height:55px; position:fixed; top:0; width:100%; display:flex; align-items:center; padding:0 15px; z-index:2200;">
+        <div style="background:rgba(0,0,0,0.9); height:55px; position:fixed; top:0; width:100%; display:flex; align-items:center; padding:0 15px; z-index:6001;">
             <i class="fa fa-arrow-left" onclick="closeAll()" style="cursor:pointer; font-size:20px; color:white;"></i>
             <span id="readTitle" style="margin-left:15px; color:white;"></span>
         </div>
@@ -137,17 +180,9 @@
             document.body.classList.toggle('light-mode');
             const isLight = document.body.classList.contains('light-mode');
             document.getElementById('themeBtn').className = isLight ? "fa-solid fa-sun" : "fa-solid fa-moon";
-            localStorage.setItem('mzone-theme', isLight ? 'light' : 'dark');
-        }
-        if(localStorage.getItem('mzone-theme') === 'light') toggleTheme();
-
-        window.onpopstate = () => closeAll(false);
-        window.closeAll = (push = true) => {
-            document.querySelectorAll('#detailsPage, .modal, #readPage').forEach(el => el.style.display = 'none');
-            document.getElementById('sidebar').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-            if(push) history.pushState(null, null, window.location.pathname);
-        }
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        };
+        if(localStorage.getItem('theme') === 'light') toggleTheme();
 
         onAuthStateChanged(auth, async (user) => {
             if(user) {
@@ -168,17 +203,37 @@
         async function fetchData() {
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
             allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
-            renderGrid(allData.filter(x => x.category !== 'Hentai'));
-            renderGenreButtons(); renderAdminChapters();
+            renderUI(allData.filter(x => x.category !== 'Hentai'));
+            renderGenreButtons(); renderAdminChapters(); setupSlider();
         }
 
-        function renderGrid(data) {
+        function renderUI(data) {
             const series = {}; data.forEach(ch => { if(!series[ch.seriesName]) series[ch.seriesName] = ch; });
-            document.getElementById('manga-list').innerHTML = Object.values(series).map(s => `
+            const list = Object.values(series);
+            
+            document.getElementById('hot-list').innerHTML = list.slice(0, 4).map(s => `
                 <div class="card" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')">
                     <img src="${s.coverUrl}">
-                    <div style="padding:10px; font-size:12px;"><b>${s.seriesName}</b><br><span style="color:red">${s.category}</span></div>
+                    <div style="padding:8px;"><span class="hot-badge">HOT</span><br><b style="font-size:13px;">${s.seriesName}</b></div>
                 </div>`).join('');
+
+            document.getElementById('manga-list').innerHTML = list.map(s => `
+                <div class="card" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')">
+                    <img src="${s.coverUrl}">
+                    <div style="padding:8px;"><b style="font-size:13px;">${s.seriesName}</b><br><span style="color:red; font-size:11px;">${s.category}</span></div>
+                </div>`).join('');
+        }
+
+        function setupSlider() {
+            const top = allData.filter(x => x.category !== 'Hentai').slice(0, 5);
+            document.getElementById('slider').innerHTML = top.map((s, i) => `
+                <div class="slide ${i===0?'active':''}" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')">
+                    <img src="${s.coverUrl}"><div class="slide-text">${s.seriesName}</div>
+                </div>`).join('');
+            let cur = 0; setInterval(() => {
+                const slides = document.querySelectorAll('.slide');
+                if(slides.length){ slides[cur].classList.remove('active'); cur = (cur+1)%slides.length; slides[cur].classList.add('active'); }
+            }, 4000);
         }
 
         window.openDetails = (title) => {
@@ -190,8 +245,8 @@
             document.getElementById('chapterList').innerHTML = s.sort((a,b) => a.chapterNum - b.chapterNum).map(ch => {
                 const isLocked = ch.price > 0 && !userData?.unlocked?.includes(ch.id);
                 return `<div class="ch-item" onclick="tryRead('${ch.id}', ${ch.price || 0})">
-                    <div style="display:flex; align-items:center; gap:10px;"><div style="width:25px; height:25px; background:rgba(255,0,0,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:red; font-size:10px;">${ch.chapterNum}</div><span>Chapter ${ch.chapterNum}</span></div>
-                    <i class="${isLocked ? 'fa fa-lock' : 'fa-regular fa-circle-play'}" style="color:${isLocked?'#ffd700':'red'};"></i>
+                    <div style="display:flex; align-items:center; gap:12px;"><div style="width:30px; height:30px; background:#222; border-radius:50%; display:flex; align-items:center; justify-content:center; color:red; font-weight:bold;">${ch.chapterNum}</div><span>Chapter ${ch.chapterNum}</span></div>
+                    <i class="${isLocked ? 'fa fa-lock' : 'fa-regular fa-circle-play'}" style="color:${isLocked?'#ffd700':'red'}; font-size:20px;"></i>
                 </div>`;
             }).join('');
             document.getElementById('detailsPage').style.display = 'block';
@@ -209,7 +264,7 @@
         function showReader(id) {
             const ch = allData.find(x => x.id === id);
             document.getElementById('readTitle').innerText = ch.seriesName + " - CH " + ch.chapterNum;
-            document.getElementById('viewer').innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join('');
+            document.getElementById('viewer').innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;" loading="lazy">`).join('');
             document.getElementById('readPage').style.display = 'block';
         }
 
@@ -234,18 +289,21 @@
 
         window.checkSecret = () => {
             if(document.getElementById('secPass').value === "MZone@99#Strict") {
-                renderGrid(allData.filter(x => x.category === 'Hentai')); closeAll();
+                renderUI(allData.filter(x => x.category === 'Hentai'));
+                document.getElementById('secretModal').style.display='none'; closeSidebar();
             } else alert("Wrong Key!");
         }
 
         window.searchManga = () => {
             const q = document.getElementById('searchInput').value.toLowerCase();
-            renderGrid(allData.filter(x => x.seriesName.toLowerCase().includes(q) && x.category !== 'Hentai'));
+            renderUI(allData.filter(x => x.seriesName.toLowerCase().includes(q) && x.category !== 'Hentai'));
         };
 
-        window.openAdmin = () => openModal('adminModal');
+        window.openAdmin = () => { document.getElementById('adminModal').style.display = 'block'; closeSidebar(); }
         window.openSidebar = () => { document.getElementById('sidebar').classList.add('active'); document.getElementById('overlay').classList.add('active'); };
-        window.openModal = (id) => { document.getElementById(id).style.display = 'block'; };
+        window.closeSidebar = () => { document.getElementById('sidebar').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); };
+        window.openModal = (id) => { document.getElementById(id).style.display = 'flex'; closeSidebar(); };
+        window.closeAll = () => { document.querySelectorAll('#detailsPage, #adminModal, #readPage').forEach(el => el.style.display = 'none'); closeSidebar(); }
         window.logout = () => signOut(auth).then(() => location.reload());
         
         window.handleAuth = async (t) => {
@@ -270,7 +328,7 @@
                     price: parseInt(document.getElementById('upPrice').value), coverUrl: cv, chapterImages: imgs, timestamp: serverTimestamp()
                 });
                 location.reload();
-            } catch(e) { alert("Fail"); btn.innerText = "UPLOAD"; btn.disabled = false; }
+            } catch(e) { alert("Fail"); btn.innerText = "PUBLISH"; btn.disabled = false; }
         };
 
         async function up(f) { 
@@ -284,17 +342,12 @@
             gl.innerHTML = ""; sl.innerHTML = "";
             CATS.forEach(c => {
                 sl.innerHTML += `<option value="${c}">${c}</option>`;
-                if(c !== 'Hentai') gl.innerHTML += `<div style="background:rgba(128,128,128,0.1); padding:10px; text-align:center; border-radius:8px; font-size:11px; cursor:pointer;" onclick="filterGenre('${c}')">${c}</div>`;
+                if(c !== 'Hentai') gl.innerHTML += `<div style="background:#161616; padding:10px; text-align:center; border-radius:8px; font-size:11px; cursor:pointer;" onclick="filterGenre('${c}')">${c}</div>`;
             });
         }
-        window.filterGenre = (g) => { renderGrid(allData.filter(x => x.category === g)); closeAll(); };
-        function renderAdminChapters() { document.getElementById('adminChapterList').innerHTML = allData.map(ch => `<div style="display:flex; justify-content:space-between; padding:5px; border-bottom:1px solid #333;"><span>${ch.seriesName} (Ch ${ch.chapterNum})</span><span style="color:red; cursor:pointer;" onclick="deleteChapter('${ch.id}')">Delete</span></div>`).join(''); }
+        window.filterGenre = (g) => { renderUI(allData.filter(x => x.category === g)); closeSidebar(); };
+        function renderAdminChapters() { document.getElementById('adminChapterList').innerHTML = allData.map(ch => `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #222; font-size:12px;"><span>${ch.seriesName} (Ch ${ch.chapterNum})</span><span style="color:red; cursor:pointer;" onclick="deleteChapter('${ch.id}')">Delete</span></div>`).join(''); }
         window.deleteChapter = async (id) => { if(confirm("Delete?")) { await deleteDoc(doc(db,"chapters",id)); location.reload(); } };
-        function setupSlider() {
-            const top = allData.filter(x => x.category !== 'Hentai').slice(0, 5);
-            document.getElementById('slider').innerHTML = top.map((s, i) => `<div class="slide ${i===0?'active':''}" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}"><div style="position:absolute; bottom:20px; left:20px; font-family:Oswald; font-size:22px; color:white;">${s.seriesName}</div></div>`).join('');
-            let cur = 0; setInterval(() => { const slides = document.querySelectorAll('.slide'); if(slides.length){ slides[cur].classList.remove('active'); cur = (cur+1)%slides.length; slides[cur].classList.add('active'); } }, 4000);
-        }
     </script>
 </body>
 </html>
