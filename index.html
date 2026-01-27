@@ -3,74 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MangaZone - Multi-Format</title>
+    <title>MangaZone - Ultimate Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #e62117; --bg: #0b0b0b; --card: #1a1a1a; --text: #fff; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding-top: 60px; }
+        body { background: var(--bg); color: var(--text); padding-top: 70px; }
 
-        header { background: var(--primary); height: 60px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
-        .logo { font-family: 'Oswald'; font-size: 22px; color: white; text-decoration: none; font-weight: bold; }
+        /* UI ELEMENTS */
+        header { background: #000; height: 65px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 2px solid var(--primary); }
+        .logo { font-family: 'Oswald'; font-size: 26px; color: var(--primary); text-decoration: none; }
+        .search-container { flex-grow: 1; margin: 0 15px; position: relative; max-width: 350px; }
+        .search-container input { width: 100%; background: #222; border: 1px solid #333; padding: 10px 15px 10px 40px; border-radius: 25px; color: white; outline: none; }
+        .search-container i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--primary); }
         
-        .container { padding: 15px; max-width: 1200px; margin: auto; }
-        .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .card { background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid #222; cursor: pointer; }
-        .card img { width: 100%; height: 210px; object-fit: cover; }
-        .card-info { padding: 8px; font-size: 12px; text-align: center; }
+        /* SIDEBAR */
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #111; z-index: 2000; transition: 0.4s; padding: 25px; overflow-y: auto; border-left: 2px solid var(--primary); }
+        .sidebar.active { right: 0; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1500; }
+        .overlay.active { display: block; }
+        .side-link { display: block; padding: 12px; border-bottom: 1px solid #222; color: #ccc; text-decoration: none; cursor: pointer; }
+        .side-link:hover { color: var(--primary); background: #1a1a1a; }
 
-        /* READER & PDF VIEWER */
+        /* MANGA GRID */
+        .container { padding: 15px; max-width: 1200px; margin: auto; }
+        .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; cursor: pointer; position: relative; }
+        .card img { width: 100%; height: 230px; object-fit: cover; }
+        .fav-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 50%; color: #fff; z-index: 5; }
+        .fav-badge.active { color: var(--primary); }
+
+        /* READER */
         #readPage { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; overflow-y: auto; }
-        .read-nav { background: #111; height: 50px; position: fixed; top: 0; width: 100%; display: flex; align-items: center; padding: 0 15px; z-index: 3001; }
-        #chapterViewer img { width: 100%; display: block; }
-        #pdfViewer { width: 100%; height: calc(100vh - 50px); border: none; margin-top: 50px; }
+        .read-nav { background: #111; height: 60px; position: fixed; top: 0; width: 100%; display: flex; align-items: center; padding: 0 15px; z-index: 3001; }
 
         /* MODAL */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: #111; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; border: 1px solid var(--primary); }
-        input { width: 100%; padding: 10px; margin: 8px 0; background: #222; border: 1px solid #333; color: white; border-radius: 5px; }
-        .btn-pub { width: 100%; padding: 12px; background: var(--primary); border: none; color: white; font-weight: bold; border-radius: 6px; cursor: pointer; }
-        
-        @media (min-width: 768px) { .manga-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: #111; padding: 25px; border-radius: 15px; width: 100%; max-width: 400px; border: 1px solid var(--primary); max-height: 90vh; overflow-y: auto; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; }
+
+        @media (min-width: 768px) { .manga-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="#" class="logo">M-ZONE</a>
-        <i class="fa fa-plus-circle" onclick="openModal('adminModal')" style="cursor:pointer; font-size:22px;"></i>
+        <a href="#" class="logo" onclick="showAll()">M-ZONE</a>
+        <div class="search-container">
+            <i class="fa fa-search"></i>
+            <input type="text" id="search" placeholder="Search..." onkeyup="searchManga()">
+        </div>
+        <i class="fa fa-bars" style="font-size:24px; cursor:pointer;" onclick="toggleSidebar()"></i>
     </header>
 
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <h2 style="font-family:'Oswald'; color:var(--primary); margin-bottom:15px;">MENU</h2>
+        <div class="side-link" onclick="showAll()"><i class="fa fa-home"></i> Home</div>
+        <div class="side-link" onclick="showFavs()"><i class="fa fa-heart"></i> Favorites</div>
+        <div class="side-link" onclick="showHistory()"><i class="fa fa-history"></i> History</div>
+        
+        <h3 style="font-size:14px; margin:20px 0 10px; color:var(--primary);">CATEGORIES</h3>
+        <div id="cat-list">
+            <div class="side-link" onclick="filterCat('Action')">Action</div>
+            <div class="side-link" onclick="filterCat('Romance')">Romance</div>
+            <div class="side-link" onclick="filterCat('Fantasy')">Fantasy</div>
+            <div class="side-link" onclick="filterCat('Horror')">Horror</div>
+        </div>
+
+        <div class="side-link" style="margin-top:30px; border:none; color:#ffcc00;" onclick="openModal('adminModal')"><i class="fa fa-lock"></i> Admin Panel</div>
+    </div>
+
     <div class="container">
-        <h2 style="margin-bottom:15px; font-family:'Oswald'; font-size:18px;">LATEST RELEASES</h2>
+        <h2 id="viewTitle" style="margin-bottom:20px; font-family:'Oswald'; border-left:4px solid var(--primary); padding-left:10px;">LATEST UPDATES</h2>
         <div id="manga-list" class="manga-grid"></div>
     </div>
 
     <div id="readPage">
         <div class="read-nav">
-            <i class="fa fa-arrow-left" onclick="closeReader()" style="cursor:pointer;"></i>
+            <i class="fa fa-chevron-left" onclick="closeReader()" style="cursor:pointer; font-size:20px; color:var(--primary);"></i>
             <span id="readTitle" style="margin-left:15px; font-size:14px;"></span>
         </div>
-        <div id="chapterViewer"></div>
-        <iframe id="pdfViewer" src="" style="display:none;"></iframe>
+        <div id="chapterViewer" style="margin-top:60px;"></div>
+        <iframe id="pdfFrame" style="width:100%; height:calc(100vh - 60px); margin-top:60px; border:none; display:none;"></iframe>
     </div>
 
     <div id="adminModal" class="modal">
         <div class="modal-content">
-            <h3 style="text-align:center; color:var(--primary);">PUBLISH CHAPTER</h3>
-            <input type="password" id="admPass" placeholder="Admin Password">
-            <input type="text" id="newTitle" placeholder="Chapter Title">
-            
-            <p style="font-size:11px; color:gray;">Cover Image</p>
+            <h3 style="text-align:center; color:var(--primary);">ADMIN</h3>
+            <input type="password" id="admPass" placeholder="Password">
+            <input type="text" id="newTitle" placeholder="Manga Title">
+            <select id="newCat">
+                <option value="Action">Action</option>
+                <option value="Romance">Romance</option>
+                <option value="Fantasy">Fantasy</option>
+                <option value="Horror">Horror</option>
+            </select>
+            <label style="font-size:11px; color:gray;">Cover</label>
             <input type="file" id="newCover" accept="image/*">
-            
-            <p style="font-size:11px; color:gray; margin-top:10px;">Chapter Content (Images OR PDF)</p>
+            <label style="font-size:11px; color:gray;">Content (Images/PDF)</label>
             <input type="file" id="chapterFiles" accept="image/*, application/pdf" multiple>
-            
-            <button class="btn-pub" id="uploadBtn">UPLOAD ALL</button>
-            <p id="status" style="font-size:11px; text-align:center; margin-top:10px; color:orange;"></p>
-            <button onclick="closeModal('adminModal')" style="width:100%; background:none; border:none; color:gray; margin-top:10px;">Cancel</button>
+            <button class="btn-pub" id="uploadBtn" style="width:100%; background:var(--primary); border:none; color:white; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">PUBLISH</button>
+            <p id="status" style="font-size:12px; text-align:center; margin-top:10px; color:orange;"></p>
+            <button onclick="closeModal('adminModal')" style="width:100%; background:none; border:none; color:gray; margin-top:10px;">Close</button>
         </div>
     </div>
 
@@ -89,87 +125,127 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const CLOUD_NAME = "dqdqg2wac"; 
+        const UPLOAD_PRESET = "ml_default";
 
-        window.openModal = (id) => document.getElementById(id).style.display = 'flex';
-        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+        let allData = [];
+
+        window.toggleSidebar = () => {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        };
 
         async function loadManga() {
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
-            document.getElementById('manga-list').innerHTML = snap.docs.map(d => `
+            allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
+            renderList(allData);
+        }
+
+        function renderList(data) {
+            const favs = JSON.parse(localStorage.getItem('favs') || '[]');
+            document.getElementById('manga-list').innerHTML = data.map(d => `
                 <div class="card" onclick="openReader('${d.id}')">
-                    <img src="${d.data().coverUrl}">
-                    <div class="card-info"><h3>${d.data().title}</h3></div>
+                    <i class="fa fa-heart fav-badge ${favs.includes(d.id) ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav('${d.id}')"></i>
+                    <img src="${d.coverUrl}">
+                    <div class="card-info"><h3>${d.title}</h3><small style="color:gray;">${d.category}</small></div>
                 </div>
             `).join('');
         }
 
         window.openReader = async (id) => {
-            const d = await getDoc(doc(db, "chapters", id));
-            const data = d.data();
-            document.getElementById('readTitle').innerText = data.title;
-            const viewer = document.getElementById('chapterViewer');
-            const pdfView = document.getElementById('pdfViewer');
+            const d = allData.find(x => x.id === id);
+            // Save History
+            let hist = JSON.parse(localStorage.getItem('history') || '[]');
+            hist = [id, ...hist.filter(x => x !== id)].slice(0, 10);
+            localStorage.setItem('history', JSON.stringify(hist));
 
-            if (data.type === 'pdf') {
-                viewer.style.display = 'none';
-                pdfView.style.display = 'block';
-                pdfView.src = `https://docs.google.com/viewer?url=${data.fileUrl}&embedded=true`;
+            document.getElementById('readTitle').innerText = d.title;
+            const viewer = document.getElementById('chapterViewer');
+            const pdf = document.getElementById('pdfFrame');
+
+            if (d.format === 'pdf') {
+                viewer.style.display = 'none'; pdf.style.display = 'block';
+                pdf.src = `https://docs.google.com/viewer?url=${d.pdfUrl}&embedded=true`;
             } else {
-                pdfView.style.display = 'none';
-                viewer.style.display = 'block';
-                viewer.innerHTML = data.chapterImages.map(url => `<img src="${url}">`).join('');
+                pdf.style.display = 'none'; viewer.style.display = 'block';
+                viewer.innerHTML = d.chapterImages.map(url => `<img src="${url}" style="width:100%; display:block;">`).join('');
             }
             document.getElementById('readPage').style.display = 'block';
         };
 
-        window.closeReader = () => {
-            document.getElementById('readPage').style.display = 'none';
-            document.getElementById('pdfViewer').src = "";
+        window.toggleFav = (id) => {
+            let favs = JSON.parse(localStorage.getItem('favs') || '[]');
+            favs = favs.includes(id) ? favs.filter(x => x !== id) : [...favs, id];
+            localStorage.setItem('favs', JSON.stringify(favs));
+            renderList(allData);
         };
 
+        window.showFavs = () => {
+            const favs = JSON.parse(localStorage.getItem('favs') || '[]');
+            const data = allData.filter(x => favs.includes(x.id));
+            document.getElementById('viewTitle').innerText = "MY FAVORITES";
+            renderList(data); toggleSidebar();
+        };
+
+        window.showHistory = () => {
+            const hist = JSON.parse(localStorage.getItem('history') || '[]');
+            const data = hist.map(id => allData.find(x => x.id === id)).filter(Boolean);
+            document.getElementById('viewTitle').innerText = "READING HISTORY";
+            renderList(data); toggleSidebar();
+        };
+
+        window.filterCat = (cat) => {
+            const data = allData.filter(x => x.category === cat);
+            document.getElementById('viewTitle').innerText = cat + " SERIES";
+            renderList(data); toggleSidebar();
+        };
+
+        window.showAll = () => {
+            document.getElementById('viewTitle').innerText = "LATEST UPDATES";
+            renderList(allData); if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar();
+        };
+
+        // ADMIN UPLOAD
         document.getElementById('uploadBtn').onclick = async () => {
             const pass = document.getElementById('admPass').value;
             const title = document.getElementById('newTitle').value;
-            const cover = document.getElementById('newCover').files[0];
+            const category = document.getElementById('newCat').value;
             const files = document.getElementById('chapterFiles').files;
             const status = document.getElementById('status');
 
-            if(pass !== "Admin67820") return alert("Wrong Password!");
-            status.innerText = "Uploading... Please wait.";
+            if(pass !== "Admin67820") return alert("Wrong!");
+            status.innerText = "Uploading...";
 
             try {
-                const coverUrl = await uploadToImgBB(cover);
-                
+                const cover = await uploadToCloudinary(document.getElementById('newCover').files[0]);
+                let payload = { title, category, coverUrl: cover, timestamp: serverTimestamp() };
+
                 if (files[0].type === "application/pdf") {
-                    // PDF Upload (PDF က ImgBB မှာ တင်လို့မရလို့ PDF တင်ရင် Cloudinary သုံးရမယ်)
-                    const pdfUrl = await uploadToCloudinary(files[0]);
-                    await addDoc(collection(db, "chapters"), {
-                        title, coverUrl, fileUrl: pdfUrl, type: 'pdf', timestamp: serverTimestamp()
-                    });
+                    payload.pdfUrl = await uploadToCloudinary(files[0]);
+                    payload.format = 'pdf';
                 } else {
-                    // Images Upload
-                    let chapterUrls = [];
-                    for(let f of files) { chapterUrls.push(await uploadToImgBB(f)); }
-                    await addDoc(collection(db, "chapters"), {
-                        title, coverUrl, chapterImages: chapterUrls, type: 'images', timestamp: serverTimestamp()
-                    });
+                    let urls = [];
+                    for(let f of files) { urls.push(await uploadToCloudinary(f)); }
+                    payload.chapterImages = urls;
+                    payload.format = 'images';
                 }
-                status.innerText = "✅ Published!";
+
+                await addDoc(collection(db, "chapters"), payload);
+                status.innerText = "✅ Success!";
                 loadManga(); closeModal('adminModal');
-            } catch (e) { status.innerText = "❌ Upload Failed!"; }
+            } catch (e) { status.innerText = "❌ Failed!"; }
         };
 
-        async function uploadToImgBB(file) {
-            const fd = new FormData(); fd.append("image", file);
-            const res = await fetch("https://api.imgbb.com/1/upload?key=6440536417531739f7823521d966952d", { method: "POST", body: fd });
-            const data = await res.json(); return data.data.url;
-        }
-
         async function uploadToCloudinary(file) {
-            const fd = new FormData(); fd.append("file", file); fd.append("upload_preset", "ml_default");
-            const res = await fetch("https://api.cloudinary.com/v1_1/demo/upload", { method: "POST", body: fd });
+            const fd = new FormData(); fd.append("file", file); fd.append("upload_preset", UPLOAD_PRESET);
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: "POST", body: fd });
             const data = await res.json(); return data.secure_url;
         }
+
+        window.closeReader = () => {
+            document.getElementById('readPage').style.display = 'none';
+            document.getElementById('pdfFrame').src = "";
+        };
 
         loadManga();
     </script>
