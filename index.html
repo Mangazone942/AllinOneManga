@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | Local Power</title>
+    <title>M-ZONE | Ultimate Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -13,6 +13,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: var(--text); padding-top: 135px; overflow-x: hidden; }
         
+        /* Header & Search */
         header { background: var(--header); height: 65px; width: 100%; position: fixed; top: 0; left: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid #222; }
         .search-container { position: fixed; top: 65px; left: 0; width: 100%; background: var(--header); padding: 10px 15px; z-index: 999; }
         .search-bar { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #333; background: var(--input); color: var(--text); outline: none; }
@@ -24,35 +25,35 @@
         .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7); }
         .slide-title { position: absolute; bottom: 20px; left: 20px; font-family: 'Oswald'; font-size: 22px; color: #fff; }
 
-        /* Grid & Cards */
+        /* Grid */
         .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .card { position: relative; cursor: pointer; }
         .card img { width: 100%; height: 210px; object-fit: cover; border-radius: 12px; }
-        .hot-badge { position: absolute; top: 10px; left: 10px; background: red; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+        .hot-badge { position: absolute; top: 10px; left: 10px; background: red; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
 
-        /* Sidebar (Black Theme) */
-        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #0c0c0c; z-index: 4000; transition: 0.3s; padding: 20px; overflow-y: auto; color: white; }
+        /* Sidebar & Bookmark */
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #0c0c0c; z-index: 4000; transition: 0.3s; padding: 20px; overflow-y: auto; color: white; border-left: 1px solid #222; }
         .sidebar.active { right: 0; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 3500; }
         .overlay.active { display: block; }
         .bm-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; background: #1a1a1a; padding: 8px; border-radius: 8px; cursor: pointer; }
 
-        /* UI Elements */
+        /* Detail & Reader */
         .back-btn { width: 42px; height: 42px; background: red; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; position: fixed; top: 15px; left: 15px; z-index: 5001; cursor: pointer; }
-        .bm-btn { background: #ffd700; color: #000; padding: 10px 15px; border-radius: 8px; border: none; font-weight: bold; margin-top: 10px; cursor: pointer; width: 100%; }
-        
         #detailsPage, #readPage, #adminModal { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 2000; overflow-y: auto; padding: 20px; padding-top: 80px; }
         #readPage { padding: 0; z-index: 6000; }
         .pdf-frame { width: 100%; height: 100vh; border: none; }
         
+        /* Admin Elements */
         input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; background: #1a1a1a; color: #fff; border: 1px solid #333; }
         .btn-red { background: red; color: white; width: 100%; padding: 14px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .admin-link { margin-top: 40px; color: #ff4444; font-size: 12px; cursor: pointer; display: block; text-align: center; border: 1px solid #333; padding: 10px; border-radius: 8px; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo" style="font-family:'Oswald'; color:red; font-size:24px;" onclick="location.reload()">M-ZONE</div>
+        <div class="logo" style="font-family:'Oswald'; color:red; font-size:24px; cursor:pointer;" onclick="location.reload()">M-ZONE</div>
         <div style="display:flex; align-items:center; gap:15px;">
             <i class="fa-solid fa-moon" id="themeBtn" onclick="toggleTheme()" style="cursor:pointer; font-size:20px;"></i>
             <i class="fa fa-bars" onclick="openSidebar()" style="font-size:24px; cursor:pointer;"></i>
@@ -65,7 +66,7 @@
 
     <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
-    <div class="container" style="padding: 0 15px;">
+    <div class="container" style="padding: 0 15px; max-width: 1200px; margin: auto;">
         <div class="slider-container" id="slider"></div>
         <h2 style="color:red; font-family:Oswald; margin-bottom:15px;"><i class="fa fa-fire"></i> HOT MANGA</h2>
         <div id="manga-list" class="manga-grid"></div>
@@ -73,64 +74,77 @@
 
     <div class="sidebar" id="sidebar">
         <div id="userProfile" style="margin-bottom:20px;">
-            <p style="font-size:10px; color:gray; margin-bottom:10px;">UID: <span id="myUID">Guest</span></p>
-            <input type="text" id="promoKey" placeholder="Promo Code" style="padding:8px; font-size:12px;">
-            <button onclick="redeemKey()" class="btn-red" style="background:var(--gold); color:black; padding:8px;">REDEEM</button>
+            <p style="font-size:11px; color:gray; margin-bottom:10px;">UID: <span id="myUID">Guest</span></p>
+            <input type="text" id="promoKey" placeholder="Promo Code" style="padding:10px; font-size:12px;">
+            <button onclick="redeemKey()" class="btn-red" style="background:var(--gold); color:black; padding:10px; height:auto;">REDEEM</button>
         </div>
         
-        <p style="color:red; font-size:14px; font-weight:bold; margin-bottom:10px;">BOOKMARKS (SAVED)</p>
+        <p style="color:red; font-size:14px; font-weight:bold; margin-bottom:12px;">SAVED BOOKMARKS</p>
         <div id="bookmarkList" style="margin-bottom:25px;"></div>
 
-        <p style="color:red; font-size:14px; font-weight:bold; margin-bottom:10px;">GENRES</p>
-        <div id="genreList" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:25px;"></div>
+        <p style="color:red; font-size:14px; font-weight:bold; margin-bottom:12px;">GENRES</p>
+        <div id="genreList" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:30px;"></div>
         
-        <button onclick="openModal('secretModal')" style="background:#ff007f; color:white; width:100%; border:none; padding:12px; border-radius:10px; font-weight:bold;">🔞 HENTAI MODE</button>
-        <p onclick="openAdmin()" style="margin-top:40px; color:#333; font-size:10px; cursor:pointer;">Admin Dashboard</p>
+        <button onclick="openModal('secretModal')" style="background:#ff007f; color:white; width:100%; border:none; padding:15px; border-radius:10px; font-weight:bold; cursor:pointer;">🔞 HENTAI MODE</button>
+        
+        <div class="admin-link" onclick="openAdmin()">
+            <i class="fa fa-lock"></i> ADMIN DASHBOARD
+        </div>
     </div>
 
     <div id="detailsPage">
         <div class="back-btn" onclick="closeAll()"><i class="fa fa-arrow-left"></i></div>
-        <div style="max-width:600px; margin:auto;">
-            <div style="display:flex; gap:15px; margin-bottom:20px;">
+        <div style="max-width:700px; margin:auto;">
+            <div style="display:flex; gap:15px; margin-bottom:25px;">
                 <img id="detImg" style="width:130px; height:190px; border-radius:12px; object-fit:cover;">
                 <div style="flex:1;">
-                    <h2 id="detTitle" style="font-family:Oswald;"></h2>
-                    <p id="detCat" style="color:red; font-weight:bold; font-size:14px;"></p>
-                    <button id="bmBtn" class="bm-btn" onclick="toggleBookmark()">+ Bookmark</button>
+                    <h2 id="detTitle" style="font-family:Oswald; font-size:24px;"></h2>
+                    <p id="detCat" style="color:red; font-weight:bold; margin-top:5px;"></p>
+                    <button id="bmBtn" onclick="toggleBookmark()" style="background:#ffd700; color:black; padding:10px 20px; border-radius:8px; border:none; font-weight:bold; margin-top:15px; cursor:pointer; width:100%;">+ Bookmark</button>
                 </div>
             </div>
-            <p id="detDesc" style="color:gray; font-size:13px; line-height:1.5; margin-bottom:25px;"></p>
+            <p id="detDesc" style="color:gray; font-size:14px; line-height:1.6; margin-bottom:30px;"></p>
             <div id="chapterList"></div>
         </div>
     </div>
 
     <div id="readPage">
         <div style="height:55px; background:rgba(0,0,0,0.95); display:flex; align-items:center; padding:0 15px; position:fixed; width:100%; top:0; z-index:6001;">
-            <i class="fa fa-arrow-left" onclick="closeAll()" style="cursor:pointer; color:white; font-size:20px;"></i>
-            <span id="readTitle" style="margin-left:15px; color:white; font-size:14px;"></span>
+            <i class="fa fa-arrow-left" onclick="closeAll()" style="cursor:pointer; color:white; font-size:22px;"></i>
+            <span id="readTitle" style="margin-left:15px; color:white; font-size:15px;"></span>
         </div>
         <div id="viewer" style="margin-top:55px; background:#000; min-height:100vh;"></div>
     </div>
 
     <div id="adminModal">
-        <div style="max-width:450px; margin:auto;">
-            <h2 style="color:red; text-align:center;">ADMIN UPLOAD</h2>
+        <div style="max-width:500px; margin:auto; padding-bottom:50px;">
+            <h2 style="color:red; text-align:center; font-family:Oswald; margin-bottom:20px;">ADMIN PANEL</h2>
             <input type="text" id="upName" placeholder="Manga Title">
-            <textarea id="upDesc" placeholder="Description"></textarea>
-            <input type="number" id="upCh" placeholder="Chapter Number">
+            <textarea id="upDesc" placeholder="Description" rows="3"></textarea>
+            <input type="number" id="upCh" placeholder="Chapter Number (e.g. 10)">
             <select id="upCat"></select>
             <select id="upPrice"><option value="0">Free</option><option value="10">10 Coins</option></select>
-            <p style="font-size:11px; margin-top:10px;">Cover Image:</p><input type="file" id="upCover">
-            <p style="font-size:11px; margin-top:10px;">PDF or Image Files:</p><input type="file" id="upFiles" multiple>
-            <button class="btn-red" id="uploadBtn">PUBLISH MANGA</button>
-            <button onclick="closeAll()" style="width:100%; margin-top:15px; background:none; color:gray; border:none; cursor:pointer;">Close</button>
+            <p style="font-size:12px; margin-top:10px; color:gray;">Cover Image:</p><input type="file" id="upCover">
+            <p style="font-size:12px; margin-top:10px; color:gray;">PDF or Image Files (Multiple):</p><input type="file" id="upFiles" multiple>
+            <button class="btn-red" id="uploadBtn" style="margin-top:20px;">PUBLISH NOW</button>
+            <button onclick="closeAll()" style="width:100%; margin-top:20px; background:none; color:gray; border:none; cursor:pointer;">Back to Home</button>
+            <div id="adminChapterList" style="margin-top:40px; border-top:1px solid #222; padding-top:20px;"></div>
+        </div>
+    </div>
+
+    <div id="secretModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:7000; align-items:center; justify-content:center; padding:20px;">
+        <div style="background:#111; padding:30px; border-radius:20px; width:100%; max-width:350px;">
+            <h3 style="color:#ff007f; margin-bottom:20px;">UNLOCK H-MODE</h3>
+            <input type="password" id="secPass" placeholder="Enter Secret Key">
+            <button onclick="checkSecret()" class="btn-red" style="background:#ff007f;">ACCESS</button>
+            <p onclick="document.getElementById('secretModal').style.display='none'" style="text-align:center; color:gray; margin-top:20px; cursor:pointer;">Close</p>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs", authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax", storageBucket: "mangabyax.firebasestorage.app", messagingSenderId: "974159756281", appId: "1:974159756281:web:228c23b929f377544b1b28" };
         const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
@@ -139,14 +153,14 @@
 
         let allData = [], currentUser = null, currentManga = "";
 
-        // UI Helpers
+        // UI Logic
         window.toggleTheme = () => {
             document.body.classList.toggle('light-mode');
             localStorage.setItem('theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
         };
         if(localStorage.getItem('theme') === 'light') toggleTheme();
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if(user) {
                 currentUser = user;
                 document.getElementById('myUID').innerText = user.uid.substring(0,8);
@@ -158,7 +172,7 @@
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
             allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
             renderGrid(allData.filter(x => x.category !== 'Hentai'));
-            renderGenreButtons(); setupSlider(); renderBookmarks();
+            renderGenreButtons(); setupSlider(); renderBookmarks(); renderAdminChapters();
         }
 
         function renderGrid(data) {
@@ -167,44 +181,39 @@
                 <div class="card" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')">
                     <span class="hot-badge">HOT</span>
                     <img src="${s.coverUrl}">
-                    <div style="padding:10px;"><b style="font-size:13px;">${s.seriesName}</b></div>
+                    <div style="padding:10px;"><b style="font-size:14px;">${s.seriesName}</b></div>
                 </div>`).join('');
         }
 
-        // Bookmark System (Local Storage Only)
+        // Bookmark (Local Storage)
         window.toggleBookmark = () => {
-            let bookmarks = JSON.parse(localStorage.getItem('mzone_bookmarks') || '[]');
-            const index = bookmarks.findIndex(b => b.name === currentManga);
-            const mangaObj = { name: currentManga, cover: allData.find(x => x.seriesName === currentManga).coverUrl };
-
-            if (index > -1) {
-                bookmarks.splice(index, 1);
-            } else {
-                bookmarks.push(mangaObj);
-            }
-            localStorage.setItem('mzone_bookmarks', JSON.stringify(bookmarks));
-            updateBookmarkUI();
-            renderBookmarks();
+            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
+            const idx = bms.findIndex(b => b.name === currentManga);
+            if(idx > -1) bms.splice(idx, 1);
+            else bms.push({ name: currentManga, cover: allData.find(x => x.seriesName === currentManga).coverUrl });
+            localStorage.setItem('mz_bookmarks', JSON.stringify(bms));
+            updateBookmarkUI(); renderBookmarks();
         };
 
         function updateBookmarkUI() {
-            let bookmarks = JSON.parse(localStorage.getItem('mzone_bookmarks') || '[]');
-            const isBookmarked = bookmarks.some(b => b.name === currentManga);
+            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
+            const isBm = bms.some(b => b.name === currentManga);
             const btn = document.getElementById('bmBtn');
-            btn.innerText = isBookmarked ? "✓ Saved" : "+ Bookmark";
-            btn.style.background = isBookmarked ? "#333" : "#ffd700";
-            btn.style.color = isBookmarked ? "white" : "black";
+            btn.innerText = isBm ? "✓ Bookmarked" : "+ Bookmark";
+            btn.style.background = isBm ? "#333" : "#ffd700";
+            btn.style.color = isBm ? "white" : "black";
         }
 
         function renderBookmarks() {
-            let bookmarks = JSON.parse(localStorage.getItem('mzone_bookmarks') || '[]');
-            document.getElementById('bookmarkList').innerHTML = bookmarks.map(b => `
+            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
+            document.getElementById('bookmarkList').innerHTML = bms.map(b => `
                 <div class="bm-item" onclick="openDetails('${b.name.replace(/'/g,"\\'")}')">
-                    <img src="${b.cover}" style="width:30px; height:40px; object-fit:cover; border-radius:4px;">
+                    <img src="${b.cover}" style="width:35px; height:45px; object-fit:cover; border-radius:4px;">
                     <span style="font-size:12px;">${b.name}</span>
                 </div>`).join('');
         }
 
+        // Details & Reader
         window.openDetails = (title) => {
             currentManga = title;
             const s = allData.filter(x => x.seriesName === title);
@@ -212,12 +221,13 @@
             document.getElementById('detImg').src = s[0].coverUrl;
             document.getElementById('detDesc').innerText = s[0].seriesDesc || "";
             document.getElementById('detCat').innerText = s[0].category;
-            
             updateBookmarkUI();
+            
+            // Chapter Sorting (Flexible Start)
             document.getElementById('chapterList').innerHTML = s.sort((a,b) => a.chapterNum - b.chapterNum).map(ch => `
-                <div style="background:#121212; padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; cursor:pointer;" onclick="showReader('${ch.id}')">
+                <div style="background:#111; padding:18px; border-radius:12px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid #222;" onclick="showReader('${ch.id}')">
                     <span>Chapter ${ch.chapterNum}</span>
-                    <i class="fa-regular fa-circle-play" style="color:red;"></i>
+                    <i class="fa-regular fa-circle-play" style="color:red; font-size:20px;"></i>
                 </div>`).join('');
             document.getElementById('detailsPage').style.display = 'block';
         };
@@ -226,55 +236,82 @@
             const ch = allData.find(x => x.id === id);
             document.getElementById('readTitle').innerText = ch.seriesName + " - CH " + ch.chapterNum;
             const viewer = document.getElementById('viewer');
-            
-            // PDF Detection Logic
             const url = ch.chapterImages[0];
-            if (url.toLowerCase().includes('.pdf')) {
-                viewer.innerHTML = `<iframe src="${url}" class="pdf-frame"></iframe>`;
-            } else {
-                viewer.innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join('');
-            }
+            if(url.toLowerCase().includes('.pdf')) viewer.innerHTML = `<iframe src="${url}" class="pdf-frame"></iframe>`;
+            else viewer.innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join('');
             document.getElementById('readPage').style.display = 'block';
         };
 
-        // Admin & Others
-        window.openAdmin = () => document.getElementById('adminModal').style.display = 'block';
-        window.openSidebar = () => { document.getElementById('sidebar').classList.add('active'); document.getElementById('overlay').classList.add('active'); };
-        window.closeAll = () => { document.querySelectorAll('#detailsPage, #adminModal, #readPage').forEach(el => el.style.display = 'none'); document.getElementById('sidebar').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); };
-        
+        // Admin Panel & Upload
+        window.openAdmin = () => {
+            if(prompt("Admin Password:") === MASTER_PASS) {
+                document.getElementById('adminModal').style.display = 'block';
+                closeSidebar();
+            } else alert("Access Denied!");
+        };
+
         async function up(f) { 
             const fd = new FormData(); fd.append("file", f); fd.append("upload_preset", "ml_default"); 
             const r = await fetch(`https://api.cloudinary.com/v1_1/dqdqg2wac/upload`, {method:"POST", body:fd}); 
-            return (await r.json()).secure_url; 
+            const res = await r.json(); return res.secure_url;
         }
 
         document.getElementById('uploadBtn').onclick = async () => {
-            if(prompt("Admin Pass:") !== MASTER_PASS) return;
-            const btn = document.getElementById('uploadBtn'); btn.innerText = "Uploading...";
-            const cv = await up(document.getElementById('upCover').files[0]);
-            const files = document.getElementById('upFiles').files; let imgs = [];
-            for(let f of files) imgs.push(await up(f));
-            await addDoc(collection(db, "chapters"), {
-                seriesName: document.getElementById('upName').value, seriesDesc: document.getElementById('upDesc').value,
-                chapterNum: parseInt(document.getElementById('upCh').value), category: document.getElementById('upCat').value,
-                price: parseInt(document.getElementById('upPrice').value), coverUrl: cv, chapterImages: imgs, timestamp: serverTimestamp()
-            });
-            location.reload();
+            const btn = document.getElementById('uploadBtn'); btn.innerText = "UPLOADING..."; btn.disabled = true;
+            try {
+                const cv = await up(document.getElementById('upCover').files[0]);
+                const files = document.getElementById('upFiles').files; let imgs = [];
+                for(let f of files) imgs.push(await up(f));
+                await addDoc(collection(db, "chapters"), {
+                    seriesName: document.getElementById('upName').value, seriesDesc: document.getElementById('upDesc').value,
+                    chapterNum: parseFloat(document.getElementById('upCh').value), category: document.getElementById('upCat').value,
+                    price: parseInt(document.getElementById('upPrice').value), coverUrl: cv, chapterImages: imgs, timestamp: serverTimestamp()
+                });
+                location.reload();
+            } catch(e) { alert("Upload Failed!"); btn.innerText = "PUBLISH NOW"; btn.disabled = false; }
         };
 
+        // UI Control
+        window.openSidebar = () => { document.getElementById('sidebar').classList.add('active'); document.getElementById('overlay').classList.add('active'); };
+        window.closeAll = () => { document.querySelectorAll('#detailsPage, #adminModal, #readPage').forEach(el => el.style.display = 'none'); document.getElementById('sidebar').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); };
+        window.openModal = (id) => { document.getElementById(id).style.display = 'flex'; closeSidebar(); };
+        
         function renderGenreButtons() {
             const gl = document.getElementById('genreList'), sl = document.getElementById('upCat');
+            sl.innerHTML = ""; gl.innerHTML = "";
             CATS.forEach(c => {
                 sl.innerHTML += `<option value="${c}">${c}</option>`;
-                if(c !== 'Hentai') gl.innerHTML += `<div style="background:#1a1a1a; padding:10px; border-radius:8px; font-size:11px; text-align:center; cursor:pointer;" onclick="filterGenre('${c}')">${c}</div>`;
+                if(c !== 'Hentai') gl.innerHTML += `<div style="background:#1a1a1a; padding:10px; border-radius:8px; font-size:11px; text-align:center; cursor:pointer; border:1px solid #333;" onclick="filterGenre('${c}')">${c}</div>`;
             });
         }
         window.filterGenre = (g) => { renderGrid(allData.filter(x => x.category === g)); closeAll(); };
+        
         function setupSlider() {
             const top = allData.filter(x => x.category !== 'Hentai').slice(0, 5);
             document.getElementById('slider').innerHTML = top.map((s, i) => `<div class="slide ${i===0?'active':''}" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}"><div class="slide-title">${s.seriesName}</div></div>`).join('');
-            let cur = 0; setInterval(() => { const slides = document.querySelectorAll('.slide'); if(slides.length){ slides[cur].classList.remove('active'); cur = (cur+1)%slides.length; slides[cur].classList.add('active'); } }, 4000);
+            let cur = 0; setInterval(() => { const slides = document.querySelectorAll('.slide'); if(slides.length){ slides[cur].classList.remove('active'); cur = (cur+1)%slides.length; slides[cur].classList.add('active'); } }, 4500);
         }
+
+        window.searchManga = () => {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            renderGrid(allData.filter(x => x.seriesName.toLowerCase().includes(q) && x.category !== 'Hentai'));
+        };
+
+        function renderAdminChapters() {
+            document.getElementById('adminChapterList').innerHTML = `<h3 style="margin-bottom:15px;">MANAGE CHAPTERS</h3>` + allData.map(ch => `
+                <div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222; font-size:12px;">
+                    <span>${ch.seriesName} (Ch ${ch.chapterNum})</span>
+                    <span style="color:red; cursor:pointer;" onclick="deleteChapter('${ch.id}')">Delete</span>
+                </div>`).join('');
+        }
+        window.deleteChapter = async (id) => { if(confirm("Delete this chapter?")) { await deleteDoc(doc(db, "chapters", id)); location.reload(); } };
+
+        window.checkSecret = () => {
+            if(document.getElementById('secPass').value === "MZone@99#Strict") {
+                renderGrid(allData.filter(x => x.category === 'Hentai'));
+                document.getElementById('secretModal').style.display = 'none';
+            } else alert("Wrong Key!");
+        };
     </script>
 </body>
 </html>
