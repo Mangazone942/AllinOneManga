@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MangaZone - Vagabond</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #e62117; --bg: #000; --text: #fff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; overflow-x: hidden; }
+
+        /* --- RED NAVBAR --- */
+        header {
+            background: var(--primary); height: 60px; width: 100%;
+            position: fixed; top: 0; left: 0; z-index: 10000;
+            display: flex; align-items: center; justify-content: space-between; padding: 0 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        .logo { font-family: 'Oswald'; font-size: 24px; color: white; text-decoration: none; font-weight: bold; }
+        
+        .auth-btns { display: flex; gap: 8px; }
+        .btn-top { background: rgba(0,0,0,0.2); border: 1px solid #fff; color: white; padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+
+        /* --- VAGABOND HERO SLIDER --- */
+        .hero {
+            height: 350px; width: 100%;
+            background: #111 url('https://image_2023-08-11_003823987.png.webp') no-repeat center;
+            background-size: cover; display: flex; align-items: center; padding: 30px; position: relative;
+        }
+        .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to right, #000 45%, transparent); }
+        .hero-content { position: relative; z-index: 10; max-width: 450px; }
+        .hero-content h4 { color: var(--primary); font-size: 12px; letter-spacing: 2px; margin-bottom: 5px; }
+        .hero-content h1 { font-family: 'Oswald'; font-size: 45px; line-height: 1; margin-bottom: 10px; }
+        .hero-content p { font-size: 13px; color: #ccc; margin-bottom: 20px; }
+        .btn-read { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
+        /* --- MANGA LIST --- */
+        .container { padding: 25px 15px; }
+        .section-title { border-left: 5px solid var(--primary); padding-left: 10px; font-size: 20px; margin-bottom: 20px; }
+        
+        .manga-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* Mobile မှာ ၂ ခုစီပြမယ် */
+            gap: 15px; 
+        }
+        .card { background: #111; border-radius: 8px; overflow: hidden; border: 1px solid #222; }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-info { padding: 10px; }
+        .card-info h3 { font-size: 13px; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        @media (min-width: 768px) {
+            .manga-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+            .hero { height: 450px; padding: 60px; }
+            .hero-content h1 { font-size: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">MANGAZONE</div>
+        <div class="auth-btns">
+            <button class="btn-top" onclick="alert('Admin Panel')">ADMIN</button>
+            <button class="btn-top" style="background:white; color:red;">LOGIN</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h4>FEATURED</h4>
+            <h1>VAGABOND</h1>
+            <p>The story of Miyamoto Musashi, a master swordsman in search of enlightenment through the way of the sword.</p>
+            <button class="btn-read">READ NOW</button>
+        </div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">Latest Updates</h2>
+        <div id="manga-list" class="manga-grid">
+            <p style="color:gray;">Connecting to Firebase...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // မောင့်ရဲ့ Firebase Config ကို ဒီမှာ အစားထိုးပါ
+        const firebaseConfig = {
+            apiKey: "YOUR_KEY",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "YOUR_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadManga() {
+            try {
+                const q = query(collection(db, "chapters"), orderBy("timestamp", "desc"));
+                const snap = await getDocs(q);
+                const list = document.getElementById('manga-list');
+                
+                if (snap.empty) {
+                    list.innerHTML = "<p>No manga found in database.</p>";
+                    return;
+                }
+
+                list.innerHTML = snap.docs.map(doc => {
+                    const data = doc.data();
+                    return `
+                        <div class="card">
+                            <img src="${data.coverUrl || 'https://via.placeholder.com/200x300'}">
+                            <div class="card-info">
+                                <h3>${data.title}</h3>
+                                <small style="color:gray;">👁️ ${data.views || 0} views</small>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error(err);
+                document.getElementById('manga-list').innerHTML = "Firebase Error: Check Console";
+            }
+        }
+
+        loadManga();
+    </script>
+</body>
+</html>
