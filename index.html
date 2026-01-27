@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | Admin Elite</title>
+    <title>M-ZONE | Secure Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -75,11 +75,13 @@
     </div>
 
     <div class="container">
-        <div class="slider-container" id="slider"></div>
-        <div class="section-title">🔥 HOT RELEASES</div>
-        <div id="hot-list" class="manga-grid"></div>
-        <div class="section-title" id="viewTitle">LATEST UPDATES</div>
-        <div id="manga-list" class="manga-grid"></div>
+        <div id="main-content">
+            <div class="slider-container" id="slider"></div>
+            <div class="section-title">🔥 HOT RELEASES</div>
+            <div id="hot-list" class="manga-grid"></div>
+            <div class="section-title" id="viewTitle">LATEST UPDATES</div>
+            <div id="manga-list" class="manga-grid"></div>
+        </div>
     </div>
 
     <div id="authModal" class="modal"><div class="modal-content">
@@ -104,8 +106,9 @@
         <hr style="margin:20px 0; border:0.5px solid #333;">
         
         <h3 style="color:var(--gold);">KEY GENERATOR</h3>
-        <input type="number" id="keyAmt" placeholder="Coin Amount (e.g. 500)">
+        <input type="number" id="keyAmt" placeholder="Coin Amount">
         <input type="number" id="keyQty" placeholder="How many keys?">
+        <input type="password" id="adminKeyPass" placeholder="Admin Password">
         <button class="nav-btn" onclick="generateKeys()" style="background:var(--gold); color:black;">GENERATE KEYS</button>
         <div id="keyDisplay" style="margin-top:10px; font-size:11px; background:#000; padding:10px; border-radius:10px; color:var(--gold); display:none; user-select:all;"></div>
         
@@ -144,19 +147,24 @@
         const CLOUD_NAME = "dqdqg2wac", UPLOAD_PRESET = "ml_default";
         const CATS = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Isekai", "Romance", "Sci-Fi", "Hentai"];
 
+        // *** မင်းရဲ့ Admin Password ကို ဒီမှာ ပြင်လို့ရပါတယ် ***
+        const MASTER_ADMIN_PASS = "MZoneAdmin@2026"; 
+
         let allData = [], currentUser = null, userData = null;
 
-        // BACK BUTTON CONTROL
         window.onpopstate = () => {
             document.querySelectorAll('.modal, #detailsPage, #readPage').forEach(el => el.style.display = 'none');
             document.getElementById('sidebar').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
         };
 
-        // ADMIN: KEY GENERATOR
+        // ADMIN: KEY GENERATOR WITH PASSWORD PROTECTION
         window.generateKeys = async () => {
+            const pass = document.getElementById('adminKeyPass').value;
             const amt = parseInt(document.getElementById('keyAmt').value);
             const qty = parseInt(document.getElementById('keyQty').value);
+
+            if(pass !== MASTER_ADMIN_PASS) return alert("Admin Password မှားနေပါတယ်!");
             if(!amt || !qty) return alert("Amount နဲ့ အရေအတွက် အရင်ရိုက်ပါ!");
 
             let keys = "";
@@ -168,10 +176,10 @@
             const display = document.getElementById('keyDisplay');
             display.style.display = "block";
             display.innerText = "COPIED LIST:\n" + keys;
-            alert(qty + " keys generated and saved!");
+            document.getElementById('adminKeyPass').value = ""; // Clear password field
+            alert(qty + " keys generated successfully!");
         };
 
-        // AUTH & DATA LOAD
         onAuthStateChanged(auth, async (user) => {
             if(user) {
                 currentUser = user; 
@@ -205,7 +213,6 @@
             } else alert("Invalid Key!");
         };
 
-        // UI RENDERERS
         function renderGrid(data) {
             const series = {}; data.forEach(ch => { if(!series[ch.seriesName]) series[ch.seriesName] = ch; });
             document.getElementById('manga-list').innerHTML = Object.values(series).map(s => `
@@ -265,7 +272,6 @@
             }).join('');
         }
 
-        // UPLOAD & AUTH
         document.getElementById('uploadBtn').onclick = async () => {
             const btn = document.getElementById('uploadBtn'); btn.innerText = "Uploading..."; btn.disabled = true;
             try {
@@ -291,7 +297,6 @@
             } catch(err) { alert(err.message); }
         };
 
-        // UI HELPERS
         window.toggleTheme = () => { document.body.classList.toggle('light-mode'); };
         window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); };
         window.openModal = (id) => { document.getElementById(id).style.display='flex'; history.pushState({p:'mod'}, "", "#modal"); };
