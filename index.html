@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | Ultimate Edition</title>
+    <title>M-ZONE | Pro Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -13,10 +13,10 @@
         body { background: var(--bg); color: var(--text); padding-top: 70px; overflow-x: hidden; }
         header { background: var(--header); backdrop-filter: blur(10px); height: 65px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid rgba(128,128,128,0.2); }
         .logo { font-family: 'Oswald'; font-size: 24px; color: var(--primary); cursor: pointer; }
-        .search-wrapper { position: relative; flex: 1.2; display: flex; align-items: center; justify-content: center; margin: 0 10px; }
+        .search-wrapper { position: relative; flex: 1.2; display: flex; align-items: center; justify-content: center; }
         .search-input { width: 0; opacity: 0; padding: 8px 35px 8px 15px; border-radius: 20px; border: 1px solid var(--primary); background: rgba(128,128,128,0.1); color: var(--text); outline: none; transition: 0.4s; pointer-events: none; }
         .search-input.active { width: 100%; opacity: 1; pointer-events: all; }
-        .search-icon { position: absolute; right: 10px; cursor: pointer; color: var(--text); }
+        .search-icon { position: absolute; right: 10px; cursor: pointer; }
         .header-right { display: flex; align-items: center; gap: 12px; }
         .coin-display { color: var(--gold); font-weight: bold; font-size: 13px; display: none; }
         .container { padding: 0 15px; max-width: 1200px; margin: auto; }
@@ -67,7 +67,7 @@
             <button onclick="logout()" style="color:red; background:none; border:none; cursor:pointer; font-size:12px;">Logout</button>
         </div>
         <button id="loginBtn" class="nav-btn" onclick="openModal('authModal')">Login / Signup</button>
-        <div onclick="showAll()" style="margin-top:15px; cursor:pointer;">Home</div>
+        <div onclick="showAll(); toggleSidebar()" style="margin-top:15px; cursor:pointer;">Home</div>
         <h3 style="font-size:14px; margin:20px 0 10px; color:var(--primary);">BOOKMARKS</h3>
         <div id="bookmarkList" style="font-size:12px;"></div>
         <h3 style="font-size:14px; margin:20px 0 10px; color:var(--primary);">GENRES</h3>
@@ -140,6 +140,17 @@
 
         let allData = [], currentUser = null, userData = null, currentSeries = "";
 
+        // NAVIGATION LOGIC (BACK BUTTON FIX)
+        window.onpopstate = function(event) {
+            closeDetails(false);
+            closeReader(false);
+            closeModal('authModal');
+            closeModal('adminModal');
+            closeModal('secretModal');
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        };
+
         // AUTH & USER DATA
         onAuthStateChanged(auth, async (user) => {
             if(user) {
@@ -159,7 +170,6 @@
             renderGrid(allData.filter(x => x.category !== 'Hentai')); setupSlider(); renderHot(); renderBookmarks();
         }
 
-        // REDEEM KEY CODE
         window.redeemKey = async () => {
             const key = document.getElementById('promoKey').value;
             if(!key) return;
@@ -173,7 +183,6 @@
             } else alert("Invalid Key!");
         };
 
-        // UI RENDERERS
         function renderGrid(data) {
             const series = {}; data.forEach(ch => { if(!series[ch.seriesName]) series[ch.seriesName] = ch; });
             document.getElementById('manga-list').innerHTML = Object.values(series).map(s => `
@@ -193,7 +202,9 @@
                     <span>${(ch.price > 0 && !userData?.unlocked?.includes(ch.id)) ? '🔒 '+ch.price : '▶'}</span>
                 </div>
             `).join('');
-            updateBmBtn(); document.getElementById('detailsPage').style.display = 'block';
+            updateBmBtn(); 
+            document.getElementById('detailsPage').style.display = 'block';
+            history.pushState({view: 'details'}, "Details", "#details");
         };
 
         window.tryRead = async (id, price) => {
@@ -213,9 +224,9 @@
             document.getElementById('readTitle').innerText = ch.seriesName + " - CH " + ch.chapterNum;
             document.getElementById('viewer').innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join('');
             document.getElementById('readPage').style.display = 'block';
+            history.pushState({view: 'reader'}, "Reader", "#reader");
         }
 
-        // OTHER FUNCTIONS (SLIDER, THEME, BOOKMARK)
         function setupSlider() {
             const unique = {}; allData.filter(x => x.category !== 'Hentai').forEach(ch => { if(!unique[ch.seriesName]) unique[ch.seriesName] = ch; });
             const top = Object.values(unique).slice(0, 5);
@@ -244,7 +255,6 @@
         function renderBookmarks() { document.getElementById('bookmarkList').innerHTML = JSON.parse(localStorage.getItem('myBookmarks') || '[]').map(b => `<div onclick="openDetails('${b.title.replace(/'/g,"\\'")}')" style="cursor:pointer; padding:5px; color:gray;">⭐ ${b.title}</div>`).join(''); }
         function updateBmBtn() { const exists = JSON.parse(localStorage.getItem('myBookmarks') || '[]').find(x => x.title === currentSeries); document.getElementById('bmBtn').style.background = exists ? "var(--primary)" : "#333"; }
 
-        // ADMIN UPLOAD
         document.getElementById('uploadBtn').onclick = async () => {
             const btn = document.getElementById('uploadBtn'); btn.innerText = "Wait...";
             const cv = await up(document.getElementById('upCover').files[0]);
@@ -259,7 +269,6 @@
         };
         async function up(f) { const fd = new FormData(); fd.append("file", f); fd.append("upload_preset", UPLOAD_PRESET); const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {method:"POST", body:fd}); return (await r.json()).secure_url; }
 
-        // AUTH HANDLER
         window.handleAuth = async (t) => {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
             try {
@@ -270,18 +279,17 @@
         };
         window.logout = () => signOut(auth).then(()=>location.reload());
 
-        // HELPERS
         window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); };
-        window.openModal = (id) => { closeModal('authModal'); closeModal('adminModal'); document.getElementById(id).style.display='flex'; };
-        window.closeModal = (id) => document.getElementById(id).style.display='none';
-        window.closeDetails = () => document.getElementById('detailsPage').style.display='none';
-        window.closeReader = () => document.getElementById('readPage').style.display='none';
+        window.openModal = (id) => { closeModal('authModal'); closeModal('adminModal'); document.getElementById(id).style.display='flex'; history.pushState({view: 'modal'}, "Modal", "#modal"); };
+        window.closeModal = (id) => { document.getElementById(id).style.display='none'; };
+        window.closeDetails = (push = true) => { document.getElementById('detailsPage').style.display='none'; if(push && window.location.hash === "#details") history.back(); };
+        window.closeReader = (push = true) => { document.getElementById('readPage').style.display='none'; if(push && window.location.hash === "#reader") history.back(); };
         window.openAdmin = () => openModal('adminModal');
         window.openSecretModal = () => openModal('secretModal');
         window.checkSecret = () => { if(document.getElementById('secPass').value === "MZone@99#Strict") { renderGrid(allData.filter(x=>x.category==='Hentai')); closeModal('secretModal'); } };
 
         const us = document.getElementById('upCat'), gl = document.getElementById('genreList');
-        CATS.forEach(c => { us.innerHTML += `<option value="${c}">${c}</option>`; if(c!=='Hentai') gl.innerHTML += `<div style="background:rgba(128,128,128,0.1); padding:10px; text-align:center; border-radius:8px; font-size:11px; cursor:pointer;" onclick="renderGrid(allData.filter(x=>x.category==='${c}'))">${c}</div>`; });
+        CATS.forEach(c => { us.innerHTML += `<option value="${c}">${c}</option>`; if(c!=='Hentai') gl.innerHTML += `<div style="background:rgba(128,128,128,0.1); padding:10px; text-align:center; border-radius:8px; font-size:11px; cursor:pointer;" onclick="renderGrid(allData.filter(x=>x.category==='${c}')); toggleSidebar()">${c}</div>`; });
     </script>
 </body>
 </html>
