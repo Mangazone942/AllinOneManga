@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | Pro Edition</title>
+    <title>M-ZONE | Admin Elite</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -59,7 +59,7 @@
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
     <div class="sidebar" id="sidebar">
         <div id="userProfile" style="display:none; border-bottom:1px solid #222; padding-bottom:15px; margin-bottom:15px;">
-            <p style="font-size:10px; color:gray;">UID: <span id="myUID"></span></p>
+            <p style="font-size:10px; color:gray;">UID: <span id="myUID" style="user-select:all;"></span></p>
             <div style="background:rgba(255,215,0,0.1); padding:10px; border-radius:10px; margin:10px 0;">
                 <input type="text" id="promoKey" placeholder="Promo Code" style="margin:0; padding:5px; font-size:11px;">
                 <button onclick="redeemKey()" style="background:var(--gold); border:none; width:100%; margin-top:5px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px; padding:5px;">REDEEM</button>
@@ -68,8 +68,6 @@
         </div>
         <button id="loginBtn" class="nav-btn" onclick="openModal('authModal')">Login / Signup</button>
         <div onclick="showAll(); toggleSidebar()" style="margin-top:15px; cursor:pointer;">Home</div>
-        <h3 style="font-size:14px; margin:20px 0 10px; color:var(--primary);">BOOKMARKS</h3>
-        <div id="bookmarkList" style="font-size:12px;"></div>
         <h3 style="font-size:14px; margin:20px 0 10px; color:var(--primary);">GENRES</h3>
         <div id="genreList" style="display:grid; grid-template-columns:1fr 1fr; gap:5px;"></div>
         <div onclick="openSecretModal()" style="margin-top:20px; background:var(--secret); color:white; padding:10px; text-align:center; border-radius:8px; cursor:pointer;">🔞 HENTAI</div>
@@ -92,17 +90,26 @@
         <p onclick="closeModal('authModal')" style="text-align:center; margin-top:15px; cursor:pointer; color:gray;">Close</p>
     </div></div>
 
-    <div id="adminModal" class="modal"><div class="modal-content" style="max-height:85vh; overflow-y:auto;">
-        <h3>UPLOAD</h3>
+    <div id="adminModal" class="modal"><div class="modal-content" style="max-height:90vh; overflow-y:auto; max-width:500px;">
+        <h3 style="color:var(--primary);">UPLOAD MANGA</h3>
         <input type="text" id="upName" placeholder="Title">
         <textarea id="upDesc" placeholder="Description"></textarea>
         <input type="number" id="upCh" placeholder="Chapter">
         <select id="upCat"></select>
-        <select id="upPrice"><option value="0">Free</option><option value="10">10 Coins</option></select>
+        <select id="upPrice"><option value="0">Free</option><option value="10">10 Coins</option><option value="20">20 Coins</option><option value="50">50 Coins</option></select>
         <p style="font-size:10px;">Cover:</p><input type="file" id="upCover">
         <p style="font-size:10px;">Images:</p><input type="file" id="upFiles" multiple>
         <button class="nav-btn" id="uploadBtn">PUBLISH</button>
-        <button onclick="closeModal('adminModal')" style="background:none; border:none; width:100%; margin-top:10px; color:gray;">Cancel</button>
+        
+        <hr style="margin:20px 0; border:0.5px solid #333;">
+        
+        <h3 style="color:var(--gold);">KEY GENERATOR</h3>
+        <input type="number" id="keyAmt" placeholder="Coin Amount (e.g. 500)">
+        <input type="number" id="keyQty" placeholder="How many keys?">
+        <button class="nav-btn" onclick="generateKeys()" style="background:var(--gold); color:black;">GENERATE KEYS</button>
+        <div id="keyDisplay" style="margin-top:10px; font-size:11px; background:#000; padding:10px; border-radius:10px; color:var(--gold); display:none; user-select:all;"></div>
+        
+        <button onclick="closeModal('adminModal')" style="background:none; border:none; width:100%; margin-top:20px; color:gray;">Cancel</button>
     </div></div>
 
     <div id="detailsPage" style="display:none; position:fixed; inset:0; background:var(--bg); z-index:3000; overflow-y:auto; padding:80px 20px;">
@@ -110,8 +117,7 @@
             <i class="fa fa-times" onclick="closeDetails()" style="position:fixed; top:20px; right:20px; font-size:24px; cursor:pointer;"></i>
             <div style="display:flex; gap:20px;">
                 <img id="detImg" style="width:120px; height:180px; border-radius:12px; object-fit:cover;">
-                <div><h2 id="detTitle" style="font-family:'Oswald';"></h2><p id="detCat" style="color:var(--primary);"></p>
-                <button id="bmBtn" onclick="toggleBookmark()" style="margin-top:10px; padding:5px 10px; font-size:11px; background:#333; border:none; color:white; border-radius:5px;">Bookmark</button></div>
+                <div><h2 id="detTitle" style="font-family:'Oswald';"></h2><p id="detCat" style="color:var(--primary);"></p></div>
             </div>
             <p id="detDesc" style="margin:20px 0; color:gray; font-size:13px;"></p>
             <div id="chapterList"></div>
@@ -138,23 +144,39 @@
         const CLOUD_NAME = "dqdqg2wac", UPLOAD_PRESET = "ml_default";
         const CATS = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Isekai", "Romance", "Sci-Fi", "Hentai"];
 
-        let allData = [], currentUser = null, userData = null, currentSeries = "";
+        let allData = [], currentUser = null, userData = null;
 
-        // NAVIGATION LOGIC (BACK BUTTON FIX)
-        window.onpopstate = function(event) {
-            closeDetails(false);
-            closeReader(false);
-            closeModal('authModal');
-            closeModal('adminModal');
-            closeModal('secretModal');
+        // BACK BUTTON CONTROL
+        window.onpopstate = () => {
+            document.querySelectorAll('.modal, #detailsPage, #readPage').forEach(el => el.style.display = 'none');
             document.getElementById('sidebar').classList.remove('active');
             document.getElementById('overlay').classList.remove('active');
         };
 
-        // AUTH & USER DATA
+        // ADMIN: KEY GENERATOR
+        window.generateKeys = async () => {
+            const amt = parseInt(document.getElementById('keyAmt').value);
+            const qty = parseInt(document.getElementById('keyQty').value);
+            if(!amt || !qty) return alert("Amount နဲ့ အရေအတွက် အရင်ရိုက်ပါ!");
+
+            let keys = "";
+            for(let i=0; i<qty; i++) {
+                const key = "MZ-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+                await setDoc(doc(db, "promo_codes", key), { amount: amt });
+                keys += key + "\n";
+            }
+            const display = document.getElementById('keyDisplay');
+            display.style.display = "block";
+            display.innerText = "COPIED LIST:\n" + keys;
+            alert(qty + " keys generated and saved!");
+        };
+
+        // AUTH & DATA LOAD
         onAuthStateChanged(auth, async (user) => {
             if(user) {
-                currentUser = user; const s = await getDoc(doc(db, "users", user.uid)); userData = s.data();
+                currentUser = user; 
+                const s = await getDoc(doc(db, "users", user.uid)); 
+                userData = s.data() || {coins: 0, unlocked: []};
                 document.getElementById('userProfile').style.display = 'block';
                 document.getElementById('loginBtn').style.display = 'none';
                 document.getElementById('coinDisp').style.display = 'block';
@@ -167,22 +189,23 @@
         async function loadData() {
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
             allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
-            renderGrid(allData.filter(x => x.category !== 'Hentai')); setupSlider(); renderHot(); renderBookmarks();
+            renderGrid(allData.filter(x => x.category !== 'Hentai')); setupSlider(); renderHot();
         }
 
         window.redeemKey = async () => {
             const key = document.getElementById('promoKey').value;
-            if(!key) return;
+            if(!key || !currentUser) return;
             const keyRef = doc(db, "promo_codes", key);
             const snap = await getDoc(keyRef);
             if(snap.exists()){
                 const amt = snap.data().amount;
-                await updateDoc(doc(db, "users", currentUser.uid), { coins: userData.coins + amt });
+                await updateDoc(doc(db, "users", currentUser.uid), { coins: (userData.coins || 0) + amt });
                 await deleteDoc(keyRef);
-                alert("Success! Received " + amt + " coins."); location.reload();
+                alert("Success! " + amt + " coins added."); location.reload();
             } else alert("Invalid Key!");
         };
 
+        // UI RENDERERS
         function renderGrid(data) {
             const series = {}; data.forEach(ch => { if(!series[ch.seriesName]) series[ch.seriesName] = ch; });
             document.getElementById('manga-list').innerHTML = Object.values(series).map(s => `
@@ -193,7 +216,7 @@
         }
 
         window.openDetails = (title) => {
-            currentSeries = title; const s = allData.filter(x => x.seriesName === title);
+            const s = allData.filter(x => x.seriesName === title);
             document.getElementById('detTitle').innerText = title; document.getElementById('detImg').src = s[0].coverUrl;
             document.getElementById('detDesc').innerText = s[0].seriesDesc || ""; document.getElementById('detCat').innerText = s[0].category;
             document.getElementById('chapterList').innerHTML = s.sort((a,b) => a.chapterNum - b.chapterNum).map(ch => `
@@ -202,9 +225,8 @@
                     <span>${(ch.price > 0 && !userData?.unlocked?.includes(ch.id)) ? '🔒 '+ch.price : '▶'}</span>
                 </div>
             `).join('');
-            updateBmBtn(); 
             document.getElementById('detailsPage').style.display = 'block';
-            history.pushState({view: 'details'}, "Details", "#details");
+            history.pushState({p:'det'}, "", "#details");
         };
 
         window.tryRead = async (id, price) => {
@@ -224,13 +246,13 @@
             document.getElementById('readTitle').innerText = ch.seriesName + " - CH " + ch.chapterNum;
             document.getElementById('viewer').innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join('');
             document.getElementById('readPage').style.display = 'block';
-            history.pushState({view: 'reader'}, "Reader", "#reader");
+            history.pushState({p:'read'}, "", "#reader");
         }
 
         function setupSlider() {
             const unique = {}; allData.filter(x => x.category !== 'Hentai').forEach(ch => { if(!unique[ch.seriesName]) unique[ch.seriesName] = ch; });
             const top = Object.values(unique).slice(0, 5);
-            document.getElementById('slider').innerHTML = top.map((s, i) => `<div class="slide ${i===0?'active':''}" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}"><h2 style="position:absolute; bottom:20px; left:20px; font-family:Oswald;">${s.seriesName}</h2></div>`).join('');
+            document.getElementById('slider').innerHTML = top.map((s, i) => `<div class="slide ${i===0?'active':''}" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}"><h2 style="position:absolute; bottom:20px; left:20px; font-family:Oswald; text-shadow:2px 2px 4px #000;">${s.seriesName}</h2></div>`).join('');
             let cur = 0; setInterval(() => { const s = document.querySelectorAll('.slide'); if(s.length){ s[cur].classList.remove('active'); cur=(cur+1)%s.length; s[cur].classList.add('active'); } }, 4000);
         }
 
@@ -243,29 +265,20 @@
             }).join('');
         }
 
-        window.toggleTheme = () => { document.body.classList.toggle('light-mode'); const isL = document.body.classList.contains('light-mode'); document.getElementById('themeIcon').className = isL ? "fa-solid fa-sun" : "fa-solid fa-moon"; };
-        window.toggleSearch = () => { const i = document.getElementById('searchInput'); i.classList.toggle('active'); if(i.classList.contains('active')) i.focus(); };
-        window.searchManga = () => { const t = document.getElementById('searchInput').value.toLowerCase(); renderGrid(allData.filter(x => x.seriesName.toLowerCase().includes(t) && x.category !== 'Hentai')); };
-        window.toggleBookmark = () => {
-            let bms = JSON.parse(localStorage.getItem('myBookmarks') || '[]');
-            if(bms.find(x => x.title === currentSeries)) bms = bms.filter(x => x.title !== currentSeries);
-            else bms.push({title: currentSeries, cover: allData.find(x=>x.seriesName===currentSeries).coverUrl});
-            localStorage.setItem('myBookmarks', JSON.stringify(bms)); renderBookmarks(); updateBmBtn();
-        };
-        function renderBookmarks() { document.getElementById('bookmarkList').innerHTML = JSON.parse(localStorage.getItem('myBookmarks') || '[]').map(b => `<div onclick="openDetails('${b.title.replace(/'/g,"\\'")}')" style="cursor:pointer; padding:5px; color:gray;">⭐ ${b.title}</div>`).join(''); }
-        function updateBmBtn() { const exists = JSON.parse(localStorage.getItem('myBookmarks') || '[]').find(x => x.title === currentSeries); document.getElementById('bmBtn').style.background = exists ? "var(--primary)" : "#333"; }
-
+        // UPLOAD & AUTH
         document.getElementById('uploadBtn').onclick = async () => {
-            const btn = document.getElementById('uploadBtn'); btn.innerText = "Wait...";
-            const cv = await up(document.getElementById('upCover').files[0]);
-            const files = document.getElementById('upFiles').files; let imgs = [];
-            for(let f of files) imgs.push(await up(f));
-            await addDoc(collection(db, "chapters"), {
-                seriesName: document.getElementById('upName').value, seriesDesc: document.getElementById('upDesc').value,
-                chapterNum: parseInt(document.getElementById('upCh').value), category: document.getElementById('upCat').value,
-                price: parseInt(document.getElementById('upPrice').value), coverUrl: cv, chapterImages: imgs, timestamp: serverTimestamp()
-            });
-            location.reload();
+            const btn = document.getElementById('uploadBtn'); btn.innerText = "Uploading..."; btn.disabled = true;
+            try {
+                const cv = await up(document.getElementById('upCover').files[0]);
+                const files = document.getElementById('upFiles').files; let imgs = [];
+                for(let f of files) imgs.push(await up(f));
+                await addDoc(collection(db, "chapters"), {
+                    seriesName: document.getElementById('upName').value, seriesDesc: document.getElementById('upDesc').value,
+                    chapterNum: parseInt(document.getElementById('upCh').value), category: document.getElementById('upCat').value,
+                    price: parseInt(document.getElementById('upPrice').value), coverUrl: cv, chapterImages: imgs, timestamp: serverTimestamp()
+                });
+                location.reload();
+            } catch (e) { alert(e.message); btn.innerText = "PUBLISH"; btn.disabled = false; }
         };
         async function up(f) { const fd = new FormData(); fd.append("file", f); fd.append("upload_preset", UPLOAD_PRESET); const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {method:"POST", body:fd}); return (await r.json()).secure_url; }
 
@@ -277,14 +290,16 @@
                 location.reload();
             } catch(err) { alert(err.message); }
         };
-        window.logout = () => signOut(auth).then(()=>location.reload());
 
+        // UI HELPERS
+        window.toggleTheme = () => { document.body.classList.toggle('light-mode'); };
         window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); };
-        window.openModal = (id) => { closeModal('authModal'); closeModal('adminModal'); document.getElementById(id).style.display='flex'; history.pushState({view: 'modal'}, "Modal", "#modal"); };
-        window.closeModal = (id) => { document.getElementById(id).style.display='none'; };
-        window.closeDetails = (push = true) => { document.getElementById('detailsPage').style.display='none'; if(push && window.location.hash === "#details") history.back(); };
-        window.closeReader = (push = true) => { document.getElementById('readPage').style.display='none'; if(push && window.location.hash === "#reader") history.back(); };
+        window.openModal = (id) => { document.getElementById(id).style.display='flex'; history.pushState({p:'mod'}, "", "#modal"); };
+        window.closeModal = (id) => { document.getElementById(id).style.display='none'; if(window.location.hash) history.back(); };
+        window.closeDetails = () => { document.getElementById('detailsPage').style.display='none'; if(window.location.hash) history.back(); };
+        window.closeReader = () => { document.getElementById('readPage').style.display='none'; if(window.location.hash) history.back(); };
         window.openAdmin = () => openModal('adminModal');
+        window.logout = () => signOut(auth).then(()=>location.reload());
         window.openSecretModal = () => openModal('secretModal');
         window.checkSecret = () => { if(document.getElementById('secPass').value === "MZone@99#Strict") { renderGrid(allData.filter(x=>x.category==='Hentai')); closeModal('secretModal'); } };
 
