@@ -3,72 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MangaZone - File Upload</title>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>MangaZone - Official Public Site</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #e62117; --bg: #000; --text: #fff; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; }
+        :root { --primary: #e62117; --bg: #0b0b0b; --card: #1a1a1a; --text: #ffffff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding-top: 70px; overflow-x: hidden; }
 
-        header { background: var(--primary); height: 60px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
-        .logo { font-family: 'Oswald'; font-size: 24px; color: white; text-decoration: none; font-weight: bold; }
-        .btn-admin { background: rgba(0,0,0,0.3); color: white; border: 1px solid white; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+        /* NAVBAR */
+        header { background: var(--primary); height: 65px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .logo { font-family: 'Oswald'; font-size: 28px; color: white; text-decoration: none; font-weight: bold; }
+        .search-bar { background: rgba(0,0,0,0.2); border-radius: 20px; padding: 5px 15px; display: flex; width: 35%; }
+        .search-bar input { background: none; border: none; color: white; width: 100%; outline: none; }
 
-        /* --- ADMIN UI (MODAL) --- */
-        #adminModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
-        .modal-content { background: #111; padding: 25px; border-radius: 12px; border: 1px solid var(--primary); width: 100%; max-width: 400px; position: relative; }
-        .modal-content h2 { color: var(--primary); margin-bottom: 20px; font-family: 'Oswald'; text-align: center; }
+        /* BUTTONS */
+        .btn { padding: 8px 15px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .btn-admin { background: #000; color: #fff; margin-right: 5px; }
+        .btn-login { background: #fff; color: var(--primary); }
+
+        /* MANGA GRID */
+        .container { padding: 20px; max-width: 1200px; margin: auto; }
+        .section-title { border-left: 5px solid var(--primary); padding-left: 15px; margin-bottom: 25px; font-family: 'Oswald'; font-size: 22px; }
+        .manga-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
         
-        label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; }
-        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 6px; outline: none; }
-        
-        .upload-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 25px; cursor: pointer; color: #888; }
-        #status { font-size: 12px; text-align: center; margin-top: 10px; color: #f39c12; }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative; border: 1px solid #222; }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .card img { width: 100%; height: 240px; object-fit: cover; }
+        .card-info { padding: 12px; }
+        .card-info h3 { font-size: 14px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .stats { display: flex; justify-content: space-between; font-size: 11px; color: #888; }
 
-        /* --- GRID --- */
-        .container { padding: 20px; }
-        .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: #111; border-radius: 8px; overflow: hidden; border: 1px solid #222; }
-        .card img { width: 100%; height: 200px; object-fit: cover; }
-        .card-info { padding: 10px; font-size: 13px; }
+        /* DELETE BUTTON (Admin Only) */
+        .del-btn { position: absolute; top: 5px; right: 5px; background: rgba(255,0,0,0.8); color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; display: none; z-index: 10; }
+
+        /* MODAL UI */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: #111; padding: 30px; border-radius: 15px; width: 100%; max-width: 380px; border: 1px solid var(--primary); position: relative; }
+        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 8px; outline: none; }
+        .action-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        @media (max-width: 600px) { .search-bar { display: none; } .manga-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">MANGAZONE</div>
-        <button class="btn-admin" onclick="document.getElementById('adminModal').style.display='flex'">ADMIN</button>
+        <a href="#" class="logo">MANGAZONE</a>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search manga..." onkeyup="searchManga()">
+        </div>
+        <div>
+            <button class="btn btn-admin" onclick="openModal('adminModal')">ADMIN</button>
+            <button class="btn btn-login" id="userBtn" onclick="openModal('loginModal')">LOGIN</button>
+        </div>
     </header>
 
-    <div id="adminModal">
+    <div id="adminModal" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="document.getElementById('adminModal').style.display='none'">&times;</span>
-            <h2>UPLOAD CONTENT</h2>
-            
+            <span style="position:absolute; right:15px; top:10px; cursor:pointer;" onclick="closeModal('adminModal')">&times;</span>
+            <h2 style="color:var(--primary); text-align:center; margin-bottom:20px;">ADMIN DASHBOARD</h2>
             <input type="password" id="admPass" placeholder="Admin Password">
             <input type="text" id="admTitle" placeholder="Manga Title">
-            
-            <label>SELECT COVER IMAGE (JPG/PNG)</label>
-            <input type="file" id="coverFile" accept="image/*">
-            
-            <label>SELECT CHAPTER FILE (PDF/ZIP)</label>
-            <input type="file" id="chapterFile">
-            
-            <button class="upload-btn" id="admUploadBtn">UPLOAD TO CLOUD</button>
-            <div id="status"></div>
+            <label style="font-size:11px; color:gray;">SELECT COVER IMAGE</label>
+            <input type="file" id="coverImg" accept="image/*">
+            <button class="action-btn" id="uploadBtn">PUBLISH MANGA</button>
+            <p id="status" style="font-size:12px; text-align:center; margin-top:10px; color:#f39c12;"></p>
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span style="position:absolute; right:15px; top:10px; cursor:pointer;" onclick="closeModal('loginModal')">&times;</span>
+            <h2 style="text-align:center; margin-bottom:20px;">USER LOGIN</h2>
+            <input type="text" id="userName" placeholder="Enter your name">
+            <button class="action-btn" onclick="userLogin()">JOIN COMMUNITY</button>
         </div>
     </div>
 
     <div class="container">
-        <h2 style="border-left: 5px solid var(--primary); padding-left: 10px; margin-bottom: 20px; font-family:'Oswald';">LATEST RELEASES</h2>
-        <div id="manga-list" class="manga-grid"></div>
+        <h2 class="section-title">LATEST RELEASES</h2>
+        <div id="manga-list" class="manga-grid">
+            <p style="text-align:center; grid-column:1/-1;">Loading Database...</p>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { getFirestore, collection, getDocs, query, orderBy, addDoc, deleteDoc, doc, serverTimestamp, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs",
@@ -81,57 +102,76 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
+        window.openModal = (id) => document.getElementById(id).style.display = 'flex';
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+
+        // Load Data & Display
         async function loadManga() {
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
-            document.getElementById('manga-list').innerHTML = snap.docs.map(doc => `
-                <div class="card">
-                    <img src="${doc.data().coverUrl}">
-                    <div class="card-info"><h3>${doc.data().title}</h3></div>
+            const isAdmin = localStorage.getItem('isAdmin') === 'true';
+            const list = document.getElementById('manga-list');
+            list.innerHTML = snap.docs.map(d => `
+                <div class="card" onclick="viewManga('${d.id}')">
+                    <button class="del-btn" style="display:${isAdmin?'block':'none'}" onclick="event.stopPropagation(); deleteManga('${d.id}')">DELETE</button>
+                    <img src="${d.data().coverUrl}">
+                    <div class="card-info">
+                        <h3>${d.data().title}</h3>
+                        <div class="stats"><span>👁️ ${d.data().views || 0}</span><span>⭐ 5.0</span></div>
+                    </div>
                 </div>
             `).join('');
         }
 
-        document.getElementById('admUploadBtn').onclick = async () => {
+        window.viewManga = async (id) => {
+            await updateDoc(doc(db, "chapters", id), { views: increment(1) });
+            loadManga();
+            alert("Manga Page Coming Soon!");
+        };
+
+        window.deleteManga = async (id) => {
+            if(confirm("Are you sure?")) {
+                await deleteDoc(doc(db, "chapters", id));
+                loadManga();
+            }
+        };
+
+        document.getElementById('uploadBtn').onclick = async () => {
             const pass = document.getElementById('admPass').value;
             const title = document.getElementById('admTitle').value;
-            const cover = document.getElementById('coverFile').files[0];
-            const file = document.getElementById('chapterFile').files[0];
+            const file = document.getElementById('coverImg').files[0];
             const status = document.getElementById('status');
 
-            if (pass !== "Admin67820") return alert("Wrong Password!");
-            if (!title || !cover) return alert("Title and Cover are required!");
+            if(pass !== "Admin67820") return alert("Access Denied!");
+            localStorage.setItem('isAdmin', 'true');
 
-            status.innerText = "Uploading to Cloud... Please wait.";
+            status.innerText = "Processing Image...";
+            const fd = new FormData(); fd.append("image", file);
+            const res = await fetch("https://api.imgbb.com/1/upload?key=6440536417531739f7823521d966952d", { method:"POST", body:fd });
+            const imgData = await res.json();
 
-            try {
-                // 1. Upload Cover
-                const coverRef = ref(storage, 'covers/' + Date.now() + "_" + cover.name);
-                await uploadBytes(coverRef, cover);
-                const coverUrl = await getDownloadURL(coverRef);
+            await addDoc(collection(db, "chapters"), {
+                title: title, coverUrl: imgData.data.url, views: 0, timestamp: serverTimestamp()
+            });
+            status.innerText = "✅ Published!";
+            setTimeout(() => { closeModal('adminModal'); loadManga(); }, 1000);
+        };
 
-                // 2. Upload Chapter File (if any)
-                let fileUrl = "";
-                if (file) {
-                    const fileRef = ref(storage, 'files/' + Date.now() + "_" + file.name);
-                    await uploadBytes(fileRef, file);
-                    fileUrl = await getDownloadURL(fileRef);
-                }
+        window.userLogin = () => {
+            const name = document.getElementById('userName').value;
+            if(name) {
+                localStorage.setItem('mUser', name);
+                document.getElementById('userBtn').innerText = name.toUpperCase();
+                closeModal('loginModal');
+            }
+        };
 
-                // 3. Save to Firestore
-                await addDoc(collection(db, "chapters"), {
-                    title: title,
-                    coverUrl: coverUrl,
-                    fileUrl: fileUrl,
-                    views: 0,
-                    timestamp: serverTimestamp()
-                });
-
-                status.innerText = "✅ Success!";
-                setTimeout(() => { document.getElementById('adminModal').style.display='none'; loadManga(); }, 1500);
-            } catch (e) {
-                status.innerText = "❌ Error: " + e.message;
+        window.searchManga = () => {
+            let filter = document.getElementById('search').value.toUpperCase();
+            let cards = document.getElementsByClassName('card');
+            for (let i = 0; i < cards.length; i++) {
+                let h3 = cards[i].querySelector('h3');
+                cards[i].style.display = h3.innerText.toUpperCase().indexOf(filter) > -1 ? "" : "none";
             }
         };
 
