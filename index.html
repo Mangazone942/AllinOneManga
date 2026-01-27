@@ -34,6 +34,9 @@
         input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; background: rgba(128,128,128,0.1); border: 1px solid #333; color: var(--text); border-radius: 10px; }
         .nav-btn { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; }
         #readPage { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; overflow-y: auto; }
+        .bm-btn { background: var(--gold); color: black; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 12px; }
+        .del-list-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,0,0,0.05); padding: 10px; border-radius: 8px; margin-bottom: 5px; border: 1px solid #300; }
+        .del-btn { background: red; color: white; border: none; padding: 5px 10px; border-radius: 5px; font-size: 11px; cursor: pointer; }
         @media (min-width: 768px) { .manga-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } .slider-container { height: 350px; } }
     </style>
 </head>
@@ -68,6 +71,10 @@
 
     <div class="container">
         <div id="homeUI">
+            <div id="bookmarkSection" style="display:none;">
+                <div class="section-title">⭐ BOOKMARKS</div>
+                <div id="bookmark-list" class="manga-grid" style="margin-bottom:30px;"></div>
+            </div>
             <div class="slider-container" id="slider"></div>
             <div class="section-title">🔥 HOT RELEASES</div>
             <div id="hot-list" class="manga-grid"></div>
@@ -85,15 +92,22 @@
     </div></div>
 
     <div id="adminModal" class="modal"><div class="modal-content" style="max-height:90vh; overflow-y:auto; max-width:500px;">
-        <h3>UPLOAD</h3>
+        <h3>UPLOAD MANGA</h3>
         <input type="text" id="upName" placeholder="Title">
         <textarea id="upDesc" placeholder="Description"></textarea>
         <input type="number" id="upCh" placeholder="Chapter">
         <select id="upCat"></select>
         <select id="upPrice"><option value="0">Free</option><option value="10">10 Coins</option></select>
-        <input type="file" id="upCover">
-        <input type="file" id="upFiles" multiple>
-        <button class="nav-btn" id="uploadBtn">PUBLISH</button>
+        <p style="font-size: 11px; color: #888; margin-top: 10px;">Cover Image:</p>
+        <input type="file" id="upCover" accept="image/*">
+        <p style="font-size: 11px; color: #888; margin-top: 10px;">Chapter Pages (Multiple):</p>
+        <input type="file" id="upFiles" multiple accept="image/*">
+        <button class="nav-btn" id="uploadBtn">PUBLISH NOW</button>
+        
+        <hr style="margin:20px 0; border:0.5px solid #333;">
+        <h3>MANAGE CHAPTERS</h3>
+        <div id="adminDeleteList" style="margin-top:10px;"></div>
+
         <hr style="margin:20px 0; border:0.5px solid #333;">
         <h3>KEY GENERATOR</h3>
         <input type="number" id="keyAmt" placeholder="Coin Amount">
@@ -109,7 +123,11 @@
             <i class="fa fa-times" onclick="closeDetails()" style="position:fixed; top:20px; right:20px; font-size:24px; cursor:pointer;"></i>
             <div style="display:flex; gap:20px;">
                 <img id="detImg" style="width:120px; height:180px; border-radius:12px; object-fit:cover;">
-                <div><h2 id="detTitle" style="font-family:'Oswald';"></h2><p id="detCat" style="color:var(--primary);"></p></div>
+                <div>
+                    <h2 id="detTitle" style="font-family:'Oswald';"></h2>
+                    <p id="detCat" style="color:var(--primary);"></p>
+                    <button id="bmBtn" class="bm-btn" onclick="toggleBookmark()">+ Bookmark</button>
+                </div>
             </div>
             <p id="detDesc" style="margin:20px 0; color:gray; font-size:13px;"></p>
             <div id="chapterList"></div>
@@ -131,17 +149,18 @@
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // CONFIGURATION
         const firebaseConfig = { apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs", authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax", storageBucket: "mangabyax.firebasestorage.app", messagingSenderId: "974159756281", appId: "1:974159756281:web:228c23b929f377544b1b28" };
+        const CLOUD_NAME = "dqdqg2wac"; // သင့် Cloudinary Name ကို ဒီနေရာမှာ သေချာစစ်ပါ
+        const UPLOAD_PRESET = "ml_default"; 
+
         const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
         const MASTER_ADMIN_PASS = "MZoneAdmin@2026";
         const CATS = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Isekai", "Romance", "Sci-Fi", "Hentai"];
 
-        let allData = [], currentUser = null, userData = null;
+        let allData = [], currentUser = null, userData = null, currentMangaTitle = "";
 
-        // FIXED PATH RELOAD FOR GITHUB PAGES
-        function reloadPage() {
-            window.location.href = window.location.origin + window.location.pathname;
-        }
+        function reloadPage() { window.location.reload(); }
 
         onAuthStateChanged(auth, async (user) => {
             if(user) {
@@ -160,17 +179,89 @@
         });
 
         async function fetchData() {
-            const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
-            allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
-            renderGenreButtons();
-            renderGrid(allData.filter(x => x.category !== 'Hentai'));
-            setupSlider();
-            renderHot();
+            try {
+                const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
+                allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
+                renderGenreButtons();
+                renderGrid(allData.filter(x => x.category !== 'Hentai'));
+                setupSlider();
+                renderHot();
+                renderBookmarks();
+            } catch(e) { console.error("Fetch Error:", e); }
         }
 
+        // --- UPLOAD LOGIC (FIXED) ---
+        async function uploadFile(file) {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", UPLOAD_PRESET);
+            
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {
+                method: "POST",
+                body: formData
+            });
+            
+            if(!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error.message);
+            }
+            const data = await res.json();
+            return data.secure_url;
+        }
+
+        document.getElementById('uploadBtn').onclick = async () => {
+            const name = document.getElementById('upName').value;
+            const desc = document.getElementById('upDesc').value;
+            const chNum = document.getElementById('upCh').value;
+            const cat = document.getElementById('upCat').value;
+            const price = document.getElementById('upPrice').value;
+            const coverFile = document.getElementById('upCover').files[0];
+            const contentFiles = document.getElementById('upFiles').files;
+
+            if(!name || !chNum || !coverFile || contentFiles.length === 0) {
+                return alert("Please fill all fields and select images!");
+            }
+
+            const btn = document.getElementById('uploadBtn');
+            btn.innerText = "UPLOADING... PLEASE WAIT";
+            btn.disabled = true;
+
+            try {
+                // 1. Upload Cover
+                const coverUrl = await uploadFile(coverFile);
+                
+                // 2. Upload Content Pages
+                let imageUrls = [];
+                for(let file of contentFiles) {
+                    const url = await uploadFile(file);
+                    imageUrls.push(url);
+                }
+
+                // 3. Save to Firebase
+                await addDoc(collection(db, "chapters"), {
+                    seriesName: name,
+                    seriesDesc: desc,
+                    chapterNum: parseFloat(chNum),
+                    category: cat,
+                    price: parseInt(price),
+                    coverUrl: coverUrl,
+                    chapterImages: imageUrls,
+                    timestamp: serverTimestamp()
+                });
+
+                alert("Published Successfully!");
+                reloadPage();
+            } catch(e) {
+                console.error("Upload Error:", e);
+                alert("Upload Failed: " + e.message);
+                btn.innerText = "PUBLISH NOW";
+                btn.disabled = false;
+            }
+        };
+
+        // UI & Other Functions (Keep same as yours)
         function renderGenreButtons() {
-            const gl = document.getElementById('genreList');
-            const sl = document.getElementById('upCat');
+            const gl = document.getElementById('genreList'); const sl = document.getElementById('upCat');
             gl.innerHTML = ""; sl.innerHTML = "";
             CATS.forEach(c => {
                 sl.innerHTML += `<option value="${c}">${c}</option>`;
@@ -182,31 +273,72 @@
             const filtered = allData.filter(x => x.category === genre);
             document.getElementById('homeUI').style.display = 'none';
             document.getElementById('viewTitle').innerText = "GENRE: " + genre.toUpperCase();
-            renderGrid(filtered);
-            toggleSidebar();
+            renderGrid(filtered); toggleSidebar();
         };
 
         function renderGrid(data) {
-            const series = {}; 
-            data.forEach(ch => { if(!series[ch.seriesName]) series[ch.seriesName] = ch; });
+            const series = {}; data.forEach(ch => { if(!series[ch.seriesName]) series[ch.seriesName] = ch; });
             document.getElementById('manga-list').innerHTML = Object.values(series).map(s => `
                 <div class="card" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')">
                     <img src="${s.coverUrl}"><div class="card-info"><h3>${s.seriesName}</h3><small>${s.category}</small></div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
         window.openDetails = (title) => {
+            currentMangaTitle = title;
             const s = allData.filter(x => x.seriesName === title);
             document.getElementById('detTitle').innerText = title; document.getElementById('detImg').src = s[0].coverUrl;
             document.getElementById('detDesc').innerText = s[0].seriesDesc || ""; document.getElementById('detCat').innerText = s[0].category;
+            updateBMBtn();
             document.getElementById('chapterList').innerHTML = s.sort((a,b) => a.chapterNum - b.chapterNum).map(ch => `
                 <div style="background:rgba(128,128,128,0.1); padding:12px; border-radius:8px; margin-bottom:8px; cursor:pointer; display:flex; justify-content:space-between;" onclick="tryRead('${ch.id}', ${ch.price || 0})">
                     <span>Chapter ${ch.chapterNum}</span>
                     <span>${(ch.price > 0 && !userData?.unlocked?.includes(ch.id)) ? '🔒 '+ch.price : '▶'}</span>
-                </div>
-            `).join('');
+                </div>`).join('');
             document.getElementById('detailsPage').style.display = 'block';
+        };
+
+        window.toggleBookmark = () => {
+            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
+            const index = bms.indexOf(currentMangaTitle);
+            if(index > -1) bms.splice(index, 1); else bms.push(currentMangaTitle);
+            localStorage.setItem('mz_bookmarks', JSON.stringify(bms));
+            updateBMBtn(); renderBookmarks();
+        };
+
+        function updateBMBtn() {
+            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
+            const btn = document.getElementById('bmBtn');
+            btn.innerText = bms.includes(currentMangaTitle) ? "✓ Bookmarked" : "+ Bookmark";
+            btn.style.background = bms.includes(currentMangaTitle) ? "#333" : "var(--gold)";
+        }
+
+        function renderBookmarks() {
+            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
+            if(bms.length > 0) {
+                document.getElementById('bookmarkSection').style.display = "block";
+                const bookmarkedData = bms.map(t => allData.find(x => x.seriesName === t)).filter(x => x);
+                document.getElementById('bookmark-list').innerHTML = bookmarkedData.map(s => `
+                    <div class="card" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')">
+                        <img src="${s.coverUrl}"><div class="card-info"><h3>${s.seriesName}</h3></div>
+                    </div>`).join('');
+            } else document.getElementById('bookmarkSection').style.display = "none";
+        }
+
+        window.openAdmin = () => {
+            if(prompt("Admin Password:") === MASTER_ADMIN_PASS) { renderDeleteList(); openModal('adminModal'); }
+        };
+
+        function renderDeleteList() {
+            document.getElementById('adminDeleteList').innerHTML = allData.map(ch => `
+                <div class="del-list-item">
+                    <span>${ch.seriesName} (Ch-${ch.chapterNum})</span>
+                    <button class="del-btn" onclick="deleteChapter('${ch.id}')">DELETE</button>
+                </div>`).join('');
+        }
+
+        window.deleteChapter = async (id) => {
+            if(confirm("Delete this?")) { await deleteDoc(doc(db, "chapters", id)); fetchData(); renderDeleteList(); }
         };
 
         window.tryRead = async (id, price) => {
@@ -232,7 +364,7 @@
             const pass = document.getElementById('adminKeyPass').value;
             const amt = parseInt(document.getElementById('keyAmt').value);
             const qty = parseInt(document.getElementById('keyQty').value);
-            if(pass !== MASTER_ADMIN_PASS) return alert("Wrong Admin Password!");
+            if(pass !== MASTER_ADMIN_PASS) return alert("Wrong!");
             let keys = "";
             for(let i=0; i<qty; i++) {
                 const key = "MZ-" + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -240,21 +372,16 @@
                 keys += key + "\n";
             }
             document.getElementById('keyDisplay').style.display = "block";
-            document.getElementById('keyDisplay').innerText = "KEYS:\n" + keys;
-            alert("Generated!");
+            document.getElementById('keyDisplay').innerText = keys;
         };
 
         window.redeemKey = async () => {
             const key = document.getElementById('promoKey').value;
-            if(!key || !currentUser) return;
-            const keyRef = doc(db, "promo_codes", key);
-            const snap = await getDoc(keyRef);
+            const snap = await getDoc(doc(db, "promo_codes", key));
             if(snap.exists()){
-                const amt = snap.data().amount;
-                await updateDoc(doc(db, "users", currentUser.uid), { coins: (userData.coins || 0) + amt });
-                await deleteDoc(keyRef);
-                reloadPage();
-            } else alert("Invalid Key!");
+                await updateDoc(doc(db, "users", currentUser.uid), { coins: (userData.coins || 0) + snap.data().amount });
+                await deleteDoc(doc(db, "promo_codes", key)); reloadPage();
+            } else alert("Invalid!");
         };
 
         window.handleAuth = async (t) => {
@@ -272,7 +399,6 @@
         window.closeModal = (id) => document.getElementById(id).style.display='none';
         window.closeDetails = () => document.getElementById('detailsPage').style.display='none';
         window.closeReader = () => document.getElementById('readPage').style.display='none';
-        window.openAdmin = () => openModal('adminModal');
         window.logout = () => signOut(auth).then(()=>reloadPage());
         window.openSecretModal = () => openModal('secretModal');
         window.checkSecret = () => { if(document.getElementById('secPass').value === "MZone@99#Strict") { renderGrid(allData.filter(x=>x.category==='Hentai')); closeModal('secretModal'); } };
