@@ -16,6 +16,12 @@
         .header-right { display: flex; align-items: center; gap: 12px; }
         .coin-display { color: var(--gold); font-weight: bold; font-size: 13px; display: none; }
         .container { padding: 0 15px; max-width: 1200px; margin: auto; }
+        
+        /* Search Bar Style */
+        .search-container { margin: 15px 0; position: relative; }
+        .search-bar { width: 100%; padding: 12px 40px 12px 15px; background: var(--card); border: 1px solid rgba(128,128,128,0.2); border-radius: 10px; color: var(--text); outline: none; }
+        .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: gray; }
+
         .slider-container { width: 100%; height: 230px; position: relative; overflow: hidden; margin-bottom: 25px; border-radius: 15px; }
         .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: 0.8s; cursor: pointer; }
         .slide.active { opacity: 1; }
@@ -70,6 +76,11 @@
     </div>
 
     <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search Manga..." oninput="searchManga()">
+            <i class="fa fa-search search-icon"></i>
+        </div>
+
         <div id="homeUI">
             <div id="bookmarkSection" style="display:none;">
                 <div class="section-title">⭐ BOOKMARKS</div>
@@ -107,14 +118,6 @@
         <hr style="margin:20px 0; border:0.5px solid #333;">
         <h3>MANAGE CHAPTERS</h3>
         <div id="adminDeleteList" style="margin-top:10px;"></div>
-
-        <hr style="margin:20px 0; border:0.5px solid #333;">
-        <h3>KEY GENERATOR</h3>
-        <input type="number" id="keyAmt" placeholder="Coin Amount">
-        <input type="number" id="keyQty" placeholder="How many keys?">
-        <input type="password" id="adminKeyPass" placeholder="Admin Password">
-        <button class="nav-btn" onclick="generateKeys()" style="background:var(--gold); color:black;">GENERATE</button>
-        <div id="keyDisplay" style="margin-top:10px; font-size:11px; background:#000; padding:10px; border-radius:10px; color:var(--gold); display:none;"></div>
         <button onclick="closeModal('adminModal')" style="background:none; border:none; width:100%; margin-top:15px; color:gray;">Cancel</button>
     </div></div>
 
@@ -149,10 +152,9 @@
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // CONFIGURATION
         const firebaseConfig = { apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs", authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax", storageBucket: "mangabyax.firebasestorage.app", messagingSenderId: "974159756281", appId: "1:974159756281:web:228c23b929f377544b1b28" };
-        const CLOUD_NAME = "dqdqg2wac"; // သင့် Cloudinary Name ကို ဒီနေရာမှာ သေချာစစ်ပါ
-        const UPLOAD_PRESET = "ml_default"; 
+        const CLOUD_NAME = "dqdqg2wac";
+        const UPLOAD_PRESET = "ml_default";
 
         const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
         const MASTER_ADMIN_PASS = "MZoneAdmin@2026";
@@ -164,8 +166,8 @@
 
         onAuthStateChanged(auth, async (user) => {
             if(user) {
-                currentUser = user; 
-                const s = await getDoc(doc(db, "users", user.uid)); 
+                currentUser = user;
+                const s = await getDoc(doc(db, "users", user.uid));
                 userData = s.data();
                 if(userData) {
                     document.getElementById('userProfile').style.display = 'block';
@@ -190,21 +192,13 @@
             } catch(e) { console.error("Fetch Error:", e); }
         }
 
-        // --- UPLOAD LOGIC (FIXED) ---
+        // --- Fast Parallel Upload Logic ---
         async function uploadFile(file) {
             const formData = new FormData();
             formData.append("file", file);
             formData.append("upload_preset", UPLOAD_PRESET);
-            
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {
-                method: "POST",
-                body: formData
-            });
-            
-            if(!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error.message);
-            }
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: "POST", body: formData });
+            if(!res.ok) throw new Error("Upload failed");
             const data = await res.json();
             return data.secure_url;
         }
@@ -216,50 +210,49 @@
             const cat = document.getElementById('upCat').value;
             const price = document.getElementById('upPrice').value;
             const coverFile = document.getElementById('upCover').files[0];
-            const contentFiles = document.getElementById('upFiles').files;
+            const contentFiles = Array.from(document.getElementById('upFiles').files);
 
-            if(!name || !chNum || !coverFile || contentFiles.length === 0) {
-                return alert("Please fill all fields and select images!");
-            }
+            if(!name || !chNum || !coverFile || contentFiles.length === 0) return alert("Fill all fields!");
 
             const btn = document.getElementById('uploadBtn');
-            btn.innerText = "UPLOADING... PLEASE WAIT";
-            btn.disabled = true;
+            btn.innerText = "UPLOADING FAST..."; btn.disabled = true;
 
             try {
-                // 1. Upload Cover
-                const coverUrl = await uploadFile(coverFile);
-                
-                // 2. Upload Content Pages
-                let imageUrls = [];
-                for(let file of contentFiles) {
-                    const url = await uploadFile(file);
-                    imageUrls.push(url);
-                }
+                // Parallel Uploading
+                const [coverUrl, imageUrls] = await Promise.all([
+                    uploadFile(coverFile),
+                    Promise.all(contentFiles.map(file => uploadFile(file)))
+                ]);
 
-                // 3. Save to Firebase
                 await addDoc(collection(db, "chapters"), {
-                    seriesName: name,
-                    seriesDesc: desc,
-                    chapterNum: parseFloat(chNum),
-                    category: cat,
-                    price: parseInt(price),
-                    coverUrl: coverUrl,
-                    chapterImages: imageUrls,
-                    timestamp: serverTimestamp()
+                    seriesName: name, seriesDesc: desc, chapterNum: parseFloat(chNum),
+                    category: cat, price: parseInt(price), coverUrl: coverUrl,
+                    chapterImages: imageUrls, timestamp: serverTimestamp()
                 });
 
-                alert("Published Successfully!");
-                reloadPage();
-            } catch(e) {
-                console.error("Upload Error:", e);
-                alert("Upload Failed: " + e.message);
-                btn.innerText = "PUBLISH NOW";
-                btn.disabled = false;
+                alert("Published!"); reloadPage();
+            } catch(e) { alert("Error: " + e.message); btn.innerText = "PUBLISH NOW"; btn.disabled = false; }
+        };
+
+        // --- Search Function ---
+        window.searchManga = () => {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const homeUI = document.getElementById('homeUI');
+            const viewTitle = document.getElementById('viewTitle');
+            
+            if(query.length > 0) {
+                homeUI.style.display = 'none';
+                viewTitle.innerText = "SEARCH RESULTS";
+                const filtered = allData.filter(m => m.seriesName.toLowerCase().includes(query));
+                renderGrid(filtered);
+            } else {
+                homeUI.style.display = 'block';
+                viewTitle.innerText = "LATEST UPDATES";
+                renderGrid(allData.filter(x => x.category !== 'Hentai'));
             }
         };
 
-        // UI & Other Functions (Keep same as yours)
+        // UI Helpers
         function renderGenreButtons() {
             const gl = document.getElementById('genreList'); const sl = document.getElementById('upCat');
             gl.innerHTML = ""; sl.innerHTML = "";
@@ -310,7 +303,6 @@
             let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
             const btn = document.getElementById('bmBtn');
             btn.innerText = bms.includes(currentMangaTitle) ? "✓ Bookmarked" : "+ Bookmark";
-            btn.style.background = bms.includes(currentMangaTitle) ? "#333" : "var(--gold)";
         }
 
         function renderBookmarks() {
@@ -359,21 +351,6 @@
             document.getElementById('viewer').innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join('');
             document.getElementById('readPage').style.display = 'block';
         }
-
-        window.generateKeys = async () => {
-            const pass = document.getElementById('adminKeyPass').value;
-            const amt = parseInt(document.getElementById('keyAmt').value);
-            const qty = parseInt(document.getElementById('keyQty').value);
-            if(pass !== MASTER_ADMIN_PASS) return alert("Wrong!");
-            let keys = "";
-            for(let i=0; i<qty; i++) {
-                const key = "MZ-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-                await setDoc(doc(db, "promo_codes", key), { amount: amt });
-                keys += key + "\n";
-            }
-            document.getElementById('keyDisplay').style.display = "block";
-            document.getElementById('keyDisplay').innerText = keys;
-        };
 
         window.redeemKey = async () => {
             const key = document.getElementById('promoKey').value;
