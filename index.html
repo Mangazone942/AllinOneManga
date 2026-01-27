@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MangaZone - Pro Series</title>
+    <title>MangaZone - Full Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -12,63 +12,85 @@
         body { background: var(--bg); color: var(--text); padding-top: 70px; }
 
         header { background: #000; height: 65px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 2px solid var(--primary); }
-        .logo { font-family: 'Oswald'; font-size: 26px; color: var(--primary); text-decoration: none; }
+        .logo { font-family: 'Oswald'; font-size: 26px; color: var(--primary); text-decoration: none; cursor: pointer; }
         
+        /* SIDEBAR (MENU) */
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #111; z-index: 2001; transition: 0.4s; padding: 25px; overflow-y: auto; border-left: 2px solid var(--primary); }
+        .sidebar.active { right: 0; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; }
+        .overlay.active { display: block; }
+        .side-link { display: block; padding: 12px; border-bottom: 1px solid #222; color: #ccc; text-decoration: none; cursor: pointer; font-size: 14px; }
+        .side-link:hover { color: var(--primary); background: #1a1a1a; }
+
+        /* GRID & CARDS */
         .container { padding: 15px; max-width: 1200px; margin: auto; }
         .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; cursor: pointer; transition: 0.3s; }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; cursor: pointer; position: relative; transition: 0.3s; }
         .card img { width: 100%; height: 230px; object-fit: cover; }
         .card-info { padding: 10px; text-align: center; }
+        .fav-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 5px; border-radius: 50%; color: #fff; z-index: 5; cursor: pointer; }
+        .fav-badge.active { color: var(--primary); }
 
-        /* DETAILS PAGE UI FIX */
-        #detailsPage { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 2000; overflow-y: auto; padding-top: 20px; }
-        .details-container { padding: 20px; max-width: 800px; margin: auto; }
-        .details-header { display: flex; gap: 20px; margin-top: 50px; }
-        .details-header img { width: 130px; height: 190px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); box-shadow: 0 0 15px var(--primary); }
-        .desc-box { background: #1a1a1a; padding: 15px; border-radius: 10px; margin: 20px 0; font-size: 13px; color: #bbb; line-height: 1.6; border: 1px solid #333; }
-        
-        .chapter-list { display: grid; gap: 8px; margin-top: 20px; }
-        .chapter-item { background: #1a1a1a; padding: 15px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); transition: 0.2s; }
-        .chapter-item:hover { background: #252525; transform: translateX(5px); }
+        /* DETAILS PAGE */
+        #detailsPage { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; overflow-y: auto; padding: 20px; padding-top: 80px; }
+        .details-container { max-width: 800px; margin: auto; }
+        .details-header { display: flex; gap: 20px; margin-bottom: 20px; }
+        .details-header img { width: 120px; height: 180px; border-radius: 12px; object-fit: cover; border: 2px solid var(--primary); }
+        .desc-box { background: #1a1a1a; padding: 15px; border-radius: 10px; margin: 20px 0; color: #ccc; font-size: 13px; line-height: 1.6; border: 1px solid #333; }
+        .chapter-list { display: grid; gap: 10px; margin-top: 15px; }
+        .chapter-item { background: #1a1a1a; padding: 15px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; border: 1px solid #333; }
 
-        /* READER & ADMIN */
-        #readPage { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; overflow-y: auto; }
-        .read-nav { background: #111; height: 60px; position: fixed; top: 0; width: 100%; display: flex; align-items: center; padding: 0 15px; z-index: 3001; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
+        /* READER & MODALS */
+        #readPage { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; overflow-y: auto; }
+        .read-nav { background: #111; height: 60px; position: fixed; top: 0; width: 100%; display: flex; align-items: center; padding: 0 15px; z-index: 4001; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: #111; padding: 25px; border-radius: 15px; width: 100%; max-width: 400px; border: 1px solid var(--primary); max-height: 90vh; overflow-y: auto; }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; outline: none; }
-        .btn-pub { width: 100%; padding: 14px; background: var(--primary); border: none; color: white; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; background: #1a1a1a; border: 1px solid #333; color: white; border-radius: 8px; }
 
-        @media (min-width: 768px) { .manga-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
+        @media (min-width: 768px) { .manga-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="#" class="logo" onclick="location.reload()">M-ZONE</a>
-        <i class="fa fa-plus-square" style="font-size:24px; cursor:pointer;" onclick="openModal('adminModal')"></i>
+        <a href="#" class="logo" onclick="showAll()">M-ZONE</a>
+        <i class="fa fa-bars" style="font-size:24px; cursor:pointer;" onclick="toggleSidebar()"></i>
     </header>
 
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+    <div class="sidebar" id="sidebar">
+        <h2 style="font-family:'Oswald'; color:var(--primary); margin-bottom:15px;">MENU</h2>
+        <div class="side-link" onclick="showAll()"><i class="fa fa-home"></i> Home</div>
+        <div class="side-link" onclick="showFavs()"><i class="fa fa-heart"></i> Favorites</div>
+        <div class="side-link" onclick="showHistory()"><i class="fa fa-history"></i> History</div>
+        
+        <h3 style="font-size:14px; margin:20px 0 10px; color:var(--primary);">CATEGORIES</h3>
+        <div class="side-link" onclick="filterCat('Action')">Action</div>
+        <div class="side-link" onclick="filterCat('Romance')">Romance</div>
+        <div class="side-link" onclick="filterCat('Fantasy')">Fantasy</div>
+        
+        <div class="side-link" style="margin-top:30px; color:#ffcc00; font-weight:bold;" onclick="openAdmin()">
+            <i class="fa fa-lock"></i> Admin Panel
+        </div>
+    </div>
+
     <div class="container">
-        <h2 style="margin-bottom:20px; font-family:'Oswald'; letter-spacing: 1px;">BROWSE SERIES</h2>
+        <h2 id="viewTitle" style="margin-bottom:20px; font-family:'Oswald'; border-left:4px solid var(--primary); padding-left:10px;">LATEST UPDATES</h2>
         <div id="manga-list" class="manga-grid"></div>
     </div>
 
     <div id="detailsPage">
         <div class="details-container">
-            <i class="fa fa-chevron-left" onclick="closeDetails()" style="font-size: 24px; cursor: pointer;"></i>
+            <i class="fa fa-arrow-left" onclick="closeDetails()" style="font-size: 24px; cursor: pointer; margin-bottom: 20px;"></i>
             <div class="details-header">
                 <img id="detImg" src="">
-                <div style="flex: 1;">
-                    <h2 id="detTitle" style="font-family: 'Oswald'; font-size: 24px;"></h2>
-                    <span style="background: var(--primary); font-size: 10px; padding: 2px 8px; border-radius: 10px;">MANGA</span>
+                <div>
+                    <h2 id="detTitle" style="font-family: 'Oswald';"></h2>
+                    <p id="detCount" style="color: var(--primary); font-size: 14px;"></p>
                 </div>
             </div>
-            
-            <h3 style="margin-top: 25px; font-size: 16px;"><i class="fa fa-book-open"></i> Description</h3>
             <div id="detDesc" class="desc-box"></div>
-
-            <h3 style="margin-top: 25px; font-size: 16px;"><i class="fa fa-list"></i> Chapters</h3>
+            <h3>Chapters</h3>
             <div id="chapterListContainer" class="chapter-list"></div>
         </div>
     </div>
@@ -76,7 +98,7 @@
     <div id="readPage">
         <div class="read-nav">
             <i class="fa fa-times" onclick="closeReader()" style="cursor:pointer; font-size:22px; color: var(--primary);"></i>
-            <span id="readTitle" style="margin-left:20px; font-size: 14px;"></span>
+            <span id="readTitle" style="margin-left:20px;"></span>
         </div>
         <div id="chapterViewer" style="margin-top:60px;"></div>
         <iframe id="pdfFrame" style="width:100%; height:calc(100vh - 60px); margin-top:60px; border:none; display:none;"></iframe>
@@ -84,18 +106,23 @@
 
     <div id="adminModal" class="modal">
         <div class="modal-content">
-            <h3 style="text-align:center; color:var(--primary); font-family: 'Oswald';">ADMIN UPLOAD</h3>
+            <h3 style="text-align:center; color:var(--primary);">ADMIN UPLOAD</h3>
             <input type="password" id="admPass" placeholder="Admin Password">
-            <input type="text" id="seriesName" placeholder="Series Name (e.g. Naruto)">
-            <textarea id="seriesDesc" rows="3" placeholder="Story Description (Short summary)"></textarea>
-            <input type="number" id="chapterNum" placeholder="Chapter Number (1, 2, 3...)">
-            <label style="font-size: 11px; color: gray;">Series Cover Image</label>
+            <input type="text" id="seriesName" placeholder="Series Name">
+            <textarea id="seriesDesc" placeholder="Description (Story)"></textarea>
+            <input type="number" id="chapterNum" placeholder="Chapter No (1, 2, 3...)">
+            <select id="newCat">
+                <option value="Action">Action</option>
+                <option value="Romance">Romance</option>
+                <option value="Fantasy">Fantasy</option>
+            </select>
+            <label style="font-size:11px; color:gray;">Cover Image</label>
             <input type="file" id="newCover" accept="image/*">
-            <label style="font-size: 11px; color: gray;">Content (Images/PDF)</label>
+            <label style="font-size:11px; color:gray;">Content (Images/PDF)</label>
             <input type="file" id="chapterFiles" accept="image/*, application/pdf" multiple>
-            <button class="btn-pub" id="uploadBtn">PUBLISH NOW</button>
+            <button id="uploadBtn" style="width:100%; background:var(--primary); color:white; padding:12px; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">PUBLISH</button>
             <p id="status" style="font-size:12px; text-align:center; margin-top:10px; color:orange;"></p>
-            <button onclick="closeModal('adminModal')" style="width:100%; background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Dismiss</button>
+            <button onclick="closeModal('adminModal')" style="width:100%; background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Cancel</button>
         </div>
     </div>
 
@@ -119,55 +146,68 @@
 
         let allChapters = [];
 
-        window.openModal = (id) => document.getElementById(id).style.display = 'flex';
+        window.toggleSidebar = () => {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        };
+
+        window.openAdmin = () => { toggleSidebar(); document.getElementById('adminModal').style.display = 'flex'; };
         window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
         async function loadData() {
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("chapterNum", "asc")));
             allChapters = snap.docs.map(d => ({id: d.id, ...d.data()}));
-            renderSeries();
+            renderSeries(allChapters);
         }
 
-        function renderSeries() {
+        function renderSeries(data) {
             const seriesMap = {};
-            allChapters.forEach(ch => {
-                if (!seriesMap[ch.seriesName]) {
-                    seriesMap[ch.seriesName] = { title: ch.seriesName, cover: ch.coverUrl, desc: ch.seriesDesc || "No description available.", chapters: [] };
+            data.forEach(ch => {
+                const name = ch.seriesName || ch.title;
+                if (!seriesMap[name]) {
+                    seriesMap[name] = { title: name, cover: ch.coverUrl, desc: ch.seriesDesc || "", cat: ch.category || "Action", chapters: [] };
                 }
-                seriesMap[ch.seriesName].chapters.push(ch);
+                seriesMap[name].chapters.push(ch);
             });
 
+            const favs = JSON.parse(localStorage.getItem('favs') || '[]');
             document.getElementById('manga-list').innerHTML = Object.values(seriesMap).map(s => `
                 <div class="card" onclick="openDetails('${s.title.replace(/'/g, "\\'")}')">
+                    <i class="fa fa-heart fav-badge ${favs.includes(s.title) ? 'active' : ''}" onclick="event.stopPropagation(); toggleFav('${s.title}')"></i>
                     <img src="${s.cover}">
-                    <div class="card-info"><h3>${s.title}</h3><small style="color:gray;">${s.chapters.length} Chapters</small></div>
+                    <div class="card-info"><h3>${s.title}</h3><small>${s.chapters.length} Chapters</small></div>
                 </div>
             `).join('');
         }
 
         window.openDetails = (title) => {
-            const seriesChaps = allChapters.filter(ch => ch.seriesName === title);
+            const series = allChapters.filter(ch => (ch.seriesName || ch.title) === title);
             document.getElementById('detTitle').innerText = title;
-            document.getElementById('detImg').src = seriesChaps[0].coverUrl;
-            document.getElementById('detDesc').innerText = seriesChaps[0].seriesDesc || "This manga has no description yet.";
+            document.getElementById('detImg').src = series[0].coverUrl;
+            document.getElementById('detDesc').innerText = series[0].seriesDesc || "No description.";
+            document.getElementById('detCount').innerText = series.length + " Chapters";
             
-            document.getElementById('chapterListContainer').innerHTML = seriesChaps.map(ch => `
+            document.getElementById('chapterListContainer').innerHTML = series.map(ch => `
                 <div class="chapter-item" onclick="startReading('${ch.id}')">
-                    <span>Chapter ${ch.chapterNum}</span>
-                    <i class="fa fa-play" style="font-size: 12px;"></i>
+                    <span>Chapter ${ch.chapterNum || 1}</span>
+                    <i class="fa fa-play-circle" style="color:var(--primary)"></i>
                 </div>
             `).join('');
             document.getElementById('detailsPage').style.display = 'block';
+            
+            // Save to History
+            let hist = JSON.parse(localStorage.getItem('history') || '[]');
+            hist = [title, ...hist.filter(x => x !== title)].slice(0, 10);
+            localStorage.setItem('history', JSON.stringify(hist));
         };
 
         window.closeDetails = () => document.getElementById('detailsPage').style.display = 'none';
 
         window.startReading = (id) => {
             const ch = allChapters.find(x => x.id === id);
-            document.getElementById('readTitle').innerText = `${ch.seriesName} | Chapter ${ch.chapterNum}`;
+            document.getElementById('readTitle').innerText = (ch.seriesName || ch.title) + " - CH " + (ch.chapterNum || 1);
             const viewer = document.getElementById('chapterViewer');
             const pdf = document.getElementById('pdfFrame');
-
             if (ch.format === 'pdf') {
                 viewer.style.display = 'none'; pdf.style.display = 'block';
                 pdf.src = `https://docs.google.com/viewer?url=${ch.pdfUrl}&embedded=true`;
@@ -178,37 +218,60 @@
             document.getElementById('readPage').style.display = 'block';
         };
 
-        window.closeReader = () => {
-            document.getElementById('readPage').style.display = 'none';
-            document.getElementById('pdfFrame').src = "";
+        window.closeReader = () => { document.getElementById('readPage').style.display = 'none'; document.getElementById('pdfFrame').src = ""; };
+
+        window.toggleFav = (title) => {
+            let favs = JSON.parse(localStorage.getItem('favs') || '[]');
+            favs = favs.includes(title) ? favs.filter(x => x !== title) : [...favs, title];
+            localStorage.setItem('favs', JSON.stringify(favs));
+            renderSeries(allChapters);
         };
+
+        window.filterCat = (cat) => {
+            const filtered = allChapters.filter(ch => ch.category === cat);
+            document.getElementById('viewTitle').innerText = cat + " SERIES";
+            renderSeries(filtered); toggleSidebar();
+        };
+
+        window.showFavs = () => {
+            const favs = JSON.parse(localStorage.getItem('favs') || '[]');
+            const filtered = allChapters.filter(ch => favs.includes(ch.seriesName || ch.title));
+            document.getElementById('viewTitle').innerText = "MY FAVORITES";
+            renderSeries(filtered); toggleSidebar();
+        };
+
+        window.showHistory = () => {
+            const hist = JSON.parse(localStorage.getItem('history') || '[]');
+            const filtered = allChapters.filter(ch => hist.includes(ch.seriesName || ch.title));
+            document.getElementById('viewTitle').innerText = "RECENTLY READ";
+            renderSeries(filtered); toggleSidebar();
+        };
+
+        window.showAll = () => { document.getElementById('viewTitle').innerText = "LATEST UPDATES"; renderSeries(allChapters); if(document.getElementById('sidebar').classList.contains('active')) toggleSidebar(); };
 
         document.getElementById('uploadBtn').onclick = async () => {
             const pass = document.getElementById('admPass').value;
-            const seriesName = document.getElementById('seriesName').value;
-            const seriesDesc = document.getElementById('seriesDesc').value;
-            const chapterNum = parseInt(document.getElementById('chapterNum').value);
-            const status = document.getElementById('status');
-
-            if(pass !== "Admin67820") return alert("Wrong Password!");
-            status.innerText = "⏳ Uploading to Cloud...";
-
+            if(pass !== "Admin67820") return alert("Wrong!");
+            document.getElementById('status').innerText = "Uploading...";
             try {
                 const cover = await uploadToCloudinary(document.getElementById('newCover').files[0]);
                 const files = document.getElementById('chapterFiles').files;
-                let payload = { seriesName, seriesDesc, chapterNum, coverUrl: cover, timestamp: serverTimestamp() };
-
+                let payload = { 
+                    seriesName: document.getElementById('seriesName').value,
+                    seriesDesc: document.getElementById('seriesDesc').value,
+                    chapterNum: parseInt(document.getElementById('chapterNum').value),
+                    category: document.getElementById('newCat').value,
+                    coverUrl: cover, timestamp: serverTimestamp() 
+                };
                 if (files[0].type === "application/pdf") {
-                    payload.pdfUrl = await uploadToCloudinary(files[0]);
-                    payload.format = 'pdf';
+                    payload.pdfUrl = await uploadToCloudinary(files[0]); payload.format = 'pdf';
                 } else {
-                    let urls = [];
-                    for(let f of files) { urls.push(await uploadToCloudinary(f)); }
+                    let urls = []; for(let f of files) { urls.push(await uploadToCloudinary(f)); }
                     payload.chapterImages = urls; payload.format = 'images';
                 }
                 await addDoc(collection(db, "chapters"), payload);
-                status.innerText = "✅ Published!"; loadData(); closeModal('adminModal');
-            } catch (e) { status.innerText = "❌ Upload Error!"; }
+                document.getElementById('status').innerText = "✅ Success!"; loadData(); closeModal('adminModal');
+            } catch (e) { document.getElementById('status').innerText = "❌ Error!"; }
         };
 
         async function uploadToCloudinary(file) {
