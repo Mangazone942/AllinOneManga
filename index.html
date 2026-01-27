@@ -3,93 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MangaZone - Official Public Site</title>
+    <title>MangaZone - Advanced Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #e62117; --bg: #0b0b0b; --card: #1a1a1a; --text: #ffffff; }
+        :root { --primary: #e62117; --bg: #0b0b0b; --card: #1a1a1a; --text: #fff; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background: var(--bg); color: var(--text); padding-top: 70px; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--text); padding-top: 70px; }
 
-        /* NAVBAR */
-        header { background: var(--primary); height: 65px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
-        .logo { font-family: 'Oswald'; font-size: 28px; color: white; text-decoration: none; font-weight: bold; }
-        .search-bar { background: rgba(0,0,0,0.2); border-radius: 20px; padding: 5px 15px; display: flex; width: 35%; }
-        .search-bar input { background: none; border: none; color: white; width: 100%; outline: none; }
-
-        /* BUTTONS */
-        .btn { padding: 8px 15px; border-radius: 5px; border: none; cursor: pointer; font-weight: bold; font-size: 12px; }
-        .btn-admin { background: #000; color: #fff; margin-right: 5px; }
-        .btn-login { background: #fff; color: var(--primary); }
-
-        /* MANGA GRID */
-        .container { padding: 20px; max-width: 1200px; margin: auto; }
-        .section-title { border-left: 5px solid var(--primary); padding-left: 15px; margin-bottom: 25px; font-family: 'Oswald'; font-size: 22px; }
-        .manga-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+        header { background: var(--primary); height: 65px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
+        .logo { font-family: 'Oswald'; font-size: 24px; color: white; text-decoration: none; font-weight: bold; }
         
-        .card { background: var(--card); border-radius: 12px; overflow: hidden; transition: 0.3s; position: relative; border: 1px solid #222; }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .card img { width: 100%; height: 240px; object-fit: cover; }
-        .card-info { padding: 12px; }
-        .card-info h3 { font-size: 14px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .stats { display: flex; justify-content: space-between; font-size: 11px; color: #888; }
+        .container { padding: 20px; max-width: 1200px; margin: auto; }
+        .section-header { border-left: 5px solid var(--primary); padding-left: 15px; margin: 25px 0 15px; font-family: 'Oswald'; }
+        
+        /* MANGA GRID */
+        .manga-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; position: relative; cursor: pointer; border: 1px solid #222; }
+        .card img { width: 100%; height: 220px; object-fit: cover; }
+        .card-info { padding: 10px; font-size: 13px; }
+        .fav-icon { position: absolute; top: 10px; right: 10px; color: #ccc; font-size: 18px; z-index: 5; }
+        .fav-icon.active { color: var(--primary); }
 
-        /* DELETE BUTTON (Admin Only) */
-        .del-btn { position: absolute; top: 5px; right: 5px; background: rgba(255,0,0,0.8); color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 10px; cursor: pointer; display: none; z-index: 10; }
+        /* CONTINUE READING BAR */
+        #continueBox { background: #1a1a1a; border: 1px dashed var(--primary); padding: 15px; border-radius: 10px; margin-bottom: 20px; display: none; align-items: center; gap: 15px; }
 
-        /* MODAL UI */
+        /* READER PAGE */
+        #readPage { display: none; position: fixed; inset: 0; background: #000; z-index: 3000; overflow-y: auto; }
+        .read-header { background: #111; height: 55px; position: fixed; top: 0; width: 100%; display: flex; align-items: center; padding: 0 15px; gap: 15px; z-index: 3001; }
+        #chapterViewer img { width: 100%; display: block; }
+
+        /* MODAL */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: #111; padding: 30px; border-radius: 15px; width: 100%; max-width: 380px; border: 1px solid var(--primary); position: relative; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 8px; outline: none; }
-        .action-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .modal-content { background: #111; padding: 25px; border-radius: 15px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; border: 1px solid var(--primary); }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; background: #222; border: 1px solid #333; color: white; border-radius: 5px; }
+        .btn-upload { width: 100%; padding: 12px; background: var(--primary); border: none; color: white; font-weight: bold; border-radius: 5px; cursor: pointer; }
 
-        @media (max-width: 600px) { .search-bar { display: none; } .manga-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+        @media (max-width: 600px) { .manga-grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
 
     <header>
-        <a href="#" class="logo">MANGAZONE</a>
-        <div class="search-bar">
-            <input type="text" id="search" placeholder="Search manga..." onkeyup="searchManga()">
-        </div>
-        <div>
-            <button class="btn btn-admin" onclick="openModal('adminModal')">ADMIN</button>
-            <button class="btn btn-login" id="userBtn" onclick="openModal('loginModal')">LOGIN</button>
+        <a href="#" class="logo">M-ZONE</a>
+        <div style="display:flex; gap:15px; align-items:center;">
+            <i class="fa fa-heart" onclick="showFavorites()" style="cursor:pointer;"></i>
+            <i class="fa fa-plus-circle" onclick="openModal('adminModal')" style="cursor:pointer; font-size:22px;"></i>
         </div>
     </header>
 
+    <div class="container">
+        <div id="continueBox">
+            <img id="contImg" src="" style="width:50px; height:70px; object-fit:cover; border-radius:5px;">
+            <div style="flex-grow:1;">
+                <p style="font-size:12px; color:gray;">Continue Reading...</p>
+                <h4 id="contTitle">Manga Title</h4>
+            </div>
+            <button onclick="resumeReading()" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:5px;">Resume</button>
+        </div>
+
+        <h2 class="section-header">LATEST UPDATES</h2>
+        <div id="manga-list" class="manga-grid"></div>
+
+        <h2 id="favTitle" class="section-header" style="display:none;">MY FAVORITES</h2>
+        <div id="fav-list" class="manga-grid"></div>
+    </div>
+
+    <div id="readPage">
+        <div class="read-header">
+            <i class="fa fa-arrow-left" onclick="closeReadPage()"></i>
+            <span id="readTitle">Reading...</span>
+        </div>
+        <div id="chapterViewer" style="margin-top:55px;"></div>
+    </div>
+
     <div id="adminModal" class="modal">
         <div class="modal-content">
-            <span style="position:absolute; right:15px; top:10px; cursor:pointer;" onclick="closeModal('adminModal')">&times;</span>
-            <h2 style="color:var(--primary); text-align:center; margin-bottom:20px;">ADMIN DASHBOARD</h2>
+            <h3 style="text-align:center; color:var(--primary);">ADMIN DASHBOARD</h3>
             <input type="password" id="admPass" placeholder="Admin Password">
-            <input type="text" id="admTitle" placeholder="Manga Title">
-            <label style="font-size:11px; color:gray;">SELECT COVER IMAGE</label>
-            <input type="file" id="coverImg" accept="image/*">
-            <button class="action-btn" id="uploadBtn">PUBLISH MANGA</button>
-            <p id="status" style="font-size:12px; text-align:center; margin-top:10px; color:#f39c12;"></p>
-        </div>
-    </div>
-
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span style="position:absolute; right:15px; top:10px; cursor:pointer;" onclick="closeModal('loginModal')">&times;</span>
-            <h2 style="text-align:center; margin-bottom:20px;">USER LOGIN</h2>
-            <input type="text" id="userName" placeholder="Enter your name">
-            <button class="action-btn" onclick="userLogin()">JOIN COMMUNITY</button>
-        </div>
-    </div>
-
-    <div class="container">
-        <h2 class="section-title">LATEST RELEASES</h2>
-        <div id="manga-list" class="manga-grid">
-            <p style="text-align:center; grid-column:1/-1;">Loading Database...</p>
+            
+            <hr style="border:0.5px solid #333; margin:15px 0;">
+            <p style="font-size:12px; color:gray;">Add New Manga</p>
+            <input type="text" id="newTitle" placeholder="Manga Name">
+            <input type="file" id="newCover" accept="image/*">
+            
+            <p style="font-size:12px; color:gray; margin-top:10px;">Upload Chapter Images</p>
+            <input type="file" id="chapterFiles" accept="image/*" multiple>
+            
+            <button class="btn-upload" id="uploadBtn">PUBLISH MANGA</button>
+            <p id="status" style="font-size:11px; text-align:center; margin-top:10px; color:orange;"></p>
+            <button onclick="closeModal('adminModal')" style="width:100%; background:none; border:none; color:gray; margin-top:10px;">Close</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy, addDoc, deleteDoc, doc, serverTimestamp, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, orderBy, addDoc, serverTimestamp, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs",
@@ -106,74 +115,97 @@
         window.openModal = (id) => document.getElementById(id).style.display = 'flex';
         window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
-        // Load Data & Display
+        // Load List
         async function loadManga() {
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
-            const isAdmin = localStorage.getItem('isAdmin') === 'true';
-            const list = document.getElementById('manga-list');
-            list.innerHTML = snap.docs.map(d => `
-                <div class="card" onclick="viewManga('${d.id}')">
-                    <button class="del-btn" style="display:${isAdmin?'block':'none'}" onclick="event.stopPropagation(); deleteManga('${d.id}')">DELETE</button>
+            const favorites = JSON.parse(localStorage.getItem('favs') || '[]');
+            
+            document.getElementById('manga-list').innerHTML = snap.docs.map(d => {
+                const isFav = favorites.includes(d.id) ? 'active' : '';
+                return `
+                <div class="card" onclick="openReader('${d.id}')">
+                    <i class="fa fa-heart fav-icon ${isFav}" onclick="event.stopPropagation(); toggleFav('${d.id}')"></i>
                     <img src="${d.data().coverUrl}">
-                    <div class="card-info">
-                        <h3>${d.data().title}</h3>
-                        <div class="stats"><span>👁️ ${d.data().views || 0}</span><span>⭐ 5.0</span></div>
-                    </div>
+                    <div class="card-info"><h3>${d.data().title}</h3></div>
                 </div>
-            `).join('');
+            `}).join('');
+            checkLastRead();
         }
 
-        window.viewManga = async (id) => {
-            await updateDoc(doc(db, "chapters", id), { views: increment(1) });
-            loadManga();
-            alert("Manga Page Coming Soon!");
-        };
-
-        window.deleteManga = async (id) => {
-            if(confirm("Are you sure?")) {
-                await deleteDoc(doc(db, "chapters", id));
-                loadManga();
+        // Continue Reading System
+        function checkLastRead() {
+            const last = JSON.parse(localStorage.getItem('lastRead'));
+            if(last) {
+                document.getElementById('continueBox').style.display = 'flex';
+                document.getElementById('contTitle').innerText = last.title;
+                document.getElementById('contImg').src = last.cover;
             }
+        }
+
+        window.resumeReading = () => {
+            const last = JSON.parse(localStorage.getItem('lastRead'));
+            if(last) openReader(last.id);
         };
 
+        // Reader
+        window.openReader = async (id) => {
+            const d = await getDoc(doc(db, "chapters", id));
+            const data = d.data();
+            
+            // Save to Continue Reading
+            localStorage.setItem('lastRead', JSON.stringify({id, title: data.title, cover: data.coverUrl}));
+            
+            document.getElementById('readTitle').innerText = data.title;
+            document.getElementById('chapterViewer').innerHTML = data.chapterImages.map(img => `<img src="${img}">`).join('');
+            document.getElementById('readPage').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeReadPage = () => {
+            document.getElementById('readPage').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            checkLastRead();
+        };
+
+        // Favorites
+        window.toggleFav = (id) => {
+            let favs = JSON.parse(localStorage.getItem('favs') || '[]');
+            if(favs.includes(id)) favs = favs.filter(f => f !== id);
+            else favs.push(id);
+            localStorage.setItem('favs', JSON.stringify(favs));
+            loadManga();
+        };
+
+        // Admin Upload
         document.getElementById('uploadBtn').onclick = async () => {
             const pass = document.getElementById('admPass').value;
-            const title = document.getElementById('admTitle').value;
-            const file = document.getElementById('coverImg').files[0];
+            const title = document.getElementById('newTitle').value;
+            const cover = document.getElementById('newCover').files[0];
+            const chapters = document.getElementById('chapterFiles').files;
             const status = document.getElementById('status');
 
-            if(pass !== "Admin67820") return alert("Access Denied!");
-            localStorage.setItem('isAdmin', 'true');
+            if(pass !== "Admin67820") return alert("Wrong Password!");
+            
+            status.innerText = "Uploading... (This may take a while)";
+            try {
+                const cRes = await uploadFile(cover);
+                let imgs = [];
+                for(let f of chapters) { imgs.push(await uploadFile(f)); }
 
-            status.innerText = "Processing Image...";
-            const fd = new FormData(); fd.append("image", file);
-            const res = await fetch("https://api.imgbb.com/1/upload?key=6440536417531739f7823521d966952d", { method:"POST", body:fd });
-            const imgData = await res.json();
-
-            await addDoc(collection(db, "chapters"), {
-                title: title, coverUrl: imgData.data.url, views: 0, timestamp: serverTimestamp()
-            });
-            status.innerText = "✅ Published!";
-            setTimeout(() => { closeModal('adminModal'); loadManga(); }, 1000);
+                await addDoc(collection(db, "chapters"), {
+                    title, coverUrl: cRes, chapterImages: imgs, timestamp: serverTimestamp()
+                });
+                status.innerText = "✅ Done!";
+                loadManga();
+                closeModal('adminModal');
+            } catch(e) { status.innerText = "❌ Failed!"; }
         };
 
-        window.userLogin = () => {
-            const name = document.getElementById('userName').value;
-            if(name) {
-                localStorage.setItem('mUser', name);
-                document.getElementById('userBtn').innerText = name.toUpperCase();
-                closeModal('loginModal');
-            }
-        };
-
-        window.searchManga = () => {
-            let filter = document.getElementById('search').value.toUpperCase();
-            let cards = document.getElementsByClassName('card');
-            for (let i = 0; i < cards.length; i++) {
-                let h3 = cards[i].querySelector('h3');
-                cards[i].style.display = h3.innerText.toUpperCase().indexOf(filter) > -1 ? "" : "none";
-            }
-        };
+        async function uploadFile(file) {
+            const fd = new FormData(); fd.append("file", file); fd.append("upload_preset", "ml_default");
+            const res = await fetch("https://api.cloudinary.com/v1_1/demo/image/upload", {method:"POST", body:fd});
+            const data = await res.json(); return data.secure_url;
+        }
 
         loadManga();
     </script>
