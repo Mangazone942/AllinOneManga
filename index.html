@@ -3,172 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MangaZone - Professional Edition</title>
+    <title>MangaZone - File Upload</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    
     <style>
         :root { --primary: #e62117; --bg: #000; --text: #fff; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; }
+
+        header { background: var(--primary); height: 60px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
+        .logo { font-family: 'Oswald'; font-size: 24px; color: white; text-decoration: none; font-weight: bold; }
+        .btn-admin { background: rgba(0,0,0,0.3); color: white; border: 1px solid white; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+
+        /* --- ADMIN UI (MODAL) --- */
+        #adminModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
+        .modal-content { background: #111; padding: 25px; border-radius: 12px; border: 1px solid var(--primary); width: 100%; max-width: 400px; position: relative; }
+        .modal-content h2 { color: var(--primary); margin-bottom: 20px; font-family: 'Oswald'; text-align: center; }
         
-        body { 
-            font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); 
-            padding-top: 60px; overflow-x: hidden; width: 100vw;
-        }
-
-        /* --- RED NAVBAR --- */
-        header {
-            background: var(--primary); height: 60px; width: 100%;
-            position: fixed; top: 0; left: 0; z-index: 10000;
-            display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.8);
-        }
-        .logo { font-family: 'Oswald'; font-size: 24px; color: white; text-decoration: none; font-weight: bold; letter-spacing: 1px; }
-
-        .auth-btns { display: flex; align-items: center; gap: 10px; }
-        .btn-login { background: white; color: var(--primary); border: none; padding: 6px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; }
-        .btn-admin { background: rgba(0,0,0,0.3); color: white; border: 1px solid white; padding: 5px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; }
-
-        /* --- HERO SLIDER (VAGABOND) --- */
-        .hero {
-            height: 380px; width: 100%; 
-            background: #111 url('https://image_2023-08-11_003823987.png.webp') no-repeat center;
-            background-size: cover; display: flex; align-items: center; 
-            padding: 25px; position: relative;
-        }
-        .hero::before { 
-            content: ""; position: absolute; inset: 0; 
-            background: linear-gradient(to right, rgba(0,0,0,0.95) 30%, transparent); 
-        }
-        .hero-content { position: relative; z-index: 10; max-width: 500px; }
-        .hero-content h4 { color: var(--primary); font-size: 13px; letter-spacing: 3px; margin-bottom: 5px; }
-        .hero-content h1 { font-family: 'Oswald'; font-size: 50px; line-height: 1; margin-bottom: 10px; text-transform: uppercase; }
-        .hero-content p { font-size: 13px; color: #ccc; margin-bottom: 20px; line-height: 1.5; }
-        .btn-read { background: var(--primary); color: white; border: none; padding: 12px 30px; border-radius: 4px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-
-        /* --- MANGA SECTION --- */
-        .container { padding: 30px 15px; }
-        .section-title { border-left: 5px solid var(--primary); padding-left: 12px; font-size: 22px; margin-bottom: 25px; font-family: 'Oswald'; }
+        label { font-size: 12px; color: #888; display: block; margin-bottom: 5px; }
+        input[type="text"], input[type="password"], input[type="file"] { width: 100%; padding: 10px; margin-bottom: 15px; background: #222; border: 1px solid #333; color: white; border-radius: 6px; outline: none; }
         
-        .manga-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 15px; 
-        }
-        .card { background: #111; border-radius: 10px; overflow: hidden; border: 1px solid #222; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .card img { width: 100%; height: 220px; object-fit: cover; }
-        .card-info { padding: 12px; }
-        .card-info h3 { font-size: 14px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-info span { font-size: 11px; color: #888; display: flex; align-items: center; gap: 5px; }
+        .upload-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 25px; cursor: pointer; color: #888; }
+        #status { font-size: 12px; text-align: center; margin-top: 10px; color: #f39c12; }
 
-        /* Tablet & Desktop */
-        @media (min-width: 768px) {
-            .manga-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 20px; }
-            .hero { height: 450px; padding: 60px; }
-            .hero-content h1 { font-size: 70px; }
-            .container { padding: 40px 60px; }
-        }
+        /* --- GRID --- */
+        .container { padding: 20px; }
+        .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .card { background: #111; border-radius: 8px; overflow: hidden; border: 1px solid #222; }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-info { padding: 10px; font-size: 13px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">MANGAZONE</div>
-        <div class="auth-btns">
-            <button class="btn-admin" onclick="openAdmin()">ADMIN</button>
-            <button class="btn-login">LOGIN</button>
-        </div>
+        <button class="btn-admin" onclick="document.getElementById('adminModal').style.display='flex'">ADMIN</button>
     </header>
 
-    <section class="hero">
-        <div class="hero-content">
-            <h4>FEATURED MANGA</h4>
-            <h1>VAGABOND</h1>
-            <p>Step into the world of Miyamoto Musashi, the legendary samurai, on his profound journey for truth and strength.</p>
-            <button class="btn-read">START READING</button>
+    <div id="adminModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('adminModal').style.display='none'">&times;</span>
+            <h2>UPLOAD CONTENT</h2>
+            
+            <input type="password" id="admPass" placeholder="Admin Password">
+            <input type="text" id="admTitle" placeholder="Manga Title">
+            
+            <label>SELECT COVER IMAGE (JPG/PNG)</label>
+            <input type="file" id="coverFile" accept="image/*">
+            
+            <label>SELECT CHAPTER FILE (PDF/ZIP)</label>
+            <input type="file" id="chapterFile">
+            
+            <button class="upload-btn" id="admUploadBtn">UPLOAD TO CLOUD</button>
+            <div id="status"></div>
         </div>
-    </section>
+    </div>
 
     <div class="container">
-        <h2 class="section-title">Latest Releases</h2>
-        <div id="manga-list" class="manga-grid">
-            <p style="color:gray; grid-column: 1/-1; text-align: center; padding: 50px;">Connecting to Cloud Database...</p>
-        </div>
+        <h2 style="border-left: 5px solid var(--primary); padding-left: 10px; margin-bottom: 20px; font-family:'Oswald';">LATEST RELEASES</h2>
+        <div id="manga-list" class="manga-grid"></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, getDocs, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-        // မောင့်ရဲ့ Firebase Config အစစ်
         const firebaseConfig = {
             apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs",
             authDomain: "mangabyax.firebaseapp.com",
             projectId: "mangabyax",
             storageBucket: "mangabyax.firebasestorage.app",
             messagingSenderId: "974159756281",
-            appId: "1:974159756281:web:228c23b929f377544b1b28",
-            measurementId: "G-J549MK52NB"
+            appId: "1:974159756281:web:228c23b929f377544b1b28"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app);
 
-        // Load Manga Data
-        async function fetchManga() {
-            const listContainer = document.getElementById('manga-list');
-            try {
-                const q = query(collection(db, "chapters"), orderBy("timestamp", "desc"));
-                const querySnapshot = await getDocs(q);
-                
-                if (querySnapshot.empty) {
-                    listContainer.innerHTML = "<p style='grid-column: 1/-1; text-align: center; color: gray;'>No manga found. Please add from Admin.</p>";
-                    return;
-                }
-
-                listContainer.innerHTML = "";
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    listContainer.innerHTML += `
-                        <div class="card">
-                            <img src="${data.coverUrl || 'https://via.placeholder.com/200x300'}" alt="cover">
-                            <div class="card-info">
-                                <h3>${data.title}</h3>
-                                <span>👁️ ${data.views || 0} views</span>
-                            </div>
-                        </div>
-                    `;
-                });
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                listContainer.innerHTML = "<p style='color:red;'>Firebase Config Error. Please check Rules.</p>";
-            }
+        async function loadManga() {
+            const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
+            document.getElementById('manga-list').innerHTML = snap.docs.map(doc => `
+                <div class="card">
+                    <img src="${doc.data().coverUrl}">
+                    <div class="card-info"><h3>${doc.data().title}</h3></div>
+                </div>
+            `).join('');
         }
 
-        // Admin Upload Function
-        window.openAdmin = async () => {
-            const pass = prompt("Enter Admin Password:");
-            if (pass === "Admin67820") {
-                const title = prompt("Manga Title:");
-                const url = prompt("Cover Image URL:");
-                if (title && url) {
-                    try {
-                        await addDoc(collection(db, "chapters"), {
-                            title: title,
-                            coverUrl: url,
-                            views: 0,
-                            timestamp: serverTimestamp()
-                        });
-                        alert("Uploaded Successfully!");
-                        fetchManga();
-                    } catch (e) { alert("Upload failed!"); }
+        document.getElementById('admUploadBtn').onclick = async () => {
+            const pass = document.getElementById('admPass').value;
+            const title = document.getElementById('admTitle').value;
+            const cover = document.getElementById('coverFile').files[0];
+            const file = document.getElementById('chapterFile').files[0];
+            const status = document.getElementById('status');
+
+            if (pass !== "Admin67820") return alert("Wrong Password!");
+            if (!title || !cover) return alert("Title and Cover are required!");
+
+            status.innerText = "Uploading to Cloud... Please wait.";
+
+            try {
+                // 1. Upload Cover
+                const coverRef = ref(storage, 'covers/' + Date.now() + "_" + cover.name);
+                await uploadBytes(coverRef, cover);
+                const coverUrl = await getDownloadURL(coverRef);
+
+                // 2. Upload Chapter File (if any)
+                let fileUrl = "";
+                if (file) {
+                    const fileRef = ref(storage, 'files/' + Date.now() + "_" + file.name);
+                    await uploadBytes(fileRef, file);
+                    fileUrl = await getDownloadURL(fileRef);
                 }
-            } else {
-                alert("Wrong Password!");
+
+                // 3. Save to Firestore
+                await addDoc(collection(db, "chapters"), {
+                    title: title,
+                    coverUrl: coverUrl,
+                    fileUrl: fileUrl,
+                    views: 0,
+                    timestamp: serverTimestamp()
+                });
+
+                status.innerText = "✅ Success!";
+                setTimeout(() => { document.getElementById('adminModal').style.display='none'; loadManga(); }, 1500);
+            } catch (e) {
+                status.innerText = "❌ Error: " + e.message;
             }
         };
 
-        fetchManga();
+        loadManga();
     </script>
 </body>
 </html>
