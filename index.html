@@ -8,8 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary: #ff0000; --bg: #050505; --card: #121212; --text: #ffffff; --gold: #ffd700; --secret: #ff007f; --header: rgba(0,0,0,0.95); }
+        .light-mode { --bg: #f4f4f4; --card: #ffffff; --text: #111; --header: rgba(255,255,255,0.9); }
         
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; transition: background 0.3s; }
         body { background: var(--bg); color: var(--text); padding-top: 70px; overflow-x: hidden; }
 
         header { 
@@ -22,50 +23,48 @@
 
         .logo { font-family: 'Oswald'; font-size: 26px; color: var(--primary); letter-spacing: 1px; cursor: pointer; }
 
-        /* BACK BUTTON ON POSTER - FIXED POSITIONING */
+        /* SLIDER STYLE */
+        .slider-container { width: 100%; height: 200px; position: relative; overflow: hidden; margin-bottom: 25px; border-radius: 15px; background: #111; }
+        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: 0.8s; cursor: pointer; }
+        .slide.active { opacity: 1; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
+        .slide-info { position: absolute; bottom: 15px; left: 15px; }
+
+        /* BACK BUTTON ON POSTER */
         .details-hero { position: relative; width: 100%; display: flex; gap: 20px; padding: 20px; }
         .back-nav {
             position: absolute; top: 10px; left: 10px; z-index: 100;
-            background: var(--primary); color: white;
-            width: 38px; height: 38px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            background: var(--primary); color: white; width: 38px; height: 38px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .premium-btn {
-            background: var(--gold); color: black; border: none; padding: 12px 18px;
-            border-radius: 10px; font-weight: bold; font-size: 11px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer;
-            text-transform: uppercase; margin-top: 15px;
+            background: var(--gold); color: black; border: none; padding: 12px 18px; border-radius: 10px; 
+            font-weight: bold; font-size: 11px; display: flex; align-items: center; gap: 8px; cursor: pointer; margin-top: 15px;
         }
 
         .chapter-box {
-            background: #111; border: 1px solid #222; padding: 16px;
-            border-radius: 14px; margin-bottom: 12px; display: flex;
-            justify-content: space-between; align-items: center; cursor: pointer; transition: 0.2s;
+            background: var(--card); border: 1px solid rgba(128,128,128,0.1); padding: 16px; border-radius: 14px; 
+            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;
         }
-        .chapter-box:active { background: #1a1a1a; transform: scale(0.98); }
 
         .container { padding: 0 15px; max-width: 1200px; margin: auto; }
-        .search-bar { width: 100%; padding: 14px; background: var(--card); border: 1px solid #222; border-radius: 12px; color: white; margin-bottom: 25px; outline: none; }
+        .search-bar { width: 100%; padding: 14px; background: var(--card); border: 1px solid rgba(128,128,128,0.2); border-radius: 12px; color: var(--text); margin-bottom: 25px; outline: none; }
 
         .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid #1a1a1a; cursor: pointer; }
+        .card { background: var(--card); border-radius: 15px; overflow: hidden; border: 1px solid rgba(128,128,128,0.1); cursor: pointer; }
         .card img { width: 100%; height: 210px; object-fit: cover; }
         .card-info { padding: 12px; }
-        .card-info h3 { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-info h3 { font-size: 13px; font-weight: 600; color: var(--text); }
 
-        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--card); z-index: 2001; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 25px; border-left: 1px solid #222; }
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--card); z-index: 2001; transition: 0.4s; padding: 25px; border-left: 1px solid rgba(128,128,128,0.1); }
         .sidebar.active { right: 0; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; backdrop-filter: blur(4px); }
         .overlay.active { display: block; }
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 5000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid #333; overflow-y: auto; max-height: 90vh; }
+        .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; color: var(--text); }
         
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #111; border: 1px solid #333; color: white; border-radius: 8px; outline: none; }
-        .nav-btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; }
-
         #detailsPage { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; overflow-y: auto; }
         #readPage { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; overflow-y: auto; }
         
@@ -80,6 +79,7 @@
             <div id="coinDisp" class="coin-display" style="display:none;">
                 <i class="fa-solid fa-gem"></i> <span id="userCoins">0</span>
             </div>
+            <i class="fa-solid fa-circle-half-stroke" onclick="toggleTheme()" style="cursor:pointer; color:var(--primary); font-size: 20px;"></i>
             <i class="fa-solid fa-bars-staggered" onclick="toggleSidebar()" style="font-size:24px; cursor:pointer;"></i>
         </div>
     </header>
@@ -87,24 +87,25 @@
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
     
     <div class="sidebar" id="sidebar">
-        <div id="userProfile" style="display:none; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 15px;">
-            <p style="font-size:10px; color:gray; text-transform: uppercase;">User UID</p>
-            <p id="myUID" style="color:var(--gold); font-size: 11px; word-break: break-all;"></p>
-            <input type="text" id="promoKey" placeholder="PROMO CODE" style="font-size: 12px; padding: 8px; margin-top: 10px;">
-            <button onclick="redeemKey()" style="background:var(--gold); color:black; border:none; width:100%; padding:8px; border-radius:5px; font-weight:bold; font-size:11px; margin-top:5px;">REDEEM KEY</button>
-            <button onclick="logout()" style="color:red; background:none; border:none; margin-top:15px; font-size:12px; cursor:pointer;"><i class="fa-solid fa-power-off"></i> Logout</button>
+        <div id="userProfile" style="display:none; margin-bottom: 20px; border-bottom: 1px solid rgba(128,128,128,0.2); padding-bottom: 15px;">
+            <p id="myUID" style="color:var(--gold); font-size: 10px; word-break: break-all; margin-bottom: 10px;"></p>
+            <input type="text" id="promoKey" placeholder="PROMO CODE" style="width:100%; padding:8px; background:rgba(0,0,0,0.2); border:1px solid #444; color:white; border-radius:5px;">
+            <button onclick="redeemKey()" style="background:var(--gold); color:black; border:none; width:100%; padding:8px; border-radius:5px; font-weight:bold; margin-top:5px;">REDEEM</button>
+            <button onclick="logout()" style="color:red; background:none; border:none; margin-top:15px; cursor:pointer; font-size:12px;"><i class="fa-solid fa-power-off"></i> Logout</button>
         </div>
-        <button id="loginBtn" class="nav-btn" onclick="openModal('authModal')">Member Login</button>
-        <div style="margin-top:25px; cursor:pointer;" onclick="location.reload()"><i class="fa-solid fa-house" style="margin-right:12px;"></i> Home</div>
+        <button id="loginBtn" style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:10px; font-weight:bold;" onclick="openModal('authModal')">Login</button>
+        <div style="margin-top:25px; cursor:pointer;" onclick="location.reload()"><i class="fa-solid fa-house"></i> Home</div>
         <div id="genreList" style="margin-top:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
         <div onclick="openSecretModal()" style="margin-top:25px; background:var(--secret); color:white; padding:12px; text-align:center; border-radius:10px; cursor:pointer; font-weight:bold; font-size:12px;">ADULT 18+</div>
-        <div onclick="openAdmin()" style="margin-top:40px; color:gray; font-size:10px; cursor:pointer; text-align:center;">ADMINISTRATION</div>
+        <div onclick="openAdmin()" style="margin-top:40px; color:gray; font-size:10px; cursor:pointer; text-align:center;">ADMIN PANEL</div>
     </div>
 
     <div class="container">
-        <input type="text" class="search-bar" id="searchInput" placeholder="Search series..." oninput="searchManga()">
+        <input type="text" class="search-bar" id="searchInput" placeholder="Search..." oninput="searchManga()">
+        
         <div id="homeUI">
-            <h3 style="font-family:'Oswald'; font-size:16px; margin-bottom:15px; letter-spacing:1px;"><i class="fa-solid fa-fire" style="color:var(--primary);"></i> LATEST UPDATES</h3>
+            <div class="slider-container" id="slider"></div>
+            <h3 style="font-family:'Oswald'; margin-bottom:15px;"><i class="fa-solid fa-clock"></i> LATEST UPDATES</h3>
             <div id="manga-list" class="manga-grid"></div>
         </div>
     </div>
@@ -112,65 +113,42 @@
     <div id="detailsPage">
         <div class="details-hero">
             <div class="back-nav" onclick="closeDetails()"><i class="fa-solid fa-chevron-left"></i></div>
-            <img id="detImg" style="width:140px; height:200px; border-radius:15px; object-fit:cover; box-shadow:0 10px 30px rgba(0,0,0,0.5);">
-            <div style="flex:1; margin-top: 10px;">
-                <h2 id="detTitle" style="font-family:'Oswald'; font-size:22px; line-height:1.2;"></h2>
-                <p id="detCat" style="color:var(--primary); font-weight:bold; font-size:13px; margin:8px 0;"></p>
+            <img id="detImg" style="width:130px; height:180px; border-radius:15px; object-fit:cover;">
+            <div style="flex:1;">
+                <h2 id="detTitle" style="font-family:'Oswald';"></h2>
+                <p id="detCat" style="color:var(--primary); font-weight:bold; font-size:13px;"></p>
                 <button id="bmBtn" class="premium-btn" onclick="toggleBookmark()"></button>
             </div>
         </div>
         <div class="container">
-            <p id="detDesc" style="color:#888; font-size:13px; margin:20px 0; line-height:1.6;"></p>
-            <h4 style="font-size:12px; color:gray; margin-bottom:15px; text-transform:uppercase;">Chapters</h4>
+            <p id="detDesc" style="color:gray; font-size:13px; margin:20px 0;"></p>
             <div id="chapterList"></div>
         </div>
     </div>
 
-    <div id="adminModal" class="modal">
-        <div class="modal-content">
-            <h3 style="color:var(--primary); font-family:'Oswald';">UPLOAD CONTENT</h3>
-            <input type="text" id="upName" placeholder="Manga Title">
-            <textarea id="upDesc" placeholder="Synopsis" rows="2"></textarea>
-            <input type="number" id="upCh" placeholder="Chapter No.">
-            <select id="upCat"></select>
-            <select id="upPrice"><option value="0">Free Chapter</option><option value="10">Premium (10 Coins)</option><option value="20">Premium (20 Coins)</option></select>
-            <p style="font-size: 10px; color: gray;">Poster & Pages</p>
-            <input type="file" id="upCover" accept="image/*">
-            <input type="file" id="upFiles" multiple accept="image/*">
-            <button class="nav-btn" id="uploadBtn">PUBLISH NOW</button>
-            <div id="adminChapterList" style="margin-top:20px; max-height: 150px; overflow-y: auto; border-top: 1px solid #333; padding-top: 10px;"></div>
-            <button onclick="closeModal('adminModal')" style="background:none; border:none; width:100%; margin-top:20px; color:gray; cursor:pointer;">EXIT</button>
-        </div>
-    </div>
-
     <div id="authModal" class="modal"><div class="modal-content">
-        <h3 style="margin-bottom:20px;">Member Login</h3>
-        <input type="email" id="email" placeholder="Email"><input type="password" id="pass" placeholder="Password">
-        <button class="nav-btn" onclick="handleAuth('login')">LOGIN</button>
-        <button class="nav-btn" style="background:#222; margin-top:10px;" onclick="handleAuth('signup')">CREATE ACCOUNT</button>
-        <p onclick="closeModal('authModal')" style="text-align:center; margin-top:20px; font-size:12px; color:gray; cursor:pointer;">CANCEL</p>
+        <h3>Member Login</h3>
+        <input type="email" id="email" placeholder="Email" style="width:100%; padding:12px; margin:10px 0; background:#111; color:white; border:1px solid #333;">
+        <input type="password" id="pass" placeholder="Password" style="width:100%; padding:12px; margin:10px 0; background:#111; color:white; border:1px solid #333;">
+        <button style="width:100%; padding:12px; background:var(--primary); color:white; border:none; border-radius:8px;" onclick="handleAuth('login')">LOGIN</button>
+        <p onclick="closeModal('authModal')" style="text-align:center; margin-top:15px; cursor:pointer; font-size:12px;">Cancel</p>
     </div></div>
 
-    <div id="secretModal" class="modal"><div class="modal-content"><h3>RESTRICTED</h3><input type="password" id="secPass" placeholder="Bypass Key"><button onclick="checkSecret()" class="nav-btn" style="background:var(--secret);">UNLOCK VAULT</button></div></div>
-
     <div id="readPage">
-        <div style="background:rgba(0,0,0,0.95); height:60px; display:flex; align-items:center; padding:0 15px; position:fixed; top:0; width:100%; z-index:4001;">
+        <div style="background:rgba(0,0,0,0.9); height:55px; display:flex; align-items:center; padding:0 15px; position:fixed; top:0; width:100%; z-index:4001;">
             <i class="fa-solid fa-xmark" onclick="closeReader()" style="font-size:22px; cursor:pointer; margin-right:15px;"></i>
-            <span id="readTitle" style="font-size:12px; font-weight:600;"></span>
+            <span id="readTitle" style="font-size:12px;"></span>
         </div>
-        <div id="viewer" style="margin-top:60px;"></div>
+        <div id="viewer" style="margin-top:55px;"></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs", authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax", storageBucket: "mangabyax.firebasestorage.app", appId: "1:974159756281:web:228c23b929f377544b1b28" };
         const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
-        const CLOUD_NAME = "dqdqg2wac", UPLOAD_PRESET = "ml_default";
-        const CATS = ["Action", "Adventure", "Comedy", "Drama", "Fantasy", "Horror", "Isekai", "Romance", "Sci-Fi", "Hentai"];
-        const MASTER_ADMIN_PASS = "MZoneAdmin@2026", HENTAI_PASS = "MZone@99#Strict";
 
         let allData = [], currentUser = null, userData = null, currentTitle = "";
 
@@ -183,7 +161,7 @@
                     document.getElementById('userProfile').style.display = 'block';
                     document.getElementById('loginBtn').style.display = 'none';
                     document.getElementById('coinDisp').style.display = 'flex';
-                    document.getElementById('userCoins').innerText = (userData.coins || 0).toLocaleString();
+                    document.getElementById('userCoins').innerText = userData.coins || 0;
                     document.getElementById('myUID').innerText = user.uid;
                 }
             }
@@ -194,38 +172,38 @@
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
             allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
             renderGrid(allData.filter(x => x.category !== 'Hentai'));
+            setupSlider();
             renderGenreList();
         }
 
-        async function uploadToCloud(file) {
-            const fd = new FormData(); fd.append("file", file); fd.append("upload_preset", UPLOAD_PRESET);
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: "POST", body: fd });
-            return (await res.json()).secure_url;
+        function setupSlider() {
+            const unique = {}; allData.forEach(ch => { if(!unique[ch.seriesName] && ch.category !== 'Hentai') unique[ch.seriesName] = ch; });
+            const slides = Object.values(unique).slice(0, 5);
+            document.getElementById('slider').innerHTML = slides.map((s, i) => `
+                <div class="slide ${i===0?'active':''}" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')">
+                    <img src="${s.coverUrl}">
+                    <div class="slide-info"><h2 style="font-family:'Oswald'; color:white;">${s.seriesName}</h2></div>
+                </div>`).join('');
+            
+            let cur = 0;
+            if(slides.length > 1) {
+                setInterval(() => {
+                    const items = document.querySelectorAll('.slide');
+                    if(items.length > 0) {
+                        items[cur].classList.remove('active');
+                        cur = (cur + 1) % items.length;
+                        items[cur].classList.add('active');
+                    }
+                }, 4000);
+            }
         }
-
-        document.getElementById('uploadBtn').onclick = async () => {
-            const btn = document.getElementById('uploadBtn');
-            const name = document.getElementById('upName').value, chNum = document.getElementById('upCh').value;
-            const cover = document.getElementById('upCover').files[0], pages = Array.from(document.getElementById('upFiles').files);
-            if(!name || !chNum || !cover || pages.length === 0) return alert("Missing fields!");
-            btn.innerText = "UPLOADING..."; btn.disabled = true;
-            try {
-                const coverUrl = await uploadToCloud(cover);
-                const imageUrls = await Promise.all(pages.map(p => uploadToCloud(p)));
-                await addDoc(collection(db, "chapters"), { seriesName: name, seriesDesc: document.getElementById('upDesc').value, chapterNum: parseFloat(chNum), category: document.getElementById('upCat').value, price: parseInt(document.getElementById('upPrice').value), coverUrl, chapterImages: imageUrls, timestamp: serverTimestamp() });
-                location.reload();
-            } catch(e) { alert("Upload Failed!"); btn.innerText = "PUBLISH NOW"; btn.disabled = false; }
-        };
 
         window.renderGrid = (data) => {
             const unique = {}; data.forEach(ch => { if(!unique[ch.seriesName]) unique[ch.seriesName] = ch; });
             document.getElementById('manga-list').innerHTML = Object.values(unique).map(v => `
                 <div class="card" onclick="openDetails('${v.seriesName.replace(/'/g,"\\'")}')">
-                    <img src="${v.coverUrl}" loading="lazy">
-                    <div class="card-info">
-                        <h3>${v.seriesName}</h3>
-                        <p style="font-size:10px; color:gray; margin-top:4px;">${v.category}</p>
-                    </div>
+                    <img src="${v.coverUrl}">
+                    <div class="card-info"><h3>${v.seriesName}</h3></div>
                 </div>`).join('');
         };
 
@@ -234,72 +212,36 @@
             document.getElementById('detTitle').innerText = title;
             document.getElementById('detImg').src = s[0].coverUrl;
             document.getElementById('detCat').innerText = s[0].category;
-            document.getElementById('detDesc').innerText = s[0].seriesDesc || "No synopsis.";
+            document.getElementById('detDesc').innerText = s[0].seriesDesc || "No synopsis available.";
             updateBookmarkBtn();
             document.getElementById('chapterList').innerHTML = s.sort((a,b) => b.chapterNum - a.chapterNum).map(ch => `
-                <div class="chapter-box" onclick="tryRead('${ch.id}', ${ch.price})">
+                <div class="chapter-box" onclick="showReader('${ch.id}')">
                     <span style="font-size:13px; font-weight:600;">Chapter ${ch.chapterNum}</span>
-                    <span style="color:var(--gold); font-size:12px;">${(ch.price > 0 && !userData?.unlocked?.includes(ch.id)) ? '<i class="fa-solid fa-lock"></i> '+ch.price : '<i class="fa-solid fa-play"></i>'}</span>
+                    <i class="fa-solid fa-play" style="color:var(--gold);"></i>
                 </div>`).join('');
             document.getElementById('detailsPage').style.display = 'block';
             window.scrollTo(0,0);
         };
 
-        window.tryRead = async (id, price) => {
-            if(price === 0 || userData?.unlocked?.includes(id)) return showReader(id);
-            if(!currentUser) return openModal('authModal');
-            if(userData.coins >= price && confirm(`Unlock for ${price} coins?`)) {
-                await updateDoc(doc(db, "users", currentUser.uid), { coins: userData.coins - price, unlocked: [...(userData.unlocked || []), id] });
-                location.reload();
-            } else if(userData.coins < price) alert("Insufficient coins!");
-        };
-
-        function showReader(id) {
+        window.showReader = (id) => {
             const ch = allData.find(x => x.id === id);
             document.getElementById('readTitle').innerText = ch.seriesName + " - CH " + ch.chapterNum;
             document.getElementById('viewer').innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join('');
             document.getElementById('readPage').style.display = 'block';
-        }
-
-        window.redeemKey = async () => {
-            const k = document.getElementById('promoKey').value;
-            const snap = await getDoc(doc(db, "promo_codes", k));
-            if(snap.exists()) {
-                await updateDoc(doc(db, "users", currentUser.uid), { coins: (userData.coins || 0) + snap.data().amount });
-                await deleteDoc(doc(db, "promo_codes", k)); location.reload();
-            } else alert("Invalid Key!");
         };
 
-        window.renderGenreList = () => {
-            const gl = document.getElementById('genreList'), sl = document.getElementById('upCat');
-            gl.innerHTML = ""; sl.innerHTML = "";
-            CATS.forEach(c => {
-                sl.innerHTML += `<option value="${c}">${c}</option>`;
-                if(c !== 'Hentai') gl.innerHTML += `<div style="background:rgba(255,255,255,0.05); padding:8px; text-align:center; border-radius:8px; font-size:11px;" onclick="filterGenre('${c}')">${c}</div>`;
-            });
-        };
-
-        window.filterGenre = (g) => { renderGrid(allData.filter(x => x.category === g)); toggleSidebar(); };
-        window.openAdmin = () => { if(prompt("Code:") === MASTER_ADMIN_PASS) { openModal('adminModal'); renderAdminManage(); } };
-        window.checkSecret = () => { if(document.getElementById('secPass').value === HENTAI_PASS) { renderGrid(allData.filter(x => x.category === 'Hentai')); closeModal('secretModal'); toggleSidebar(); } };
-        window.handleAuth = async (t) => {
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            try {
-                let r = (t === 'signup') ? await createUserWithEmailAndPassword(auth,e,p) : await signInWithEmailAndPassword(auth,e,p);
-                if(t === 'signup') await setDoc(doc(db,"users",r.user.uid), {uid:r.user.uid, coins:0, unlocked:[]});
-                location.reload();
-            } catch(err) { alert(err.message); }
-        };
-
+        window.toggleTheme = () => document.body.classList.toggle('light-mode');
         window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); };
-        window.closeDetails = () => document.getElementById('detailsPage').style.display='none';
-        window.closeReader = () => { document.getElementById('readPage').style.display='none'; window.scrollTo(0,0); };
-        window.openModal = (id) => document.getElementById(id).style.display='flex';
-        window.closeModal = (id) => document.getElementById(id).style.display='none';
-        window.openSecretModal = () => openModal('secretModal');
+        window.closeDetails = () => document.getElementById('detailsPage').style.display = 'none';
+        window.closeReader = () => document.getElementById('readPage').style.display = 'none';
+        window.openModal = (id) => document.getElementById(id).style.display = 'flex';
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
         window.logout = () => signOut(auth).then(()=>location.reload());
-        window.searchManga = () => { const q = document.getElementById('searchInput').value.toLowerCase(); renderGrid(allData.filter(m => m.seriesName.toLowerCase().includes(q))); };
 
+        function updateBookmarkBtn() {
+            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
+            document.getElementById('bmBtn').innerHTML = bms.includes(currentTitle) ? '<i class="fa-solid fa-check"></i> SAVED' : '<i class="fa-solid fa-plus"></i> LIBRARY';
+        }
         window.toggleBookmark = () => {
             let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
             const idx = bms.indexOf(currentTitle);
@@ -308,18 +250,15 @@
             updateBookmarkBtn();
         };
 
-        function updateBookmarkBtn() {
-            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
-            document.getElementById('bmBtn').innerHTML = bms.includes(currentTitle) ? '<i class="fa-solid fa-check"></i> SAVED TO LIBRARY' : '<i class="fa-solid fa-plus"></i> ADD TO LIBRARY';
-        }
-        
-        window.renderAdminManage = () => {
-            document.getElementById('adminChapterList').innerHTML = allData.map(ch => `
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:11px;">
-                    <span>${ch.seriesName} (Ch-${ch.chapterNum})</span>
-                    <button onclick="deleteDoc(doc(db, 'chapters', '${ch.id}')).then(()=>location.reload())" style="color:red; background:none; border:none;">DEL</button>
-                </div>`).join('');
+        window.renderGenreList = () => {
+            const genres = ["Action", "Romance", "Isekai", "Fantasy", "Drama"];
+            const gl = document.getElementById('genreList'); gl.innerHTML = "";
+            genres.forEach(g => {
+                gl.innerHTML += `<div style="background:rgba(128,128,128,0.1); padding:8px; text-align:center; border-radius:8px; font-size:11px;" onclick="filterGenre('${g}')">${g}</div>`;
+            });
         };
+        window.filterGenre = (g) => { renderGrid(allData.filter(x => x.category === g)); toggleSidebar(); };
+        window.searchManga = () => { const q = document.getElementById('searchInput').value.toLowerCase(); renderGrid(allData.filter(m => m.seriesName.toLowerCase().includes(q))); };
     </script>
 </body>
 </html>
