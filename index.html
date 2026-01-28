@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE PREMIUM | Ultra Edition</title>
+    <title>M-ZONE PREMIUM | Final Max Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #ff0000; --bg: #050505; --card: #121212; --text: #ffffff; --gold: #ffd700; --header: rgba(0,0,0,0.98); }
+        :root { --primary: #ff0000; --bg: #050505; --card: #121212; --text: #ffffff; --gold: #ffd700; --adult: #ff007f; --header: rgba(0,0,0,0.98); }
         .light-mode { --bg: #f4f4f4; --card: #ffffff; --text: #111; --header: #ffffff; }
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
@@ -19,8 +19,8 @@
         .container { padding: 0 15px; max-width: 1200px; margin: auto; }
         .section-title { font-family: 'Oswald'; font-size: 18px; margin: 20px 0 15px; display: flex; align-items: center; gap: 10px; color: var(--primary); text-transform: uppercase; }
 
-        /* ROUNDED UI BUTTONS & CARDS */
-        .btn-red { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.2s; }
+        /* ROUNDED UI */
+        .btn-red { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
         .btn-gold { background: var(--gold); color: black; border: none; padding: 10px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; }
         input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; background: rgba(128,128,128,0.1); border: 1px solid #333; color: var(--text); border-radius: 12px; outline: none; }
         
@@ -30,16 +30,14 @@
         .card-info { padding: 12px; }
         .card-info h3 { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* SIDEBAR & MODALS */
-        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--card); z-index: 2001; padding: 25px; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--card); z-index: 2001; padding: 25px; transition: 0.4s; }
         .sidebar.active { right: 0; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; backdrop-filter: blur(5px); }
         .overlay.active { display: block; }
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; padding: 20px; }
-        .modal-content { background: var(--card); padding: 25px; border-radius: 25px; width: 100%; max-width: 450px; border: 1px solid #333; }
+        .modal-content { background: var(--card); padding: 25px; border-radius: 25px; width: 100%; max-width: 450px; border: 1px solid #333; max-height: 90vh; overflow-y: auto; }
 
-        /* SLIDER */
         .slider-container { width: 100%; height: 210px; position: relative; overflow: hidden; margin: 10px 0 20px; border-radius: 20px; background: #111; }
         .slide { position: absolute; inset: 0; opacity: 0; transition: 0.8s; cursor: pointer; }
         .slide.active { opacity: 1; }
@@ -67,78 +65,80 @@
 
     <div class="sidebar" id="sidebar">
         <div id="userProfile" style="display:none; border-bottom:1px solid #333; padding-bottom:15px; margin-bottom:15px;">
-            <p style="font-size:10px; color:gray;">USER UID:</p>
-            <p id="myUID" style="font-size:10px; color:var(--gold); margin-bottom:15px;"></p>
-            <p style="font-size:11px; font-weight:bold; margin-bottom:5px;">REDEEM GIFT CODE</p>
-            <input type="text" id="promoInput" placeholder="Enter Key Here...">
-            <button onclick="redeemPromo()" class="btn-gold" style="font-size:12px;">CLAIM COINS</button>
+            <p id="myUID" style="font-size:10px; color:var(--gold); margin-bottom:10px; word-break: break-all;"></p>
+            <input type="text" id="promoInput" placeholder="Enter Gift Key">
+            <button onclick="redeemPromo()" class="btn-gold" style="font-size:12px; width:100%;">REDEEM KEY</button>
             <button onclick="logout()" style="color:red; background:none; border:none; margin-top:15px; cursor:pointer; font-size:12px;">LOGOUT</button>
         </div>
-        <button id="loginBtn" class="btn-red" onclick="openModal('authModal')">MEMBER LOGIN</button>
-        <div style="margin-top:25px; cursor:pointer; font-weight:600;" onclick="location.reload()"><i class="fa-solid fa-house"></i> HOME</div>
+        <button id="loginBtn" class="btn-red" onclick="openModal('authModal')">LOGIN</button>
+        <div style="margin-top:25px; cursor:pointer;" onclick="location.reload()"><i class="fa-solid fa-house"></i> HOME</div>
         <div id="genreList" style="margin-top:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
-        <div onclick="openAdmin()" style="margin-top:40px; color:gray; font-size:10px; text-align:center; cursor:pointer; opacity:0.5;">ADMINISTRATION</div>
+        
+        <div onclick="unlockHentai()" style="margin-top:20px; background:var(--adult); color:white; padding:12px; border-radius:12px; text-align:center; cursor:pointer; font-weight:bold; font-size:12px;">🔞 HENTAI (18+)</div>
+        
+        <div onclick="openAdmin()" style="margin-top:40px; color:gray; font-size:10px; text-align:center; cursor:pointer;">ADMIN PANEL</div>
     </div>
 
     <div class="container">
-        <input type="text" placeholder="Search series..." style="background:var(--card); margin:10px 0 20px;" oninput="searchManga(this.value)">
+        <input type="text" placeholder="Search..." style="background:var(--card); margin:10px 0 20px;" oninput="searchManga(this.value)">
         <div id="homeUI">
             <div id="saved-section" style="display:none;">
-                <div class="section-title" style="color:var(--gold);"><i class="fa-solid fa-bookmark"></i> SAVED LIBRARY</div>
+                <div class="section-title" style="color:var(--gold);"><i class="fa-solid fa-bookmark"></i> SAVED</div>
                 <div id="saved-list" class="manga-grid"></div>
             </div>
             <div class="slider-container" id="slider"></div>
-            <div class="section-title" id="gridTitle"><i class="fa-solid fa-bolt"></i> LATEST UPDATES</div>
+            <div class="section-title" id="gridTitle"><i class="fa-solid fa-bolt"></i> UPDATES</div>
             <div id="manga-list" class="manga-grid"></div>
         </div>
     </div>
 
     <div id="adminModal" class="modal"><div class="modal-content">
-        <h3 style="color:var(--primary); font-family:'Oswald';">ADMIN PANEL</h3>
-        <div style="display:flex; gap:10px; margin:15px 0;">
-            <button onclick="switchTab('up')" id="t1" style="flex:1; padding:8px; border-radius:8px; border:none; background:var(--primary); color:white;">UPLOAD</button>
-            <button onclick="switchTab('key')" id="t2" style="flex:1; padding:8px; border-radius:8px; border:none; background:#333; color:white;">KEYS</button>
-            <button onclick="switchTab('man')" id="t3" style="flex:1; padding:8px; border-radius:8px; border:none; background:#333; color:white;">MANAGE</button>
+        <h3 style="color:var(--primary);">ADMIN</h3>
+        <div style="display:flex; gap:5px; margin:15px 0;">
+            <button onclick="switchTab('up')" style="flex:1; padding:8px; border-radius:8px; border:none; background:var(--primary); color:white;">UPLOAD</button>
+            <button onclick="switchTab('key')" style="flex:1; padding:8px; border-radius:8px; border:none; background:#333; color:white;">KEYS</button>
+            <button onclick="switchTab('man')" style="flex:1; padding:8px; border-radius:8px; border:none; background:#333; color:white;">MANAGE</button>
         </div>
         <div id="upTab">
-            <input id="upName" placeholder="Manga Title"><input id="upCh" type="number" placeholder="Chapter No">
+            <input id="upName" placeholder="Manga Title">
+            <textarea id="upDesc" placeholder="Manga Description (Synopsis)" rows="3"></textarea>
+            <input id="upCh" type="number" placeholder="Chapter No">
             <select id="upCat"></select>
-            <input type="file" id="upCover" accept="image/*"><input type="file" id="upFiles" multiple accept="image/*">
-            <button id="uploadBtn" class="btn-red">PUBLISH SERIES</button>
+            <input type="file" id="upCover" accept="image/*">
+            <input type="file" id="upFiles" multiple accept="image/*">
+            <button id="uploadBtn" class="btn-red">PUBLISH</button>
         </div>
         <div id="keyTab" style="display:none;">
-            <p style="font-size:12px; color:gray;">Generate Promo Key:</p>
-            <input type="number" id="keyAmount" placeholder="Coin Amount (e.g. 1000)">
-            <button onclick="generateKey()" class="btn-gold">GENERATE & SAVE</button>
-            <div id="keyList" style="margin-top:15px; max-height:150px; overflow-y:auto; background:#111; padding:10px; border-radius:10px; font-size:11px;"></div>
+            <input type="number" id="keyAmount" placeholder="Amount">
+            <button onclick="generateKey()" class="btn-gold">GENERATE KEY</button>
+            <div id="keyList" style="margin-top:10px; max-height:100px; overflow-y:auto; font-size:10px; background:#111; padding:10px;"></div>
         </div>
         <div id="manTab" style="display:none;"><div id="adminManageList"></div></div>
         <button onclick="closeModal('adminModal')" style="width:100%; margin-top:15px; background:none; border:none; color:gray;">CLOSE</button>
     </div></div>
 
     <div id="detailsPage">
-        <div style="position:relative; width:100%; padding:20px; display:flex; gap:20px; background:linear-gradient(transparent, rgba(0,0,0,0.8));">
+        <div style="position:relative; width:100%; padding:20px; display:flex; gap:20px;">
             <div class="back-nav" onclick="closeDetails()"><i class="fa-solid fa-chevron-left"></i></div>
-            <img id="detImg" style="width:130px; height:185px; border-radius:18px; object-fit:cover; box-shadow: 0 10px 20px rgba(0,0,0,0.5);">
+            <img id="detImg" style="width:130px; height:185px; border-radius:18px; object-fit:cover;">
             <div style="flex:1; margin-top:20px;">
-                <h2 id="detTitle" style="font-family:'Oswald'; line-height:1.2;"></h2>
-                <p id="detCat" style="color:var(--primary); font-weight:bold; font-size:13px; margin:5px 0;"></p>
+                <h2 id="detTitle" style="font-family:'Oswald';"></h2>
+                <p id="detCat" style="color:var(--primary); font-weight:bold;"></p>
                 <button id="bmBtn" onclick="toggleBookmark()" class="btn-gold" style="width:auto; padding:8px 15px; margin-top:10px;"></button>
             </div>
         </div>
-        <div class="container"><p id="detDesc" style="color:gray; font-size:13px; margin:20px 0; line-height:1.6;"></p><div id="chapterList"></div></div>
+        <div class="container"><p id="detDesc" style="color:gray; font-size:13px; margin:20px 0;"></p><div id="chapterList"></div></div>
     </div>
 
     <div id="authModal" class="modal"><div class="modal-content">
-        <h3>Login</h3><input id="email" placeholder="Email"><input id="pass" type="password" placeholder="Password">
-        <button class="btn-red" onclick="handleLogin()">SIGN IN</button>
-        <p onclick="closeModal('authModal')" style="text-align:center; margin-top:15px; color:gray; font-size:12px; cursor:pointer;">Cancel</p>
+        <h3>Login</h3><input id="email" placeholder="Email"><input id="pass" type="password" placeholder="Pass">
+        <button class="btn-red" onclick="handleLogin()">LOGIN</button>
     </div></div>
 
     <div id="readPage">
         <div style="background:#000; height:60px; display:flex; align-items:center; padding:0 15px; position:fixed; top:0; width:100%; z-index:4001;">
             <i class="fa-solid fa-arrow-left" onclick="closeReader()" style="font-size:20px; cursor:pointer; margin-right:15px;"></i>
-            <span id="readTitle" style="font-size:13px; font-weight:bold;"></span>
+            <span id="readTitle" style="font-size:13px;"></span>
         </div>
         <div id="viewer" style="margin-top:60px;"></div>
     </div>
@@ -151,7 +151,7 @@
         const firebaseConfig = { apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs", authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax", storageBucket: "mangabyax.firebasestorage.app", appId: "1:974159756281:web:228c23b929f377544b1b28" };
         const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
         const CLOUD_NAME = "dqdqg2wac", UPLOAD_PRESET = "ml_default";
-        const CATS = ["Action", "Adventure", "Romance", "Isekai", "Fantasy", "Comedy"];
+        const CATS = ["Action", "Adventure", "Romance", "Isekai", "Fantasy", "Comedy", "Hentai"];
 
         let allData = [], currentUser = null, currentTitle = "";
 
@@ -169,7 +169,7 @@
             const s = await getDoc(doc(db, "users", currentUser.uid));
             document.getElementById('coinDisp').style.display = 'flex';
             document.getElementById('userCoins').innerText = (s.data().coins || 0).toLocaleString();
-            document.getElementById('myUID').innerText = currentUser.uid;
+            document.getElementById('myUID').innerText = "UID: " + currentUser.uid;
             document.getElementById('loginBtn').style.display = 'none';
             document.getElementById('userProfile').style.display = 'block';
         }
@@ -177,7 +177,8 @@
         async function fetchData() {
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
             allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
-            renderGrid(allData); renderSaved(); renderGenreMenu(); setupSlider();
+            renderGrid(allData.filter(x => x.category !== 'Hentai'));
+            renderSaved(); renderGenreMenu(); setupSlider();
         }
 
         window.renderGrid = (data) => {
@@ -189,55 +190,51 @@
                 </div>`).join('');
         };
 
-        window.filterGenre = (cat) => {
-            document.getElementById('gridTitle').innerText = cat + " SERIES";
-            renderGrid(allData.filter(x => x.category === cat));
-            toggleSidebar();
+        window.unlockHentai = () => {
+            if(prompt("Enter Adult Access Key:") === "18plus") {
+                document.getElementById('gridTitle').innerText = "HENTAI (18+)";
+                renderGrid(allData.filter(x => x.category === 'Hentai'));
+                toggleSidebar();
+            } else alert("Wrong Key!");
         };
 
-        /* PROMO KEY LOGIC */
-        window.generateKey = async () => {
-            const amt = document.getElementById('keyAmount').value;
-            if(!amt) return alert("Enter amount!");
-            const key = "MZ-" + Math.random().toString(36).substring(2, 10).toUpperCase();
-            await setDoc(doc(db, "promo_keys", key), { amount: parseInt(amt), used: false });
-            alert("Generated: " + key);
-            loadKeys();
-        };
+        window.openAdmin = () => { if(prompt("Admin Pass:") === "Admin@2026") { openModal('adminModal'); loadKeys(); } };
 
-        async function loadKeys() {
-            const snap = await getDocs(collection(db, "promo_keys"));
-            document.getElementById('keyList').innerHTML = snap.docs.map(d => `<div>${d.id} - ${d.data().amount} Coins (${d.data().used?'Used':'Active'})</div>`).join('');
-        }
-
-        window.redeemPromo = async () => {
-            const key = document.getElementById('promoInput').value.trim();
-            if(!key) return;
-            const ref = doc(db, "promo_keys", key);
-            const s = await getDoc(ref);
-            if(s.exists() && !s.data().used) {
-                await updateDoc(ref, { used: true });
-                await updateDoc(doc(db, "users", currentUser.uid), { coins: increment(s.data().amount) });
-                alert("Successfully added " + s.data().amount + " coins!");
-                location.reload();
-            } else { alert("Invalid or Used Key!"); }
-        };
-
-        /* ADMIN LOGIC */
-        window.openAdmin = () => { if(prompt("Pass:") === "Admin@2026") { openModal('adminModal'); loadKeys(); } };
         window.switchTab = (t) => {
             ['upTab','keyTab','manTab'].forEach(id => document.getElementById(id).style.display = 'none');
             document.getElementById(t+'Tab').style.display = 'block';
             if(t==='man') {
                 document.getElementById('adminManageList').innerHTML = allData.map(ch => `
-                    <div style="display:flex; justify-content:space-between; padding:10px; background:#1a1a1a; margin-bottom:8px; border-radius:10px; font-size:11px;">
+                    <div style="display:flex; justify-content:space-between; padding:10px; background:#1a1a1a; margin-bottom:8px; border-radius:10px; font-size:10px;">
                         <span>${ch.seriesName} (Ch-${ch.chapterNum})</span>
                         <button onclick="delChapter('${ch.id}')" style="background:red; color:white; border:none; padding:4px 8px; border-radius:6px;">DEL</button>
                     </div>`).join('');
             }
         };
 
-        window.delChapter = async (id) => { if(confirm("Delete this?")) { await deleteDoc(doc(db, "chapters", id)); location.reload(); } };
+        window.delChapter = async (id) => { if(confirm("Delete?")) { await deleteDoc(doc(db, "chapters", id)); location.reload(); } };
+
+        window.generateKey = async () => {
+            const amt = document.getElementById('keyAmount').value;
+            const key = "MZ-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+            await setDoc(doc(db, "promo_keys", key), { amount: parseInt(amt), used: false });
+            alert("Generated: " + key); loadKeys();
+        };
+
+        async function loadKeys() {
+            const snap = await getDocs(collection(db, "promo_keys"));
+            document.getElementById('keyList').innerHTML = snap.docs.map(d => `<div>${d.id} - ${d.data().amount} (${d.data().used?'Used':'Active'})</div>`).join('');
+        }
+
+        window.redeemPromo = async () => {
+            const key = document.getElementById('promoInput').value.trim();
+            const s = await getDoc(doc(db, "promo_keys", key));
+            if(s.exists() && !s.data().used) {
+                await updateDoc(doc(db, "promo_keys", key), { used: true });
+                await updateDoc(doc(db, "users", currentUser.uid), { coins: increment(s.data().amount) });
+                alert("Redeemed!"); location.reload();
+            } else alert("Invalid Key!");
+        };
 
         async function uploadCloud(file) {
             const fd = new FormData(); fd.append("file", file); fd.append("upload_preset", UPLOAD_PRESET);
@@ -246,29 +243,28 @@
         }
 
         document.getElementById('uploadBtn').onclick = async () => {
-            const name = document.getElementById('upName').value, ch = document.getElementById('upCh').value;
+            const name = document.getElementById('upName').value, ch = document.getElementById('upCh').value, desc = document.getElementById('upDesc').value;
             const cover = document.getElementById('upCover').files[0], pages = Array.from(document.getElementById('upFiles').files);
-            if(!name || !ch || !cover || pages.length === 0) return alert("Fill everything!");
-            document.getElementById('uploadBtn').innerText = "Uploading... Wait...";
+            if(!name || !ch || !cover || pages.length === 0) return alert("Fill all!");
+            document.getElementById('uploadBtn').innerText = "Uploading...";
             try {
                 const cUrl = await uploadCloud(cover);
                 const pUrls = await Promise.all(pages.map(p => uploadCloud(p)));
-                await addDoc(collection(db, "chapters"), { seriesName: name, chapterNum: parseFloat(ch), category: document.getElementById('upCat').value, coverUrl: cUrl, chapterImages: pUrls, timestamp: serverTimestamp() });
+                await addDoc(collection(db, "chapters"), { seriesName: name, seriesDesc: desc, chapterNum: parseFloat(ch), category: document.getElementById('upCat').value, coverUrl: cUrl, chapterImages: pUrls, timestamp: serverTimestamp() });
                 location.reload();
             } catch(e) { alert("Error!"); }
         };
 
-        /* UI LOGIC */
         window.openDetails = (title) => {
             currentTitle = title; const s = allData.filter(x => x.seriesName === title);
             document.getElementById('detTitle').innerText = title;
             document.getElementById('detImg').src = s[0].coverUrl;
             document.getElementById('detCat').innerText = s[0].category;
+            document.getElementById('detDesc').innerText = s[0].seriesDesc || "No description available.";
             updateBmBtn();
             document.getElementById('chapterList').innerHTML = s.sort((a,b)=>b.chapterNum-a.chapterNum).map(ch => `
                 <div style="background:var(--card); padding:15px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="showReader('${ch.id}')">
-                    <span style="font-size:13px; font-weight:600;">Chapter ${ch.chapterNum}</span>
-                    <i class="fa-solid fa-circle-play" style="color:var(--gold); font-size:18px;"></i>
+                    <span>Chapter ${ch.chapterNum}</span><i class="fa-solid fa-circle-play" style="color:var(--gold);"></i>
                 </div>`).join('');
             document.getElementById('detailsPage').style.display = 'block';
         };
@@ -278,12 +274,12 @@
             menu.innerHTML = ""; sel.innerHTML = "";
             CATS.forEach(c => {
                 sel.innerHTML += `<option value="${c}">${c}</option>`;
-                menu.innerHTML += `<div style="background:rgba(128,128,128,0.1); padding:10px; text-align:center; border-radius:12px; font-size:11px; cursor:pointer;" onclick="filterGenre('${c}')">${c}</div>`;
+                if(c !== 'Hentai') menu.innerHTML += `<div style="background:rgba(128,128,128,0.1); padding:10px; text-align:center; border-radius:12px; font-size:11px; cursor:pointer;" onclick="filterGenre('${c}')">${c}</div>`;
             });
         };
 
         window.setupSlider = () => {
-            const s = allData.slice(0,5);
+            const s = allData.filter(x=>x.category!=='Hentai').slice(0,5);
             document.getElementById('slider').innerHTML = s.map((v,i)=>`<div class="slide ${i===0?'active':''}" onclick="openDetails('${v.seriesName.replace(/'/g,"\\'")}')"><img src="${v.coverUrl}"><div class="slide-info"><h2>${v.seriesName}</h2></div></div>`).join('');
             let idx = 0; setInterval(() => {
                 const slides = document.querySelectorAll('.slide'); if(!slides.length) return;
@@ -311,7 +307,7 @@
 
         function updateBmBtn() {
             let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
-            document.getElementById('bmBtn').innerHTML = bms.includes(currentTitle) ? '<i class="fa-solid fa-check"></i> SAVED' : '<i class="fa-solid fa-plus"></i> LIBRARY';
+            document.getElementById('bmBtn').innerHTML = bms.includes(currentTitle) ? 'SAVED' : 'ADD TO LIBRARY';
         }
 
         window.toggleTheme = () => document.body.classList.toggle('light-mode');
