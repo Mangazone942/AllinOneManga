@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | Premium Experience</title>
+    <title>M-ZONE | Executive Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -14,49 +14,53 @@
         html { scroll-behavior: smooth; }
         body { background: var(--bg); color: var(--text); padding-top: 70px; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
 
-        /* 5. Hardware Acceleration & Smooth Rendering */
-        .manga-grid, .card, .sidebar, .modal-content { transform: translateZ(0); backface-visibility: hidden; will-change: transform; }
+        header { 
+            background: var(--header); backdrop-filter: blur(15px); height: 65px; width: 100%; position: fixed; 
+            top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 15px; border-bottom: 1px solid rgba(128,128,128,0.1); 
+        }
+        .header-right { display: flex; align-items: center; gap: 18px; }
+        .coin-display { color: var(--gold); font-weight: bold; font-size: 14px; display: none; align-items: center; gap: 6px; }
 
-        header { background: var(--header); backdrop-filter: blur(15px); height: 65px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid rgba(128,128,128,0.1); }
-        .logo { font-family: 'Oswald'; font-size: 24px; color: var(--primary); cursor: pointer; letter-spacing: 1px; }
+        .logo { font-family: 'Oswald'; font-size: 26px; color: var(--primary); cursor: pointer; letter-spacing: 1.5px; text-transform: uppercase; }
+        .container { padding: 0 15px; max-width: 1200px; margin: auto; }
 
-        /* 4. Button Micro-interactions */
-        .nav-btn, .card, .bm-btn, .genre-item, .sidebar i { cursor: pointer; transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
-        .nav-btn:active, .card:active, .bm-btn:active { transform: scale(0.95); }
-
-        .search-bar { width: 100%; padding: 12px 40px 12px 15px; background: var(--card); border: 1px solid rgba(128,128,128,0.2); border-radius: 12px; color: var(--text); outline: none; }
+        .search-bar { width: 100%; padding: 12px 15px; background: var(--card); border: 1px solid rgba(128,128,128,0.2); border-radius: 10px; color: var(--text); outline: none; font-size: 13px; }
         .search-bar:focus { border-color: var(--primary); }
 
-        /* 1. Skeleton Loading Animation */
+        /* Skeleton & Fade-in */
         @keyframes shimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }
         .skeleton { background: #1a1a1a; background-image: linear-gradient(to right, #1a1a1a 0%, #252525 20%, #1a1a1a 40%, #1a1a1a 100%); background-repeat: no-repeat; background-size: 800px 100%; animation: shimmer 1.5s infinite linear; border-radius: 12px; height: 210px; }
+        .fade-in { opacity: 0; animation: fadeInKey 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        @keyframes fadeInKey { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 2. Image Fade-in Effect */
-        .fade-in { opacity: 0; animation: fadeInKey 0.6s ease-out forwards; }
-        @keyframes fadeInKey { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        .slider-container { width: 100%; height: 230px; position: relative; overflow: hidden; margin-bottom: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .slider-container { width: 100%; height: 230px; position: relative; overflow: hidden; margin-bottom: 25px; border-radius: 15px; }
         .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease; }
         .slide.active { opacity: 1; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.6); }
+        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); }
 
+        .section-title { margin: 25px 0 15px; font-family: 'Oswald'; font-size: 18px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px; }
         .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid rgba(128,128,128,0.05); }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid rgba(128,128,128,0.05); cursor: pointer; }
+        .card:active { transform: scale(0.97); }
         .card img { width: 100%; height: 210px; object-fit: cover; background: #1a1a1a; }
-        .card-info { padding: 10px; }
+        .card-info { padding: 12px; }
+        .card-info h3 { font-size: 13px; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* 3. Premium Sidebar Transition */
-        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--card); z-index: 2001; transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1); padding: 25px; border-left: 1px solid #222; overflow-y: auto; }
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--card); z-index: 2001; transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1); padding: 25px; border-left: 1px solid #222; }
         .sidebar.active { right: 0; }
-        
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; backdrop-filter: blur(3px); }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; backdrop-filter: blur(4px); }
         .overlay.active { display: block; }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 450px; border: 1px solid #333; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 5000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px); }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 20px; width: 100%; max-width: 480px; border: 1px solid #333; overflow-y: auto; max-height: 90vh; }
+        
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; background: rgba(255,255,255,0.03); border: 1px solid #333; color: var(--text); border-radius: 8px; outline: none; font-size: 13px; }
+        .nav-btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: 600; width: 100%; margin-top: 10px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+
+        .admin-item { background: rgba(255,255,255,0.02); padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #222; }
 
         #readPage { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; overflow-y: auto; }
-        
         @media (min-width: 768px) { .manga-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } .slider-container { height: 350px; } }
     </style>
 </head>
@@ -66,111 +70,120 @@
         <div class="logo" onclick="location.reload()">M-ZONE</div>
         <div class="header-right">
             <div id="coinDisp" class="coin-display"><i class="fa-solid fa-gem"></i> <span id="userCoins">0</span></div>
-            <i class="fa-solid fa-moon" onclick="toggleTheme()" style="cursor:pointer; color:var(--primary); font-size:18px;"></i>
-            <i class="fa-solid fa-bars" onclick="toggleSidebar()" style="font-size:22px; cursor:pointer;"></i>
+            <i class="fa-solid fa-circle-half-stroke" onclick="toggleTheme()" style="cursor:pointer; color:var(--primary); font-size:18px;"></i>
+            <i class="fa-solid fa-bars-staggered" onclick="toggleSidebar()" style="font-size:22px; cursor:pointer;"></i>
         </div>
     </header>
 
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
     
     <div class="sidebar" id="sidebar">
-        <div id="userProfile" style="display:none; border-bottom:1px solid #222; padding-bottom:15px; margin-bottom:15px;">
-            <p style="font-size:10px; color:gray;">ACCOUNT UID:</p>
-            <p id="myUID" style="user-select:all; font-size:11px; color:var(--gold); margin-bottom:10px;"></p>
-            <div style="background:rgba(255,215,0,0.05); padding:10px; border-radius:10px; border:1px solid rgba(255,215,0,0.1);">
-                <input type="text" id="promoKey" placeholder="Enter Promo Code" style="margin:0; padding:8px; font-size:11px; width:100%; background:transparent; border:1px solid #333; color:white; border-radius:5px;">
-                <button onclick="redeemKey()" style="background:var(--gold); border:none; width:100%; margin-top:8px; border-radius:5px; font-weight:bold; cursor:pointer; font-size:11px; padding:8px; color:black;">REDEEM NOW</button>
+        <div id="userProfile" style="display:none; border-bottom:1px solid #222; padding-bottom:20px; margin-bottom:20px;">
+            <p style="font-size:10px; color:gray; text-transform:uppercase; letter-spacing:1px;">User ID</p>
+            <p id="myUID" style="user-select:all; color:var(--gold); font-size:11px; margin-bottom:15px;"></p>
+            <div style="background:rgba(255,215,0,0.03); padding:12px; border-radius:10px; border:1px solid rgba(255,215,0,0.1);">
+                <input type="text" id="promoKey" placeholder="PROMO CODE" style="margin:0; padding:8px; font-size:11px; background:transparent; border:none; text-align:center;">
+                <button onclick="redeemKey()" style="background:var(--gold); border:none; width:100%; margin-top:10px; border-radius:6px; font-weight:bold; padding:10px; color:black; font-size:10px; text-transform:uppercase;">Apply Key</button>
             </div>
-            <button onclick="logout()" style="color:#ff4d4d; background:none; border:none; cursor:pointer; font-size:12px; margin-top:15px; font-weight:600;"><i class="fa-solid fa-right-from-bracket"></i> Logout</button>
+            <button onclick="logout()" style="color:#ff4d4d; background:none; border:none; cursor:pointer; font-size:12px; font-weight:600; margin-top:15px;"><i class="fa-solid fa-arrow-right-from-bracket"></i> SIGN OUT</button>
         </div>
-        <button id="loginBtn" class="nav-btn" onclick="openModal('authModal')">SIGN IN / JOIN</button>
-        <div onclick="location.reload()" style="margin-top:20px; cursor:pointer; font-size:14px;"><i class="fa-solid fa-house" style="margin-right:10px;"></i> Home</div>
-        <h3 style="font-size:12px; margin:25px 0 12px; color:var(--primary); letter-spacing:1px;">GENRES</h3>
+        <button id="loginBtn" class="nav-btn" onclick="openModal('authModal')">MEMBER LOGIN</button>
+        <div onclick="location.reload()" style="margin-top:20px; cursor:pointer; font-size:14px;"><i class="fa-solid fa-house-chimney" style="margin-right:12px; color:var(--primary);"></i> HOME</div>
+        <h3 style="font-size:11px; margin:30px 0 15px; color:gray; letter-spacing:2px; text-transform:uppercase;">Catalog Genres</h3>
         <div id="genreList" style="display:grid; grid-template-columns:1fr 1fr; gap:8px;"></div>
-        <div onclick="openSecretModal()" style="margin-top:25px; background:var(--secret); color:white; padding:12px; text-align:center; border-radius:10px; cursor:pointer; font-weight:bold; font-size:13px;"><i class="fa-solid fa-crown"></i> RESTRICTED 18+</div>
-        <div onclick="openAdmin()" style="margin-top:40px; color:gray; font-size:10px; cursor:pointer; text-align:center; opacity:0.5;">ADMINISTRATION</div>
+        <div onclick="openSecretModal()" style="margin-top:30px; background:var(--secret); color:white; padding:14px; text-align:center; border-radius:10px; cursor:pointer; font-weight:bold; font-size:12px; letter-spacing:1px;"><i class="fa-solid fa-shield-halved" style="margin-right:8px;"></i> ADULT VAULT</div>
+        <div onclick="openAdmin()" style="margin-top:40px; color:gray; font-size:9px; cursor:pointer; text-align:center; letter-spacing:1px; opacity:0.6;">SYSTEM ADMINISTRATION</div>
     </div>
 
     <div class="container">
-        <div class="search-container">
-            <input type="text" class="search-bar" id="searchInput" placeholder="Search premium titles..." oninput="searchManga()">
-            <i class="fa-solid fa-magnifying-glass" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:gray;"></i>
+        <div class="search-container" style="margin:20px 0; position:relative;">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search for premium series..." oninput="searchManga()">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute; right:15px; top:50%; transform:translateY(-50%); color:gray; font-size:14px;"></i>
         </div>
 
         <div id="homeUI">
             <div id="bookmarkSection" style="display:none;">
-                <div class="section-title"><i class="fa-solid fa-bookmark" style="color:var(--gold);"></i> SAVED</div>
+                <div class="section-title"><i class="fa-solid fa-bookmark" style="color:var(--gold);"></i> My Library</div>
                 <div id="bookmark-list" class="manga-grid" style="margin-bottom:30px;"></div>
             </div>
             <div class="slider-container" id="slider"></div>
-            <div class="section-title"><i class="fa-solid fa-fire" style="color:var(--primary);"></i> TRENDING</div>
+            <div class="section-title"><i class="fa-solid fa-bolt-lightning" style="color:var(--primary);"></i> Trending Now</div>
             <div id="hot-list" class="manga-grid"></div>
-            <div class="section-title" id="viewTitle">LATEST UPDATES</div>
+            <div class="section-title" id="viewTitle"><i class="fa-solid fa-clock-rotate-left"></i> Latest Releases</div>
         </div>
         <div id="manga-list" class="manga-grid">
-            <div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div>
+            <div class="skeleton"></div><div class="skeleton"></div>
         </div>
     </div>
 
     <div id="adminModal" class="modal">
-        <div class="modal-content" style="overflow-y:auto; max-height:85vh;">
-            <h3 style="color:var(--primary); border-bottom:1px solid #333; padding-bottom:10px;">ADMIN PANEL</h3>
-            <div style="margin:15px 0;">
+        <div class="modal-content">
+            <h3 style="color:var(--primary); font-family:'Oswald'; letter-spacing:1px;">ADMIN CONTROL</h3>
+            
+            <div style="background:rgba(255,255,255,0.02); padding:18px; border-radius:15px; margin:20px 0; border:1px solid #222;">
+                <h4 style="color:var(--gold); font-size:12px; margin-bottom:12px; text-transform:uppercase;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Manga</h4>
                 <input type="text" id="upName" placeholder="Manga Title">
-                <textarea id="upDesc" placeholder="Description" rows="3" style="width:100%; background:rgba(128,128,128,0.1); border:1px solid #333; color:white; padding:10px; border-radius:10px;"></textarea>
-                <input type="number" id="upCh" placeholder="Chapter No.">
-                <select id="upCat" style="width:100%; background:#1a1a1a; color:white; padding:10px; margin:8px 0; border-radius:10px; border:1px solid #333;"></select>
-                <select id="upPrice" style="width:100%; background:#1a1a1a; color:white; padding:10px; margin:8px 0; border-radius:10px; border:1px solid #333;"><option value="0">Free</option><option value="10">10 Coins</option><option value="20">20 Coins</option><option value="50">50 Coins</option></select>
-                <p style="font-size:11px; color:gray; margin-top:10px;">Cover & Pages:</p>
+                <textarea id="upDesc" placeholder="Series Synopsis" rows="2"></textarea>
+                <input type="number" id="upCh" placeholder="Chapter Number">
+                <select id="upCat"></select>
+                <select id="upPrice"><option value="0">Free Content</option><option value="10">Premium (10 Coins)</option><option value="20">Premium (20 Coins)</option><option value="50">Premium (50 Coins)</option></select>
+                <p style="font-size:10px; color:gray; margin:10px 0 5px;">Cover & Pages</p>
                 <input type="file" id="upCover" accept="image/*">
                 <input type="file" id="upFiles" multiple accept="image/*">
-                <button class="nav-btn" id="uploadBtn" style="margin-top:10px;">PUBLISH</button>
+                <button class="nav-btn" id="uploadBtn">Publish Series</button>
             </div>
-            <div style="border-top:1px solid #333; padding-top:15px;">
-                <h4 style="color:var(--gold); font-size:14px;">KEY GENERATOR</h4>
-                <input type="number" id="keyAmt" placeholder="Coin Amount">
-                <input type="number" id="keyQty" placeholder="Quantity">
-                <button class="nav-btn" onclick="generateKeys()" style="background:#333;">GENERATE</button>
-                <div id="keyDisplay" style="margin-top:10px; font-size:11px; background:#000; padding:10px; color:var(--gold); display:none; white-space:pre-wrap; border:1px dashed #444;"></div>
+
+            <div style="background:rgba(255,255,255,0.02); padding:18px; border-radius:15px; margin-bottom:20px; border:1px solid #222;">
+                <h4 style="color:var(--gold); font-size:12px; margin-bottom:12px; text-transform:uppercase;"><i class="fa-solid fa-list-check"></i> Manage Content</h4>
+                <div id="adminChapterList" style="max-height:180px; overflow-y:auto;"></div>
             </div>
-            <button onclick="closeModal('adminModal')" style="background:none; border:none; width:100%; margin-top:20px; color:gray; cursor:pointer;">Close Panel</button>
+
+            <div style="background:rgba(255,255,255,0.02); padding:18px; border-radius:15px; border:1px solid #222;">
+                <h4 style="color:var(--gold); font-size:12px; margin-bottom:12px; text-transform:uppercase;"><i class="fa-solid fa-key"></i> Key Management</h4>
+                <input type="number" id="keyAmt" placeholder="Coin Value">
+                <input type="number" id="keyQty" placeholder="Key Quantity">
+                <button class="nav-btn" onclick="generateKeys()" style="background:#333;">Generate Keys</button>
+                <div id="keyDisplay" style="margin-top:10px; font-size:10px; color:var(--gold); display:none; white-space:pre-wrap; background:#000; padding:10px; border-radius:5px;"></div>
+            </div>
+            
+            <button onclick="closeModal('adminModal')" style="background:none; border:none; width:100%; margin-top:20px; color:gray; cursor:pointer; font-size:12px;">EXIT PANEL</button>
         </div>
     </div>
 
     <div id="authModal" class="modal"><div class="modal-content">
-        <h3 style="margin-bottom:15px;">M-ZONE ACCESS</h3>
-        <input type="email" id="email" placeholder="Email"><input type="password" id="pass" placeholder="Password">
-        <button class="nav-btn" onclick="handleAuth('login')">LOGIN</button>
-        <button class="nav-btn" style="background:#333; margin-top:10px;" onclick="handleAuth('signup')">CREATE ACCOUNT</button>
-        <p onclick="closeModal('authModal')" style="text-align:center; margin-top:20px; cursor:pointer; color:gray; font-size:12px;">Go Back</p>
+        <h3 style="font-family:'Oswald'; margin-bottom:20px;">AUTHENTICATION</h3>
+        <input type="email" id="email" placeholder="Email Address"><input type="password" id="pass" placeholder="Password">
+        <button class="nav-btn" onclick="handleAuth('login')">SIGN IN</button>
+        <button class="nav-btn" style="background:#222; margin-top:10px; border:1px solid #333;" onclick="handleAuth('signup')">CREATE ACCOUNT</button>
+        <p onclick="closeModal('authModal')" style="text-align:center; margin-top:25px; cursor:pointer; color:gray; font-size:11px;">CANCEL</p>
     </div></div>
 
     <div id="detailsPage" style="display:none; position:fixed; inset:0; background:var(--bg); z-index:3000; overflow-y:auto; padding:80px 20px;">
         <div style="max-width:800px; margin:auto;" class="fade-in">
-            <i class="fa-solid fa-arrow-left" onclick="closeDetails()" style="position:fixed; top:25px; left:20px; font-size:20px; cursor:pointer; background:var(--primary); padding:10px; border-radius:50%; width:40px; height:40px; display:flex; align-items:center; justify-content:center;"></i>
-            <div style="display:flex; gap:20px; align-items:flex-start;">
-                <img id="detImg" style="width:130px; height:190px; border-radius:12px; object-fit:cover; box-shadow:0 5px 15px rgba(0,0,0,0.5);">
+            <i class="fa-solid fa-chevron-left" onclick="closeDetails()" style="position:fixed; top:25px; left:20px; background:var(--primary); color:white; padding:12px; border-radius:12px; cursor:pointer; font-size:18px; box-shadow:0 4px 15px rgba(255,0,0,0.3);"></i>
+            <div style="display:flex; gap:25px; align-items:flex-start;">
+                <img id="detImg" style="width:130px; height:190px; border-radius:15px; object-fit:cover; box-shadow:0 10px 25px rgba(0,0,0,0.5);">
                 <div style="flex:1;">
-                    <h2 id="detTitle" style="font-family:'Oswald'; line-height:1.2;"></h2>
-                    <p id="detCat" style="color:var(--primary); font-weight:bold; margin-top:5px; font-size:14px;"></p>
-                    <button id="bmBtn" class="nav-btn" style="width:auto; padding:8px 15px; background:var(--gold); color:black; margin-top:15px; font-size:12px;" onclick="toggleBookmark()"></button>
+                    <h2 id="detTitle" style="font-family:'Oswald'; font-size:24px; line-height:1.2;"></h2>
+                    <p id="detCat" style="color:var(--primary); font-weight:bold; font-size:13px; margin-top:8px;"></p>
+                    <button id="bmBtn" class="nav-btn" style="width:auto; padding:10px 20px; background:var(--gold); color:black; font-size:11px; border-radius:8px;" onclick="toggleBookmark()"></button>
                 </div>
             </div>
-            <p id="detDesc" style="margin:25px 0; color:#aaa; font-size:13px; line-height:1.8;"></p>
-            <h4 style="border-bottom:1px solid #222; padding-bottom:10px; margin-bottom:15px; font-size:16px;">CHAPTERS</h4>
+            <p id="detDesc" style="margin:30px 0; color:#888; font-size:13px; line-height:1.8;"></p>
+            <h4 style="font-size:14px; margin-bottom:15px; color:gray; text-transform:uppercase; letter-spacing:1px;">Available Chapters</h4>
             <div id="chapterList"></div>
         </div>
     </div>
 
     <div id="readPage">
-        <div style="background:rgba(0,0,0,0.9); backdrop-filter:blur(10px); height:55px; position:fixed; top:0; width:100%; display:flex; align-items:center; padding:0 15px; z-index:4001; border-bottom:1px solid #222;">
-            <i class="fa-solid fa-chevron-left" onclick="closeReader()" style="cursor:pointer; margin-right:20px; font-size:20px;"></i>
-            <span id="readTitle" style="font-size:13px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"></span>
+        <div style="background:rgba(0,0,0,0.95); backdrop-filter:blur(10px); height:60px; position:fixed; top:0; width:100%; display:flex; align-items:center; padding:0 15px; z-index:4001; border-bottom:1px solid #222;">
+            <i class="fa-solid fa-xmark" onclick="closeReader()" style="cursor:pointer; margin-right:20px; font-size:20px;"></i>
+            <span id="readTitle" style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; opacity:0.8;"></span>
         </div>
-        <div id="viewer" style="margin-top:55px;"></div>
+        <div id="viewer" style="margin-top:60px;"></div>
     </div>
 
-    <div id="secretModal" class="modal"><div class="modal-content"><h3>RESTRICTED ACCESS</h3><p style="font-size:11px; color:gray; margin-bottom:10px;">Enter the special access token</p><input type="password" id="secPass" placeholder="Token ID"><button onclick="checkSecret()" class="nav-btn" style="background:var(--secret); margin-top:10px;">UNLOCK ARCHIVE</button></div></div>
+    <div id="secretModal" class="modal"><div class="modal-content"><h3>RESTRICTED ARCHIVE</h3><p style="font-size:11px; color:gray; margin-bottom:15px;">Access requires a security bypass key.</p><input type="password" id="secPass" placeholder="Security Token"><button onclick="checkSecret()" class="nav-btn" style="background:var(--secret);">BYPASS SECURITY</button></div></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -185,8 +198,7 @@
 
         let allData = [], currentUser = null, userData = null, currentMangaTitle = "";
 
-        // Fix Login Persistence
-        (async () => { try { await setPersistence(auth, browserLocalPersistence); } catch (e) { console.error(e); } })();
+        (async () => { try { await setPersistence(auth, browserLocalPersistence); } catch (e) {} })();
 
         onAuthStateChanged(auth, async (user) => {
             if(user) {
@@ -222,19 +234,34 @@
             const btn = document.getElementById('uploadBtn');
             const name = document.getElementById('upName').value, chNum = document.getElementById('upCh').value;
             const coverFile = document.getElementById('upCover').files[0], contentFiles = Array.from(document.getElementById('upFiles').files);
-            if(!name || !chNum || !coverFile || contentFiles.length === 0) return alert("Missing fields");
-            btn.innerText = "Processing..."; btn.disabled = true;
+            if(!name || !chNum || !coverFile || contentFiles.length === 0) return alert("All fields are mandatory.");
+            btn.innerText = "Processing Assets..."; btn.disabled = true;
             try {
                 const coverUrl = await uploadFile(coverFile);
                 const imageUrls = await Promise.all(contentFiles.map(f => uploadFile(f)));
                 await addDoc(collection(db, "chapters"), { seriesName: name, seriesDesc: document.getElementById('upDesc').value, chapterNum: parseFloat(chNum), category: document.getElementById('upCat').value, price: parseInt(document.getElementById('upPrice').value), coverUrl, chapterImages: imageUrls, timestamp: serverTimestamp() });
                 location.reload();
-            } catch(e) { alert(e.message); btn.innerText = "PUBLISH"; btn.disabled = false; }
+            } catch(e) { alert(e.message); btn.innerText = "Publish Series"; btn.disabled = false; }
+        };
+
+        window.deleteChapter = async (id) => {
+            if(confirm("Permanently delete this entry?")) {
+                await deleteDoc(doc(db, "chapters", id));
+                location.reload();
+            }
+        };
+
+        window.renderAdminManage = () => {
+            document.getElementById('adminChapterList').innerHTML = allData.map(ch => `
+                <div class="admin-item">
+                    <span style="font-size:11px;">${ch.seriesName} (Ch-${ch.chapterNum})</span>
+                    <button onclick="deleteChapter('${ch.id}')" style="background:#ff4d4d; color:white; border:none; padding:5px 10px; border-radius:5px; font-size:10px; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
+                </div>`).join('');
         };
 
         window.generateKeys = async () => {
             const amt = parseInt(document.getElementById('keyAmt').value), qty = parseInt(document.getElementById('keyQty').value);
-            if(!amt || !qty) return alert("Enter values");
+            if(!amt || !qty) return alert("Values missing.");
             let keys = [];
             for(let i=0; i<qty; i++) {
                 const k = "MZ-" + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -249,19 +276,21 @@
             const snap = await getDoc(doc(db, "promo_codes", key));
             if(snap.exists()){
                 await updateDoc(doc(db, "users", currentUser.uid), { coins: (userData.coins || 0) + snap.data().amount });
-                await deleteDoc(doc(db, "promo_codes", key)); alert("Successfully added coins!"); location.reload();
-            } else alert("Invalid Key");
+                await deleteDoc(doc(db, "promo_codes", key)); location.reload();
+            } else alert("Key is invalid or expired.");
         };
 
         window.renderGrid = (data) => {
             const s = {}; data.forEach(ch => { if(!s[ch.seriesName]) s[ch.seriesName] = ch; });
-            // 2. Applied Fade-in and Lazy load to cards
             document.getElementById('manga-list').innerHTML = Object.values(s).map(v => `
                 <div class="card fade-in" onclick="openDetails('${v.seriesName.replace(/'/g,"\\'")}')">
                     <img src="${v.coverUrl}" loading="lazy">
                     <div class="card-info">
-                        <h3 style="font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${v.seriesName}</h3>
-                        <small style="color:gray; font-size:11px;">${v.category}</small>
+                        <h3>${v.seriesName}</h3>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <small style="color:gray; font-size:10px; text-transform:uppercase;">${v.category}</small>
+                            <i class="fa-solid fa-arrow-right-long" style="font-size:10px; opacity:0.3;"></i>
+                        </div>
                     </div>
                 </div>`).join('');
         };
@@ -269,12 +298,12 @@
         window.openDetails = (title) => {
             currentMangaTitle = title; const s = allData.filter(x => x.seriesName === title);
             document.getElementById('detTitle').innerText = title; document.getElementById('detImg').src = s[0].coverUrl;
-            document.getElementById('detDesc').innerText = s[0].seriesDesc || ""; document.getElementById('detCat').innerText = s[0].category;
+            document.getElementById('detDesc').innerText = s[0].seriesDesc || "No synopsis available for this title."; document.getElementById('detCat').innerText = s[0].category;
             updateBMBtn();
             document.getElementById('chapterList').innerHTML = s.sort((a,b) => a.chapterNum - b.chapterNum).map(ch => `
-                <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;" onclick="tryRead('${ch.id}', ${ch.price})">
-                    <span style="font-size:14px; font-weight:600;">Chapter ${ch.chapterNum}</span>
-                    <span style="color:var(--gold); font-size:12px;">${(ch.price > 0 && !userData?.unlocked?.includes(ch.id)) ? '<i class="fa-solid fa-lock"></i> '+ch.price : '<i class="fa-solid fa-circle-play" style="font-size:18px;"></i>'}</span>
+                <div style="background:rgba(255,255,255,0.03); padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="tryRead('${ch.id}', ${ch.price})">
+                    <span style="font-size:13px; font-weight:600;">Chapter ${ch.chapterNum}</span>
+                    <span style="color:var(--gold); font-size:12px;">${(ch.price > 0 && !userData?.unlocked?.includes(ch.id)) ? '<i class="fa-solid fa-lock" style="margin-right:5px;"></i>'+ch.price : '<i class="fa-solid fa-circle-play" style="font-size:16px;"></i>'}</span>
                 </div>`).join('');
             document.getElementById('detailsPage').style.display = 'block';
         };
@@ -287,13 +316,12 @@
                     await updateDoc(doc(db, "users", currentUser.uid), { coins: userData.coins - price, unlocked: [...(userData.unlocked || []), id] });
                     location.reload();
                 }
-            } else alert("Insufficient coins. Please redeem a code.");
+            } else alert("Insufficient balance.");
         };
 
         function showReader(id) {
             const ch = allData.find(x => x.id === id);
-            document.getElementById('readTitle').innerText = ch.seriesName + " - CH " + ch.chapterNum;
-            // 2. Applied Lazy Loading for reader images
+            document.getElementById('readTitle').innerText = ch.seriesName + " | CHAPTER " + ch.chapterNum;
             document.getElementById('viewer').innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;" loading="lazy" class="fade-in">`).join('');
             document.getElementById('readPage').style.display = 'block';
         }
@@ -303,13 +331,13 @@
             gl.innerHTML = ""; sl.innerHTML = "";
             CATS.forEach(c => {
                 sl.innerHTML += `<option value="${c}">${c}</option>`;
-                if(c !== 'Hentai') gl.innerHTML += `<div class="genre-item" style="background:rgba(255,255,255,0.05); padding:10px; text-align:center; border-radius:8px; font-size:11px; font-weight:600;" onclick="filterGenre('${c}')">${c}</div>`;
+                if(c !== 'Hentai') gl.innerHTML += `<div class="genre-item" style="background:rgba(255,255,255,0.05); padding:10px; text-align:center; border-radius:8px; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px;" onclick="filterGenre('${c}')">${c}</div>`;
             });
         };
 
-        window.filterGenre = (g) => { renderGrid(allData.filter(x => x.category === g)); document.getElementById('homeUI').style.display='none'; document.getElementById('viewTitle').innerText="GENRE: "+g.toUpperCase(); toggleSidebar(); window.scrollTo(0,0); };
-        window.openAdmin = () => { if(prompt("Enter Admin Passcode:") === MASTER_ADMIN_PASS) openModal('adminModal'); };
-        window.checkSecret = () => { if(document.getElementById('secPass').value === HENTAI_PASS) { renderGrid(allData.filter(x => x.category === 'Hentai')); closeModal('secretModal'); document.getElementById('homeUI').style.display='none'; toggleSidebar(); window.scrollTo(0,0); } else alert("Access Denied"); };
+        window.filterGenre = (g) => { renderGrid(allData.filter(x => x.category === g)); document.getElementById('homeUI').style.display='none'; document.getElementById('viewTitle').innerHTML=`<i class="fa-solid fa-filter"></i> ${g}`; toggleSidebar(); window.scrollTo(0,0); };
+        window.openAdmin = () => { if(prompt("System Access Code:") === MASTER_ADMIN_PASS) { renderAdminManage(); openModal('adminModal'); } };
+        window.checkSecret = () => { if(document.getElementById('secPass').value === HENTAI_PASS) { renderGrid(allData.filter(x => x.category === 'Hentai')); closeModal('secretModal'); document.getElementById('homeUI').style.display='none'; toggleSidebar(); window.scrollTo(0,0); } };
         window.handleAuth = async (t) => {
             const e = document.getElementById('email').value, p = document.getElementById('pass').value;
             try {
@@ -332,15 +360,15 @@
             const u = {}; allData.filter(x=>x.category!=='Hentai').forEach(ch => { if(!u[ch.seriesName]) u[ch.seriesName]=ch; }); 
             const top = Object.values(u).slice(0,5); 
             if(top.length === 0) return;
-            document.getElementById('slider').innerHTML = top.map((s,i)=>`<div class="slide ${i===0?'active':''}" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}"> <h2 style="position:absolute; bottom:20px; left:20px; text-shadow:2px 2px 10px rgba(0,0,0,0.8); font-family:'Oswald'; font-size:24px;">${s.seriesName}</h2></div>`).join(''); 
+            document.getElementById('slider').innerHTML = top.map((s,i)=>`<div class="slide ${i===0?'active':''}" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}"> <h2 style="position:absolute; bottom:20px; left:20px; text-shadow:2px 2px 10px #000; font-family:'Oswald'; font-size:22px; text-transform:uppercase;">${s.seriesName}</h2></div>`).join(''); 
             let cur=0; const slides=document.querySelectorAll('.slide'); 
-            if(slides.length > 1){ setInterval(()=>{ slides[cur].classList.remove('active'); cur=(cur+1)%slides.length; slides[cur].classList.add('active'); }, 5000); } 
+            if(slides.length > 1){ setInterval(()=>{ slides[cur].classList.remove('active'); cur=(cur+1)%slides.length; slides[cur].classList.add('active'); }, 6000); } 
         }
 
         function renderHot() { 
             const u = {}; allData.filter(x=>x.category!=='Hentai').forEach(ch => { if(!u[ch.seriesName]) u[ch.seriesName]=ch; }); 
             const hot = Object.values(u).slice(0,4); 
-            document.getElementById('hot-list').innerHTML = hot.map(s => `<div class="card fade-in" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}" loading="lazy"><div class="card-info"><h3>${s.seriesName}</h3><span style="color:var(--primary); font-size:10px; font-weight:bold;">🔥 POPULAR</span></div></div>`).join(''); 
+            document.getElementById('hot-list').innerHTML = hot.map(s => `<div class="card fade-in" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}" loading="lazy"><div class="card-info"><h3>${s.seriesName}</h3><span style="color:var(--primary); font-size:9px; font-weight:bold; letter-spacing:1px;"><i class="fa-solid fa-fire"></i> TRENDING</span></div></div>`).join(''); 
         }
 
         function renderBookmarks() { 
@@ -348,7 +376,7 @@
             if(bms.length > 0) { 
                 document.getElementById('bookmarkSection').style.display = "block"; 
                 const bd = bms.map(t => allData.find(x => x.seriesName === t)).filter(x => x); 
-                document.getElementById('bookmark-list').innerHTML = bd.map(s => `<div class="card fade-in" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}" loading="lazy"><div class="card-info"><h3>${s.seriesName}</h3></div></div>`).join(''); 
+                document.getElementById('bookmark-list').innerHTML = bd.map(s => `<div class="card fade-in" onclick="openDetails('${s.seriesName.replace(/'/g,"\\'")}')"><img src="${s.coverUrl}"><div class="card-info"><h3>${s.seriesName}</h3></div></div>`).join(''); 
             } 
         }
 
@@ -363,7 +391,7 @@
         function updateBMBtn() { 
             let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]'); 
             const btn = document.getElementById('bmBtn');
-            if(btn) btn.innerHTML = bms.includes(currentMangaTitle) ? '<i class="fa-solid fa-check"></i> SAVED' : '<i class="fa-solid fa-star"></i> SAVE TO LIST'; 
+            if(btn) btn.innerHTML = bms.includes(currentMangaTitle) ? '<i class="fa-solid fa-check-double"></i> ADDED TO LIBRARY' : '<i class="fa-solid fa-plus"></i> ADD TO LIBRARY'; 
         }
     </script>
 </body>
