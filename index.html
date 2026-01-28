@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE PREMIUM | Final Max Edition</title>
+    <title>M-ZONE PREMIUM | Full Max Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -19,24 +19,36 @@
         .container { padding: 0 15px; max-width: 1200px; margin: auto; }
         .section-title { font-family: 'Oswald'; font-size: 18px; margin: 20px 0 15px; display: flex; align-items: center; gap: 10px; color: var(--primary); text-transform: uppercase; }
 
-        /* ROUNDED UI */
+        /* UI COMPONENTS */
         .btn-red { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; }
         .btn-gold { background: var(--gold); color: black; border: none; padding: 10px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; }
         input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; background: rgba(128,128,128,0.1); border: 1px solid #333; color: var(--text); border-radius: 12px; outline: none; }
         
+        /* GRID & CARDS */
         .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: var(--card); border-radius: 18px; overflow: hidden; cursor: pointer; transition: 0.3s; border: 1px solid rgba(128,128,128,0.05); }
+        .card { background: var(--card); border-radius: 18px; overflow: hidden; cursor: pointer; transition: 0.3s; border: 1px solid rgba(128,128,128,0.05); position: relative; }
+        
+        /* Privacy Blur Effect */
+        .blur-mode .card img { filter: blur(12px); transition: 0.4s; }
+        .blur-mode .card:hover img { filter: blur(0); }
+        
         .card img { width: 100%; height: 230px; object-fit: cover; }
         .card-info { padding: 12px; }
         .card-info h3 { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+        /* SIDEBAR */
         .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: var(--card); z-index: 2001; padding: 25px; transition: 0.4s; }
         .sidebar.active { right: 0; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; backdrop-filter: blur(5px); }
         .overlay.active { display: block; }
 
+        /* MODALS */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: var(--card); padding: 25px; border-radius: 25px; width: 100%; max-width: 450px; border: 1px solid #333; max-height: 90vh; overflow-y: auto; }
+
+        /* ANIME STYLES */
+        .ep-row { display: flex; gap: 5px; margin-bottom: 5px; }
+        .ep-link-btn { background: #1a1a1a; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; text-decoration: none; color: white; margin-bottom: 10px; border-left: 4px solid var(--adult); }
 
         .slider-container { width: 100%; height: 210px; position: relative; overflow: hidden; margin: 10px 0 20px; border-radius: 20px; background: #111; }
         .slide { position: absolute; inset: 0; opacity: 0; transition: 0.8s; cursor: pointer; }
@@ -44,13 +56,17 @@
         .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
         .slide-info { position: absolute; bottom: 20px; left: 20px; }
 
-        .back-nav { position: absolute; top: 15px; left: 15px; z-index: 100; background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .back-nav { background: var(--primary); color: white; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         
-        #detailsPage { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; overflow-y: auto; }
+        #detailsPage, #animePage, #animeDetailsPage { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; overflow-y: auto; padding-top: 20px; }
         #readPage { display: none; position: fixed; inset: 0; background: #000; z-index: 4000; overflow-y: auto; }
+        
+        #panicBtn { position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; background: red; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 9999; cursor: pointer; font-weight: bold; border: 2px solid white; }
     </style>
 </head>
-<body>
+<body class="blur-mode">
+
+    <div id="panicBtn" onclick="window.location.replace('https://www.google.com')">EXIT</div>
 
     <header>
         <div class="logo" onclick="location.reload()">M-ZONE</div>
@@ -71,11 +87,11 @@
             <button onclick="logout()" style="color:red; background:none; border:none; margin-top:15px; cursor:pointer; font-size:12px;">LOGOUT</button>
         </div>
         <button id="loginBtn" class="btn-red" onclick="openModal('authModal')">LOGIN</button>
+        
         <div style="margin-top:25px; cursor:pointer;" onclick="location.reload()"><i class="fa-solid fa-house"></i> HOME</div>
+        <div onclick="openAnimePage()" style="margin-top:15px; background:#4e148c; color:white; padding:12px; border-radius:12px; text-align:center; cursor:pointer; font-weight:bold; font-size:12px;">🔞 H-ANIME ZONE</div>
         <div id="genreList" style="margin-top:15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;"></div>
-        
-        <div onclick="unlockHentai()" style="margin-top:20px; background:var(--adult); color:white; padding:12px; border-radius:12px; text-align:center; cursor:pointer; font-weight:bold; font-size:12px;">🔞 HENTAI (18+)</div>
-        
+        <div onclick="unlockHentai()" style="margin-top:20px; background:var(--adult); color:white; padding:12px; border-radius:12px; text-align:center; cursor:pointer; font-weight:bold; font-size:12px;">🔞 HENTAI MANGA</div>
         <div onclick="openAdmin()" style="margin-top:40px; color:gray; font-size:10px; text-align:center; cursor:pointer;">ADMIN PANEL</div>
     </div>
 
@@ -93,75 +109,64 @@
     </div>
 
     <div id="adminModal" class="modal"><div class="modal-content">
-        <h3 style="color:var(--primary);">ADMIN</h3>
+        <h3 style="color:var(--gold);">ADMIN CONTROLS</h3>
         <div style="display:flex; gap:5px; margin:15px 0;">
             <button onclick="switchTab('up')" style="flex:1; padding:8px; border-radius:8px; border:none; background:var(--primary); color:white;">UPLOAD</button>
             <button onclick="switchTab('key')" style="flex:1; padding:8px; border-radius:8px; border:none; background:#333; color:white;">KEYS</button>
-            <button onclick="switchTab('man')" style="flex:1; padding:8px; border-radius:8px; border:none; background:#333; color:white;">MANAGE</button>
         </div>
+
         <div id="upTab">
-            <input id="upName" placeholder="Manga Title">
-            <textarea id="upDesc" placeholder="Manga Description (Synopsis)" rows="3"></textarea>
-            <input id="upCh" type="number" placeholder="Chapter No">
-            <select id="upCat"></select>
-            <input type="file" id="upCover" accept="image/*">
-            <input type="file" id="upFiles" multiple accept="image/*">
+            <select id="upMainType" onchange="toggleAdminFields()">
+                <option value="manga">Upload Manga</option>
+                <option value="anime">Upload H-Anime</option>
+            </select>
+            <div id="mangaFields">
+                <input id="upName" placeholder="Manga Title">
+                <textarea id="upDesc" placeholder="Manga Synopsis" rows="2"></textarea>
+                <input id="upCh" type="number" placeholder="Chapter No">
+                <select id="upCat"></select>
+                <label style="font-size:10px;">Cover Image</label><input type="file" id="upCover" accept="image/*">
+                <label style="font-size:10px;">Chapter Pages</label><input type="file" id="upFiles" multiple accept="image/*">
+            </div>
+            <div id="animeFields" style="display:none;">
+                <input id="aniName" placeholder="Anime Title">
+                <textarea id="aniDesc" placeholder="Anime Drep Box" rows="2"></textarea>
+                <label style="font-size:10px;">Anime Cover</label><input type="file" id="aniCoverFile" accept="image/*">
+                <div id="epContainer">
+                    <div class="ep-row"><input class="ep-name" placeholder="Ep 1" style="width:30%;"><input class="ep-url" placeholder="TG Link" style="width:70%;"></div>
+                </div>
+                <button class="btn-gold" style="font-size:11px;" onclick="addNewEpField()">+ ADD EP BOX</button>
+            </div>
             <button id="uploadBtn" class="btn-red">PUBLISH</button>
         </div>
+
         <div id="keyTab" style="display:none;">
-            <input type="number" id="keyAmount" placeholder="Amount">
-            <button onclick="generateKey()" class="btn-gold">GENERATE KEY</button>
-            <div id="keyList" style="margin-top:10px; max-height:100px; overflow-y:auto; font-size:10px; background:#111; padding:10px;"></div>
+            <input type="number" id="keyAmount" placeholder="Coin Amount">
+            <button onclick="generateKey()" class="btn-gold">GENERATE PROMO KEY</button>
+            <div id="keyList" style="margin-top:10px; max-height:150px; overflow-y:auto; font-size:10px; background:#111; padding:10px;"></div>
         </div>
-        <div id="manTab" style="display:none;"><div id="adminManageList"></div></div>
+
         <button onclick="closeModal('adminModal')" style="width:100%; margin-top:15px; background:none; border:none; color:gray;">CLOSE</button>
     </div></div>
 
-    <div id="detailsPage">
-        <div style="position:relative; width:100%; padding:20px; display:flex; gap:20px;">
-            <div class="back-nav" onclick="closeDetails()"><i class="fa-solid fa-chevron-left"></i></div>
-            <img id="detImg" style="width:130px; height:185px; border-radius:18px; object-fit:cover;">
-            <div style="flex:1; margin-top:20px;">
-                <h2 id="detTitle" style="font-family:'Oswald';"></h2>
-                <p id="detCat" style="color:var(--primary); font-weight:bold;"></p>
-                <button id="bmBtn" onclick="toggleBookmark()" class="btn-gold" style="width:auto; padding:8px 15px; margin-top:10px;"></button>
-            </div>
-        </div>
-        <div class="container"><p id="detDesc" style="color:gray; font-size:13px; margin:20px 0;"></p><div id="chapterList"></div></div>
-    </div>
-
-    <div id="authModal" class="modal"><div class="modal-content">
-        <h3>Login</h3><input id="email" placeholder="Email"><input id="pass" type="password" placeholder="Pass">
-        <button class="btn-red" onclick="handleLogin()">LOGIN</button>
-    </div></div>
-
-    <div id="readPage">
-        <div style="background:#000; height:60px; display:flex; align-items:center; padding:0 15px; position:fixed; top:0; width:100%; z-index:4001;">
-            <i class="fa-solid fa-arrow-left" onclick="closeReader()" style="font-size:20px; cursor:pointer; margin-right:15px;"></i>
-            <span id="readTitle" style="font-size:13px;"></span>
-        </div>
-        <div id="viewer" style="margin-top:60px;"></div>
-    </div>
+    <div id="animePage"><div class="container" style="padding-top:60px;"><div class="back-nav" onclick="closeAnimePage()"><i class="fa-solid fa-chevron-left"></i></div><h2 style="color:var(--adult); margin:20px 0;">H-ANIME ZONE</h2><div id="anime-list-grid" class="manga-grid"></div></div></div>
+    <div id="animeDetailsPage"><div class="container" style="padding-top:60px;"><div class="back-nav" onclick="closeAniDetails()"><i class="fa-solid fa-chevron-left"></i></div><center><img id="aniDetImg" style="width:180px; height:250px; border-radius:20px; object-fit:cover; margin-top:20px;"></center><h2 id="aniDetTitle" style="text-align:center; margin:15px 0; color:var(--gold);"></h2><p id="aniDetDesc" style="color:gray; font-size:13px; margin-bottom:20px; text-align:center;"></p><div id="aniEpisodeList"></div></div></div>
+    <div id="detailsPage"><div style="padding:20px; padding-top:80px; display:flex; gap:20px;"><div class="back-nav" onclick="closeDetails()" style="top:75px;"><i class="fa-solid fa-chevron-left"></i></div><img id="detImg" style="width:130px; height:185px; border-radius:18px; object-fit:cover;"><div style="flex:1; margin-top:20px;"><h2 id="detTitle"></h2><p id="detCat" style="color:var(--primary); font-weight:bold;"></p><button id="bmBtn" onclick="toggleBookmark()" class="btn-gold" style="width:auto; padding:8px 15px; margin-top:10px;"></button></div></div><div class="container"><p id="detDesc" style="color:gray; font-size:13px; margin:20px 0;"></p><div id="chapterList"></div></div></div>
+    <div id="authModal" class="modal"><div class="modal-content"><h3>Login</h3><input id="email" placeholder="Email"><input id="pass" type="password" placeholder="Pass"><button class="btn-red" onclick="handleLogin()">LOGIN</button></div></div>
+    <div id="readPage"><div style="background:#000; height:60px; display:flex; align-items:center; padding:0 15px; position:fixed; top:0; width:100%; z-index:4001;"><i class="fa-solid fa-arrow-left" onclick="closeReader()"></i><span id="readTitle" style="margin-left:15px;"></span></div><div id="viewer" style="margin-top:60px;"></div></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, deleteDoc, query, orderBy, addDoc, serverTimestamp, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc, query, orderBy, addDoc, serverTimestamp, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs", authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax", storageBucket: "mangabyax.firebasestorage.app", appId: "1:974159756281:web:228c23b929f377544b1b28" };
         const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
-        const CLOUD_NAME = "dqdqg2wac", UPLOAD_PRESET = "ml_default";
-        const CATS = ["Action", "Adventure", "Romance", "Isekai", "Fantasy", "Comedy", "Hentai"];
-
-        let allData = [], currentUser = null, currentTitle = "";
+        const CLOUD_NAME = "dqdqg2wac", UPLOAD_PRESET = "ml_default", CATS = ["Action", "Adventure", "Romance", "Isekai", "Fantasy", "Comedy", "Hentai"];
+        let allData = [], animeData = [], currentUser = null, currentTitle = "";
 
         onAuthStateChanged(auth, async (user) => {
-            if(user) {
-                currentUser = user;
-                const s = await getDoc(doc(db, "users", user.uid));
-                if(!s.exists()) await setDoc(doc(db, "users", user.uid), { coins: 0 });
-                updateUserUI();
-            }
+            if(user) { currentUser = user; const s = await getDoc(doc(db, "users", user.uid)); if(!s.exists()) await setDoc(doc(db, "users", user.uid), { coins: 0 }); updateUserUI(); }
             fetchData();
         });
 
@@ -177,42 +182,18 @@
         async function fetchData() {
             const snap = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
             allData = snap.docs.map(d => ({id: d.id, ...d.data()}));
+            const aniSnap = await getDocs(query(collection(db, "animes"), orderBy("timestamp", "desc")));
+            animeData = aniSnap.docs.map(d => ({id: d.id, ...d.data()}));
             renderGrid(allData.filter(x => x.category !== 'Hentai'));
             renderSaved(); renderGenreMenu(); setupSlider();
         }
 
-        window.renderGrid = (data) => {
-            const unique = {}; data.forEach(ch => { if(!unique[ch.seriesName]) unique[ch.seriesName] = ch; });
-            document.getElementById('manga-list').innerHTML = Object.values(unique).map(v => `
-                <div class="card" onclick="openDetails('${v.seriesName.replace(/'/g,"\\'")}')">
-                    <img src="${v.coverUrl}">
-                    <div class="card-info"><h3>${v.seriesName}</h3><p style="font-size:10px; color:gray;">${v.category}</p></div>
-                </div>`).join('');
+        // --- NEW: GENRE FILTER FUNCTION ---
+        window.filterGenre = (cat) => {
+            document.getElementById('gridTitle').innerText = cat.toUpperCase() + " UPDATES";
+            renderGrid(allData.filter(x => x.category === cat));
+            toggleSidebar();
         };
-
-        window.unlockHentai = () => {
-            if(prompt("Enter Adult Access Key:") === "18plus") {
-                document.getElementById('gridTitle').innerText = "HENTAI (18+)";
-                renderGrid(allData.filter(x => x.category === 'Hentai'));
-                toggleSidebar();
-            } else alert("Wrong Key!");
-        };
-
-        window.openAdmin = () => { if(prompt("Admin Pass:") === "Admin@2026") { openModal('adminModal'); loadKeys(); } };
-
-        window.switchTab = (t) => {
-            ['upTab','keyTab','manTab'].forEach(id => document.getElementById(id).style.display = 'none');
-            document.getElementById(t+'Tab').style.display = 'block';
-            if(t==='man') {
-                document.getElementById('adminManageList').innerHTML = allData.map(ch => `
-                    <div style="display:flex; justify-content:space-between; padding:10px; background:#1a1a1a; margin-bottom:8px; border-radius:10px; font-size:10px;">
-                        <span>${ch.seriesName} (Ch-${ch.chapterNum})</span>
-                        <button onclick="delChapter('${ch.id}')" style="background:red; color:white; border:none; padding:4px 8px; border-radius:6px;">DEL</button>
-                    </div>`).join('');
-            }
-        };
-
-        window.delChapter = async (id) => { if(confirm("Delete?")) { await deleteDoc(doc(db, "chapters", id)); location.reload(); } };
 
         window.generateKey = async () => {
             const amt = document.getElementById('keyAmount').value;
@@ -223,7 +204,7 @@
 
         async function loadKeys() {
             const snap = await getDocs(collection(db, "promo_keys"));
-            document.getElementById('keyList').innerHTML = snap.docs.map(d => `<div>${d.id} - ${d.data().amount} (${d.data().used?'Used':'Active'})</div>`).join('');
+            document.getElementById('keyList').innerHTML = snap.docs.map(d => `<div style="padding:5px; border-bottom:1px solid #222;">${d.id} - ${d.data().amount} Coins (${d.data().used?'Used':'Active'})</div>`).join('');
         }
 
         window.redeemPromo = async () => {
@@ -232,99 +213,59 @@
             if(s.exists() && !s.data().used) {
                 await updateDoc(doc(db, "promo_keys", key), { used: true });
                 await updateDoc(doc(db, "users", currentUser.uid), { coins: increment(s.data().amount) });
-                alert("Redeemed!"); location.reload();
-            } else alert("Invalid Key!");
+                alert("Successfully Redeemed " + s.data().amount + " Coins!"); location.reload();
+            } else alert("Invalid or Used Key!");
         };
 
-        async function uploadCloud(file) {
-            const fd = new FormData(); fd.append("file", file); fd.append("upload_preset", UPLOAD_PRESET);
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: "POST", body: fd });
-            return (await res.json()).secure_url;
-        }
+        window.switchTab = (t) => { document.getElementById('upTab').style.display = t==='up'?'block':'none'; document.getElementById('keyTab').style.display = t==='key'?'block':'none'; if(t==='key') loadKeys(); };
+        window.toggleAdminFields = () => { const t = document.getElementById('upMainType').value; document.getElementById('mangaFields').style.display = t==='manga'?'block':'none'; document.getElementById('animeFields').style.display = t==='anime'?'block':'none'; };
+        window.addNewEpField = () => { const div = document.createElement('div'); div.className = 'ep-row'; div.innerHTML = `<input class="ep-name" placeholder="Ep ${document.querySelectorAll('.ep-row').length + 1}" style="width:30%;"><input class="ep-url" placeholder="TG Link" style="width:70%;">`; document.getElementById('epContainer').appendChild(div); };
+        
+        async function uploadCloud(file) { const fd = new FormData(); fd.append("file", file); fd.append("upload_preset", UPLOAD_PRESET); const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, { method: "POST", body: fd }); return (await res.json()).secure_url; }
 
         document.getElementById('uploadBtn').onclick = async () => {
-            const name = document.getElementById('upName').value, ch = document.getElementById('upCh').value, desc = document.getElementById('upDesc').value;
-            const cover = document.getElementById('upCover').files[0], pages = Array.from(document.getElementById('upFiles').files);
-            if(!name || !ch || !cover || pages.length === 0) return alert("Fill all!");
-            document.getElementById('uploadBtn').innerText = "Uploading...";
+            const type = document.getElementById('upMainType').value; document.getElementById('uploadBtn').innerText = "Uploading...";
             try {
-                const cUrl = await uploadCloud(cover);
-                const pUrls = await Promise.all(pages.map(p => uploadCloud(p)));
-                await addDoc(collection(db, "chapters"), { seriesName: name, seriesDesc: desc, chapterNum: parseFloat(ch), category: document.getElementById('upCat').value, coverUrl: cUrl, chapterImages: pUrls, timestamp: serverTimestamp() });
+                if(type === 'manga') {
+                    const cUrl = await uploadCloud(document.getElementById('upCover').files[0]);
+                    const pUrls = await Promise.all(Array.from(document.getElementById('upFiles').files).map(p => uploadCloud(p)));
+                    await addDoc(collection(db, "chapters"), { seriesName: document.getElementById('upName').value, seriesDesc: document.getElementById('upDesc').value, chapterNum: parseFloat(document.getElementById('upCh').value), category: document.getElementById('upCat').value, coverUrl: cUrl, chapterImages: pUrls, timestamp: serverTimestamp() });
+                } else {
+                    const cUrl = await uploadCloud(document.getElementById('aniCoverFile').files[0]);
+                    let eps = []; document.querySelectorAll('.ep-row').forEach(row => { const n = row.querySelector('.ep-name').value; const u = row.querySelector('.ep-url').value; if(n) eps.push({n, u}); });
+                    await addDoc(collection(db, "animes"), { title: document.getElementById('aniName').value, cover: cUrl, desc: document.getElementById('aniDesc').value, episodes: eps, timestamp: serverTimestamp() });
+                }
                 location.reload();
-            } catch(e) { alert("Error!"); }
+            } catch(e) { alert("Error!"); document.getElementById('uploadBtn').innerText = "PUBLISH"; }
         };
 
-        window.openDetails = (title) => {
-            currentTitle = title; const s = allData.filter(x => x.seriesName === title);
-            document.getElementById('detTitle').innerText = title;
-            document.getElementById('detImg').src = s[0].coverUrl;
-            document.getElementById('detCat').innerText = s[0].category;
-            document.getElementById('detDesc').innerText = s[0].seriesDesc || "No description available.";
-            updateBmBtn();
-            document.getElementById('chapterList').innerHTML = s.sort((a,b)=>b.chapterNum-a.chapterNum).map(ch => `
-                <div style="background:var(--card); padding:15px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="showReader('${ch.id}')">
-                    <span>Chapter ${ch.chapterNum}</span><i class="fa-solid fa-circle-play" style="color:var(--gold);"></i>
-                </div>`).join('');
-            document.getElementById('detailsPage').style.display = 'block';
-        };
-
-        window.renderGenreMenu = () => {
-            const menu = document.getElementById('genreList'), sel = document.getElementById('upCat');
-            menu.innerHTML = ""; sel.innerHTML = "";
-            CATS.forEach(c => {
-                sel.innerHTML += `<option value="${c}">${c}</option>`;
-                if(c !== 'Hentai') menu.innerHTML += `<div style="background:rgba(128,128,128,0.1); padding:10px; text-align:center; border-radius:12px; font-size:11px; cursor:pointer;" onclick="filterGenre('${c}')">${c}</div>`;
-            });
-        };
-
-        window.setupSlider = () => {
-            const s = allData.filter(x=>x.category!=='Hentai').slice(0,5);
-            document.getElementById('slider').innerHTML = s.map((v,i)=>`<div class="slide ${i===0?'active':''}" onclick="openDetails('${v.seriesName.replace(/'/g,"\\'")}')"><img src="${v.coverUrl}"><div class="slide-info"><h2>${v.seriesName}</h2></div></div>`).join('');
-            let idx = 0; setInterval(() => {
-                const slides = document.querySelectorAll('.slide'); if(!slides.length) return;
-                slides[idx].classList.remove('active'); idx = (idx+1)%slides.length; slides[idx].classList.add('active');
-            }, 5000);
-        };
-
-        window.renderSaved = () => {
-            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
-            const sec = document.getElementById('saved-section');
-            if(bms.length > 0) {
-                sec.style.display = 'block';
-                const data = bms.map(t => allData.find(x => x.seriesName === t)).filter(x => x);
-                document.getElementById('saved-list').innerHTML = data.map(v => `<div class="card" onclick="openDetails('${v.seriesName.replace(/'/g,"\\'")}')"><img src="${v.coverUrl}"><div class="card-info"><h3>${v.seriesName}</h3></div></div>`).join('');
-            } else sec.style.display = 'none';
-        };
-
-        window.toggleBookmark = () => {
-            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
-            const i = bms.indexOf(currentTitle);
-            if(i > -1) bms.splice(i, 1); else bms.push(currentTitle);
-            localStorage.setItem('mz_bookmarks', JSON.stringify(bms));
-            updateBmBtn(); renderSaved();
-        };
-
-        function updateBmBtn() {
-            let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]');
-            document.getElementById('bmBtn').innerHTML = bms.includes(currentTitle) ? 'SAVED' : 'ADD TO LIBRARY';
-        }
-
+        window.renderGrid = (data) => { const unique = {}; data.forEach(ch => { if(!unique[ch.seriesName]) unique[ch.seriesName] = ch; }); document.getElementById('manga-list').innerHTML = Object.values(unique).map(v => `<div class="card" onclick="openDetails('${v.seriesName.replace(/'/g,"\\'")}')"><img src="${v.coverUrl}"><div class="card-info"><h3>${v.seriesName}</h3><p style="font-size:10px; color:gray;">${v.category}</p></div></div>`).join(''); };
+        window.openAnimePage = () => { document.getElementById('anime-list-grid').innerHTML = animeData.map(v => `<div class="card" onclick="showAniDetails('${v.id}')"><img src="${v.cover}"><div class="card-info"><h3>${v.title}</h3></div></div>`).join(''); document.getElementById('animePage').style.display = 'block'; toggleSidebar(); };
+        window.showAniDetails = (id) => { const item = animeData.find(x => x.id === id); document.getElementById('aniDetTitle').innerText = item.title; document.getElementById('aniDetImg').src = item.cover; document.getElementById('aniDetDesc').innerText = item.desc || ""; document.getElementById('aniEpisodeList').innerHTML = item.episodes.map(e => `<a href="${e.u}" target="_blank" class="ep-link-btn"><span>${e.n}</span> <i class="fa-solid fa-play"></i></a>`).join(''); document.getElementById('animeDetailsPage').style.display = 'block'; };
+        window.openDetails = (title) => { currentTitle = title; const s = allData.filter(x => x.seriesName === title); document.getElementById('detTitle').innerText = title; document.getElementById('detImg').src = s[0].coverUrl; document.getElementById('detCat').innerText = s[0].category; document.getElementById('detDesc').innerText = s[0].seriesDesc || ""; updateBmBtn(); document.getElementById('chapterList').innerHTML = s.sort((a,b)=>b.chapterNum-a.chapterNum).map(ch => `<div style="background:var(--card); padding:15px; border-radius:15px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="showReader('${ch.id}')"><span>Chapter ${ch.chapterNum}</span><i class="fa-solid fa-circle-play" style="color:var(--gold);"></i></div>`).join(''); document.getElementById('detailsPage').style.display = 'block'; };
+        window.showReader = (id) => { const ch = allData.find(x=>x.id===id); document.getElementById('readTitle').innerText = ch.seriesName + " - CH " + ch.chapterNum; document.getElementById('viewer').innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join(''); document.getElementById('readPage').style.display = 'block'; };
+        window.setupSlider = () => { const s = allData.filter(x=>x.category!=='Hentai').slice(0,5); document.getElementById('slider').innerHTML = s.map((v,i)=>`<div class="slide ${i===0?'active':''}" onclick="openDetails('${v.seriesName.replace(/'/g,"\\'")}')"><img src="${v.coverUrl}"><div class="slide-info"><h2>${v.seriesName}</h2></div></div>`).join(''); let idx = 0; setInterval(() => { const slides = document.querySelectorAll('.slide'); if(!slides.length) return; slides[idx].classList.remove('active'); idx = (idx+1)%slides.length; slides[idx].classList.add('active'); }, 5000); };
+        window.renderGenreMenu = () => { const menu = document.getElementById('genreList'), sel = document.getElementById('upCat'); menu.innerHTML = ""; sel.innerHTML = ""; CATS.forEach(c => { sel.innerHTML += `<option value="${c}">${c}</option>`; if(c !== 'Hentai') menu.innerHTML += `<div style="background:rgba(128,128,128,0.1); padding:10px; text-align:center; border-radius:12px; font-size:11px; cursor:pointer;" onclick="filterGenre('${c}')">${c}</div>`; }); };
+        window.renderSaved = () => { let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]'); const sec = document.getElementById('saved-section'); if(bms.length > 0) { sec.style.display = 'block'; const data = bms.map(t => allData.find(x => x.seriesName === t)).filter(x => x); document.getElementById('saved-list').innerHTML = data.map(v => `<div class="card" onclick="openDetails('${v.seriesName.replace(/'/g,"\\'")}')"><img src="${v.coverUrl}"><div class="card-info"><h3>${v.seriesName}</h3></div></div>`).join(''); } else sec.style.display = 'none'; };
+        window.toggleBookmark = () => { let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]'); const i = bms.indexOf(currentTitle); if(i > -1) bms.splice(i, 1); else bms.push(currentTitle); localStorage.setItem('mz_bookmarks', JSON.stringify(bms)); updateBmBtn(); renderSaved(); };
+        function updateBmBtn() { let bms = JSON.parse(localStorage.getItem('mz_bookmarks') || '[]'); document.getElementById('bmBtn').innerHTML = bms.includes(currentTitle) ? 'SAVED' : 'ADD TO LIBRARY'; }
+        
         window.toggleTheme = () => document.body.classList.toggle('light-mode');
         window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); };
         window.openModal = (id) => document.getElementById(id).style.display = 'flex';
         window.closeModal = (id) => document.getElementById(id).style.display = 'none';
         window.closeDetails = () => document.getElementById('detailsPage').style.display = 'none';
+        window.closeAnimePage = () => document.getElementById('animePage').style.display = 'none';
+        window.closeAniDetails = () => document.getElementById('animeDetailsPage').style.display = 'none';
         window.closeReader = () => document.getElementById('readPage').style.display = 'none';
-        window.showReader = (id) => {
-            const ch = allData.find(x=>x.id===id);
-            document.getElementById('readTitle').innerText = ch.seriesName + " - CH " + ch.chapterNum;
-            document.getElementById('viewer').innerHTML = ch.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join('');
-            document.getElementById('readPage').style.display = 'block';
-        };
+        window.unlockHentai = () => { if(prompt("Key:") === "18plus") { filterGenre('Hentai'); } };
         window.handleLogin = () => signInWithEmailAndPassword(auth, document.getElementById('email').value, document.getElementById('pass').value).then(()=>location.reload());
         window.logout = () => signOut(auth).then(()=>location.reload());
         window.searchManga = (q) => renderGrid(allData.filter(m => m.seriesName.toLowerCase().includes(q.toLowerCase())));
+        window.openAdmin = () => { if(prompt("Admin Pass:") === "Admin@2026") openModal('adminModal'); };
+        document.onkeydown = (e) => { if(e.keyCode == 27) window.location.replace("https://google.com"); };
+
+        fetchData();
     </script>
 </body>
 </html>
