@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | ULTIMATE VIP & CHAT</title>
+    <title>M-ZONE | ULTIMATE MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -11,48 +11,39 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: var(--text); padding-top: 75px; overflow-x: hidden; }
         
-        /* HEADER */
         header { background: var(--card); height: 75px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 2px solid #222; }
         .logo { font-family: 'Oswald'; font-size: 26px; color: var(--primary); letter-spacing: 2px; }
 
-        /* SIDEBAR & CHAT */
         .sidebar { position: fixed; top: 0; right: -330px; width: 310px; height: 100%; background: var(--card); z-index: 2001; padding: 25px 15px; transition: 0.4s; overflow-y: auto; border-left: 1px solid #333; }
         .sidebar.active { right: 0; }
-        .chat-container { background: #000; border-radius: 12px; height: 280px; display: flex; flex-direction: column; margin: 15px 0; border: 1px solid #222; overflow: hidden; }
+        
+        .chat-container { background: #000; border-radius: 12px; height: 230px; display: flex; flex-direction: column; margin: 15px 0; border: 1px solid #222; }
         #chatDisplay { flex: 1; overflow-y: auto; padding: 10px; font-size: 11px; }
-        .chat-msg { margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 4px; }
         .vip-name { color: var(--vip); font-weight: bold; }
-        .chat-input-box { display: flex; border-top: 1px solid #222; }
-        .chat-input-box input { flex: 1; padding: 10px; background: transparent; border: none; color: #fff; font-size: 12px; }
 
-        /* UI ELEMENTS */
         .container { padding: 0 15px; max-width: 1200px; margin: auto; }
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; position: relative; }
-        .card img { width: 100%; height: 220px; object-fit: cover; }
-        .card-name { padding: 10px; font-size: 12px; text-align: center; font-weight: 600; }
-        .vip-tag { position: absolute; top: 8px; left: 8px; background: var(--vip); color: #000; padding: 2px 8px; font-size: 10px; font-weight: bold; border-radius: 4px; z-index: 5; }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; position: relative; cursor: pointer; }
+        .card img { width: 100%; height: 210px; object-fit: cover; }
+        .card-name { padding: 10px; font-size: 11px; text-align: center; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .vip-tag { position: absolute; top: 8px; left: 8px; background: var(--vip); color: #000; padding: 2px 6px; font-size: 9px; font-weight: bold; border-radius: 4px; }
 
-        /* MODAL FIXES */
+        .admin-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 15px; }
+        .modal-content { background: var(--card); padding: 20px; border-radius: 15px; width: 95%; max-width: 420px; border: 1px solid var(--primary); max-height: 90vh; overflow-y: auto; }
+
         .full-page { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; overflow-y: auto; padding: 20px; }
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center; }
-        .modal-content { background: var(--card); padding: 20px; border-radius: 15px; width: 95%; max-width: 400px; border: 1px solid var(--primary); max-height: 85vh; overflow-y: auto; }
-        
-        .admin-tabs { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 15px; }
-        .admin-tabs .btn { flex: 1; min-width: 70px; font-size: 10px; padding: 8px 2px; }
-
-        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.3s; }
+        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
         .btn-gold { background: var(--primary); color: #000; }
-        .vip-btn { background: linear-gradient(45deg, #ffd700, #b8860b); color: #000; }
-        
-        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; }
+        .vip-btn { background: linear-gradient(45deg, var(--vip), #b8860b); color: #000; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 13px; }
 
         .slider-container { width: 100%; height: 180px; overflow: hidden; border-radius: 12px; margin-bottom: 20px; }
         .slider { display: flex; transition: 0.5s; height: 100%; }
-        .slide { min-width: 100%; position: relative; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); }
+        .slide { min-width: 100%; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4); }
 
-        @media (min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } .slider-container { height: 280px; } }
+        @media (min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } .slider-container { height: 300px; } }
     </style>
 </head>
 <body>
@@ -60,106 +51,46 @@
     <header>
         <div class="logo" onclick="location.reload()">M-ZONE</div>
         <div style="display:flex; gap:15px; align-items:center;">
-            <i class="fa-solid fa-crown" onclick="showLeaderboard()" style="color:var(--vip); cursor:pointer;"></i>
-            <i class="fa-solid fa-magnifying-glass" onclick="toggleSearch()" style="color:var(--primary); cursor:pointer;"></i>
+            <i class="fa-solid fa-trophy" onclick="showLeaderboard()" style="color:var(--vip); cursor:pointer;"></i>
             <i class="fa-solid fa-bars" onclick="toggleSidebar()" style="font-size:22px; cursor:pointer;"></i>
         </div>
     </header>
-
-    <div id="searchBox" style="display:none; padding:10px; background:var(--card);">
-        <input type="text" id="searchInput" placeholder="Search title..." oninput="doSearch()">
-    </div>
 
     <div class="overlay" id="overlay" onclick="toggleSidebar()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:2000;"></div>
 
     <div class="sidebar" id="sidebar">
         <div id="loggedOutUI"><button class="btn btn-gold" onclick="toggleAuthModal()">LOGIN / SIGNUP</button></div>
         <div id="loggedInUI" style="display:none;">
-            <div id="vipStatusBox" style="display:none; text-align:center; margin-bottom:10px; color:var(--vip);">
-                <i class="fa-solid fa-gem" style="font-size:24px;"></i><br><small>VIP ACCOUNT</small>
-            </div>
+            <div id="vipStatusBox" style="display:none; text-align:center; margin-bottom:10px; color:var(--vip);"><i class="fa-solid fa-gem"></i> VIP</div>
             <div style="background:#111; padding:12px; border-radius:10px; text-align:center; border:1px solid var(--primary);">
-                <small>COINS</small><br>
-                <span style="font-size:20px; color:var(--primary); font-weight:bold;"><i class="fa-solid fa-coins"></i> <span id="uCoins">0</span></span>
-                <button class="btn btn-gold" id="dailyBtn" onclick="claimDaily()" style="padding:5px; font-size:10px; margin-top:5px;">FREE GIFT</button>
+                <small>COINS</small><br><span style="font-size:20px; color:var(--primary); font-weight:bold;"><i class="fa-solid fa-coins"></i> <span id="uCoins">0</span></span>
             </div>
-            
-            <div class="chat-container">
-                <div id="chatDisplay"></div>
-                <div class="chat-input-box">
-                    <input type="text" id="chatMsg" placeholder="Say something...">
-                    <button onclick="sendChat()" style="background:var(--primary); border:none; padding:0 12px;"><i class="fa-solid fa-paper-plane"></i></button>
-                </div>
+            <div style="margin-top:10px; display:flex; gap:5px;">
+                <input type="text" id="redeemKey" placeholder="Gift Key" style="margin:0; font-size:11px;">
+                <button onclick="handleRedeem()" style="background:var(--primary); border:none; border-radius:8px; padding:0 10px; font-weight:bold;">OK</button>
             </div>
-
-            <div class="sidebar-item" onclick="showBookmarks()" style="padding:10px; border-bottom:1px solid #222;"><i class="fa-solid fa-bookmark"></i> MY FAVORITES</div>
-            <div onclick="logout()" style="color:#ff4444; font-size:11px; margin-top:15px; cursor:pointer; text-align:center;">LOGOUT</div>
+            <div class="chat-container"><div id="chatDisplay"></div><div style="display:flex;"><input type="text" id="chatMsg" placeholder="Chat..." style="margin:0; border:none;"><button onclick="sendChat()" style="background:var(--primary); border:none; padding:0 10px;"><i class="fa-solid fa-paper-plane"></i></button></div></div>
+            <div onclick="showBookmarks()" style="padding:10px; cursor:pointer; font-size:13px; border-bottom:1px solid #222;"><i class="fa-solid fa-bookmark"></i> MY FAVORITES</div>
+            <div onclick="logout()" style="color:#ff4444; font-size:11px; margin-top:10px; cursor:pointer; text-align:center;">LOGOUT</div>
         </div>
-        <hr style="border:0; border-top:1px solid #222; margin:15px 0;">
+        <div onclick="location.reload()" style="padding:10px; cursor:pointer;"><i class="fa-solid fa-house"></i> HOME</div>
+        <div onclick="openAnimeHome()" style="padding:10px; cursor:pointer;"><i class="fa-solid fa-play"></i> H-ANIME</div>
         <div id="genreContainer"></div>
-        <div onclick="checkAdmin()" style="margin-top:20px; border:1px solid var(--primary); padding:10px; border-radius:8px; color:var(--primary); text-align:center; font-size:12px;">ADMIN PANEL</div>
+        <div onclick="checkAdmin()" style="margin-top:20px; border:1px solid var(--primary); padding:10px; border-radius:8px; color:var(--primary); text-align:center; cursor:pointer;">ADMIN</div>
     </div>
 
     <div class="container">
         <div class="slider-container"><div class="slider" id="mainSlider"></div></div>
-        <h3 id="sectionTitle" style="margin-bottom:12px; border-left:4px solid var(--primary); padding-left:10px; font-size:16px;">UPDATES</h3>
+        <h3 id="sectionTitle" style="margin-bottom:12px; border-left:4px solid var(--primary); padding-left:10px; font-size:15px;">UPDATES</h3>
         <div id="mainGrid" class="grid"></div>
     </div>
 
-    <div id="adminModal" class="modal"><div class="modal-content">
-        <div class="admin-tabs">
-            <button class="btn" onclick="showTab('mUp')">MANGA</button>
-            <button class="btn" onclick="showTab('aUp')">ANIME</button>
-            <button class="btn vip-btn" onclick="showTab('vipTab')">VIP</button>
-            <button class="btn" onclick="showTab('mng')" style="background:#ff4444;">DEL</button>
-        </div>
-        <div id="mUp">
-            <input id="upTitle" placeholder="TITLE">
-            <input id="upCh" type="number" placeholder="CHAPTER NO">
-            <input id="upCoin" type="number" placeholder="COINS (0=FREE)">
-            <select id="upCat"></select>
-            <label style="font-size:10px;">COVER:</label><input type="file" id="upCover">
-            <label style="font-size:10px;">PAGES:</label><input type="file" id="upPages" multiple>
-            <button class="btn btn-gold" id="pbm" onclick="uploadManga()">PUBLISH</button>
-        </div>
-        <div id="vipTab" style="display:none;">
-            <p style="font-size:11px; margin-bottom:5px;">Enter Email to Give VIP:</p>
-            <input id="vipEmail" placeholder="user@gmail.com">
-            <button class="btn vip-btn" onclick="makeVIP(true)">ACTIVATE VIP</button>
-            <button class="btn" onclick="makeVIP(false)" style="margin-top:5px; font-size:10px;">REMOVE VIP</button>
-        </div>
-        <div id="aUp" style="display:none;">
-            <input id="at" placeholder="ANIME TITLE"><input type="file" id="ac">
-            <div id="epList"></div>
-            <button class="btn" onclick="addEp()">+ EPISODE</button>
-            <button class="btn btn-gold" onclick="uploadAnime()">PUBLISH ANIME</button>
-        </div>
-        <div id="mng" style="display:none;"><div id="delList"></div></div>
-        <button class="btn" onclick="document.getElementById('adminModal').style.display='none'" style="margin-top:15px; background:#333;">CLOSE</button>
-    </div></div>
+    <div id="leaderModal" class="modal"><div class="modal-content"><h3 style="color:var(--vip); text-align:center; margin-bottom:15px;">TOP USERS</h3><div id="leaderList"></div><button class="btn btn-gold" style="margin-top:10px;" onclick="closePage('leaderModal')">CLOSE</button></div></div>
+    <div id="adminModal" class="modal"><div class="modal-content"><div class="admin-tabs"><button class="btn" onclick="showTab('mUp')">MANGA</button><button class="btn" onclick="showTab('aUp')">ANIME</button><button class="btn vip-btn" onclick="showTab('keyTab')">KEYS</button><button class="btn" onclick="showTab('mng')" style="background:#ff4444; color:#fff;">DEL</button></div><div id="mUp"><input id="upTitle" placeholder="Title"><input id="upCh" type="number" placeholder="Ch"><input id="upCoin" type="number" placeholder="Coins"><select id="upCat"></select><input type="file" id="upCover"><input type="file" id="upPages" multiple><button class="btn btn-gold" onclick="uploadManga()">PUBLISH</button></div><div id="aUp" style="display:none;"><input id="at" placeholder="Anime Title"><textarea id="as" placeholder="Story"></textarea><input type="file" id="ac"><div id="epList"></div><button class="btn" onclick="addEp()">+ EP</button><button class="btn btn-gold" onclick="uploadAnime()">PUBLISH</button></div><div id="keyTab" style="display:none;"><input id="ka" type="number" placeholder="Amount"><button class="btn btn-gold" onclick="genKey('COIN')">GEN COIN KEY</button><button class="btn vip-btn" onclick="genKey('VIP')" style="margin-top:5px;">GEN VIP KEY</button><div id="kh" style="font-size:10px; margin-top:10px; color:var(--vip);"></div></div><div id="mng" style="display:none;"><div id="delList"></div></div><button class="btn" onclick="closePage('adminModal')" style="margin-top:10px; background:#333;">CLOSE</button></div></div>
 
-    <div id="detPage" class="full-page">
-        <div onclick="closePage('detPage')" style="color:var(--primary); margin-bottom:15px;"><i class="fa-solid fa-arrow-left"></i> BACK</div>
-        <div id="detContent"></div>
-        <div id="itemList" style="margin-top:20px;"></div>
-    </div>
-
-    <div id="playPage" class="full-page" style="padding:0; background:#000;">
-        <div style="background:#111; padding:15px; display:flex; justify-content:space-between; align-items:center;">
-            <i class="fa-solid fa-chevron-left" onclick="closePage('playPage')"></i>
-            <span id="playTitle" style="font-size:12px; color:var(--primary);"></span>
-            <i class="fa-solid fa-bookmark" id="bookBtn" onclick="toggleBookmark()"></i>
-        </div>
-        <div id="viewer" style="padding-bottom:100px;"></div>
-    </div>
-
-    <div id="authModal" class="modal"><div class="modal-content">
-        <h2 id="authTitle" style="text-align:center; color:var(--primary);">WELCOME</h2>
-        <input type="email" id="authEmail" placeholder="Email">
-        <input type="password" id="authPass" placeholder="Password">
-        <button class="btn btn-gold" onclick="handleAuth()">CONTINUE</button>
-        <p onclick="switchAuth()" id="authSwitch" style="text-align:center; font-size:11px; margin-top:15px; cursor:pointer; opacity:0.7;">No account? SIGNUP</p>
-    </div></div>
+    <div id="detPage" class="full-page"><div onclick="closePage('detPage')" style="color:var(--primary); margin-bottom:15px; cursor:pointer;"><i class="fa-solid fa-arrow-left"></i> BACK</div><div id="detContent"></div><div id="itemList" style="margin-top:20px;"></div></div>
+    <div id="playPage" class="full-page" style="padding:0; background:#000;"><div style="background:#111; padding:15px; display:flex; justify-content:space-between; align-items:center;"><i class="fa-solid fa-chevron-left" onclick="closePage('playPage')"></i><span id="playTitle" style="font-size:12px; color:var(--primary);"></span><i class="fa-solid fa-bookmark" id="bookBtn" onclick="toggleBookmark()" style="cursor:pointer;"></i></div><div id="viewer"></div></div>
+    <div id="authModal" class="modal"><div class="modal-content"><h2 id="authTitle" style="text-align:center; color:var(--primary);">ACCOUNT</h2><input type="email" id="authEmail" placeholder="Email"><input type="password" id="authPass" placeholder="Password"><button class="btn btn-gold" onclick="handleAuth()">GO</button><p onclick="switchAuth()" style="text-align:center; font-size:11px; margin-top:15px; cursor:pointer;">Login/Signup</p></div></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -169,20 +100,19 @@
         const firebaseConfig = { apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs", authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax", storageBucket: "mangabyax.firebasestorage.app", appId: "1:974159756281:web:228c23b929f377544b1b28" };
         const app = initializeApp(firebaseConfig), db = getFirestore(app), auth = getAuth(app);
 
-        let currentUser = null, isSignup = false, manga = [], anime = [], userVIP = false;
+        let currentUser = null, manga = [], anime = [], userVIP = false, isSignup = false, currentId = "";
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
                 const uDoc = await getDoc(doc(db, "users", user.uid));
-                if (!uDoc.exists()) await setDoc(doc(db, "users", user.uid), { coins: 0, isVIP: false, email: user.email });
+                if (!uDoc.exists()) await setDoc(doc(db, "users", user.uid), { coins: 0, isVIP: false, email: user.email, bookmarks: [] });
                 userVIP = uDoc.data()?.isVIP || false;
                 document.getElementById('loggedInUI').style.display='block';
-                document.getElementById('loggedOutUI').style.display='none';
-                document.getElementById('uCoins').innerText = uDoc.data().coins || 0;
+                document.getElementById('uCoins').innerText = uDoc.data()?.coins || 0;
                 document.getElementById('vipStatusBox').style.display = userVIP ? 'block' : 'none';
                 listenChat();
-            } else { currentUser = null; document.getElementById('loggedInUI').style.display='none'; document.getElementById('loggedOutUI').style.display='block'; }
+            }
         });
 
         async function loadData() {
@@ -190,42 +120,89 @@
             manga = mS.docs.map(d => ({id: d.id, ...d.data()}));
             const aS = await getDocs(query(collection(db, "animes"), orderBy("timestamp", "desc")));
             anime = aS.docs.map(d => ({id: d.id, ...d.data()}));
-            renderHome(manga); renderSlider(manga); renderGenres();
+            renderHome(manga); renderSlider(manga); renderGenres(); renderManage();
         }
 
         function renderHome(data) {
             const u = {}; data.forEach(i => { if(!u[i.seriesName]) u[i.seriesName] = i; });
-            document.getElementById('mainGrid').innerHTML = Object.values(u).map(v => `
-                <div class="card" onclick="openManga('${v.seriesName.replace(/'/g,"\\'")}')">
-                    ${v.coinPrice > 0 ? `<div class="vip-tag">PREMIUM</div>` : ''}
-                    <img src="${v.coverUrl}"><div class="card-name">${v.seriesName}</div>
-                </div>`).join('');
+            document.getElementById('mainGrid').innerHTML = Object.values(u).map(v => `<div class="card" onclick="openManga('${v.seriesName.replace(/'/g,"\\'")}')">${v.coinPrice>0?'<div class="vip-tag">PREMIUM</div>':''}<img src="${v.coverUrl}"><div class="card-name">${v.seriesName}</div></div>`).join('');
         }
 
         function renderSlider(data) {
-            document.getElementById('mainSlider').innerHTML = data.slice(0,5).map(v => `<div class="slide" onclick="openManga('${v.seriesName}')"><img src="${v.coverUrl}"></div>`).join('');
-            let idx = 0; setInterval(() => { idx = (idx+1)%5; if(document.getElementById('mainSlider')) document.getElementById('mainSlider').style.transform = `translateX(-${idx*100}%)`; }, 4000);
+            document.getElementById('mainSlider').innerHTML = data.slice(0,5).map(v => `<div class="slide"><img src="${v.coverUrl}" style="width:100%; height:100%; object-fit:cover;"></div>`).join('');
         }
 
-        // VIP & ADMIN
-        window.makeVIP = async (val) => {
-            const email = document.getElementById('vipEmail').value;
-            const q = query(collection(db, "users"), where("email", "==", email));
+        window.showLeaderboard = async () => {
+            const q = query(collection(db, "users"), orderBy("coins", "desc"), limit(10));
             const qs = await getDocs(q);
-            if(!qs.empty) { await updateDoc(doc(db, "users", qs.docs[0].id), { isVIP: val }); alert("Done!"); }
-            else alert("Email not found in database!");
+            let h = ""; let r = 1;
+            qs.forEach(doc => { 
+                const u = doc.data();
+                h += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #222;"><span>#${r} ${u.email.split('@')[0]} ${u.isVIP?'⭐':''}</span><b>${u.coins}</b></div>`;
+                r++;
+            });
+            document.getElementById('leaderList').innerHTML = h; document.getElementById('leaderModal').style.display = 'flex';
         };
 
-        // CHAT
+        window.toggleBookmark = async () => {
+            if(!currentUser) return alert("Login First");
+            const uRef = doc(db, "users", currentUser.uid);
+            const uS = await getDoc(uRef);
+            let bks = uS.data().bookmarks || [];
+            if(bks.includes(currentId)) {
+                bks = bks.filter(id => id !== currentId);
+                document.getElementById('bookBtn').style.color = "#fff";
+            } else {
+                bks.push(currentId);
+                document.getElementById('bookBtn').style.color = "var(--vip)";
+            }
+            await updateDoc(uRef, { bookmarks: bks });
+        };
+
+        window.showBookmarks = async () => {
+            const uDoc = await getDoc(doc(db, "users", currentUser.uid));
+            const bks = uDoc.data().bookmarks || [];
+            const filtered = manga.filter(m => bks.includes(m.id)).concat(anime.filter(a => bks.includes(a.id)));
+            renderHome(filtered);
+            document.getElementById('sectionTitle').innerText = "MY FAVORITES";
+            toggleSidebar();
+        };
+
+        window.renderManage = () => {
+            let h = manga.map(m => `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222;"><span>${m.seriesName} (CH ${m.chapterNum})</span><i class="fa fa-trash" style="color:red;" onclick="del('chapters','${m.id}')"></i></div>`).join('');
+            h += anime.map(a => `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #222; color:var(--primary);"><span>${a.title} (ANIME)</span><i class="fa fa-trash" style="color:red;" onclick="del('animes','${a.id}')"></i></div>`).join('');
+            document.getElementById('delList').innerHTML = h || "Empty";
+        };
+
+        window.del = async (col, id) => { if(confirm("Del?")) { await deleteDoc(doc(db, col, id)); loadData(); } };
+
+        window.genKey = async (type) => {
+            const k = (type === "VIP" ? "VIP-" : "COIN-") + Math.random().toString(36).substr(2, 6).toUpperCase();
+            await addDoc(collection(db, "keys"), { key: k, type: type, amount: parseInt(document.getElementById('ka').value)||0, used: false });
+            document.getElementById('kh').innerText = "Key: " + k;
+        };
+
+        window.handleRedeem = async () => {
+            const k = document.getElementById('redeemKey').value;
+            const q = query(collection(db, "keys"), where("key", "==", k), where("used", "==", false));
+            const qs = await getDocs(q);
+            if(qs.empty) return alert("Invalid");
+            const kd = qs.docs[0].data();
+            const uRef = doc(db, "users", currentUser.uid);
+            const uS = await getDoc(uRef);
+            if(kd.type === "VIP") await updateDoc(uRef, { isVIP: true });
+            else await updateDoc(uRef, { coins: (uS.data().coins||0) + kd.amount });
+            await updateDoc(doc(db, "keys", qs.docs[0].id), { used: true });
+            location.reload();
+        };
+
         function listenChat() {
-            onSnapshot(query(collection(db, "chats"), orderBy("timestamp", "desc"), limit(25)), (sn) => {
-                document.getElementById('chatDisplay').innerHTML = sn.docs.map(d => {
-                    const c = d.data();
-                    return `<div class="chat-msg"><span class="${c.isVIP?'vip-name':''}">${c.name}:</span> ${c.msg}</div>`;
-                }).reverse().join('');
-                document.getElementById('chatDisplay').scrollTop = document.getElementById('chatDisplay').scrollHeight;
+            onSnapshot(query(collection(db, "chats"), orderBy("timestamp", "desc"), limit(15)), (sn) => {
+                document.getElementById('chatDisplay').innerHTML = sn.docs.map(d => { const c = d.data(); return `<div><b class="${c.isVIP?'vip-name':''}">${c.name}:</b> ${c.msg}</div>`; }).reverse().join('');
+                document.getElementById('chatDisplay').scrollTop = 9999;
             });
         }
+
         window.sendChat = async () => {
             const m = document.getElementById('chatMsg').value;
             if(!m || !currentUser) return;
@@ -233,55 +210,75 @@
             document.getElementById('chatMsg').value = "";
         };
 
-        window.openManga = async (t) => {
-            const s = manga.filter(m => m.seriesName === t);
-            document.getElementById('detContent').innerHTML = `
-                <div style="display:flex; gap:15px;">
-                    <img src="${s[0].coverUrl}" style="width:110px; border-radius:10px;">
-                    <div><h3>${t}</h3><small>${s[0].category}</small></div>
-                </div>`;
-            document.getElementById('itemList').innerHTML = s.sort((a,b)=>b.chapterNum-a.chapterNum).map(c => `
-                <div class="sidebar-item" onclick="readManga('${c.id}')" style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #222;">
-                    <span>CH ${c.chapterNum}</span>
-                    <span style="color:var(--primary); font-size:11px;">${userVIP ? 'VIP FREE' : (c.coinPrice||'FREE')}</span>
-                </div>`).join('');
-            document.getElementById('detPage').style.display = 'block';
-        };
-
-        window.readManga = async (id) => {
-            if(!currentUser) return alert("Please Login!");
-            const c = manga.find(x => x.id === id);
-            const uRef = doc(db, "users", currentUser.uid), uS = await getDoc(uRef);
-            if(!userVIP && uS.data().coins < (c.coinPrice || 0)) return alert("Buy VIP or Coins!");
-            if(!userVIP && c.coinPrice > 0) await updateDoc(uRef, { coins: uS.data().coins - c.coinPrice });
-            document.getElementById('playTitle').innerText = c.seriesName + " CH " + c.chapterNum;
-            document.getElementById('viewer').innerHTML = c.chapterImages.map(img => `<img src="${img}" style="width:100%; display:block;">`).join('');
-            document.getElementById('playPage').style.display = 'block';
-        };
-
-        // UTILS
         async function upCl(f) { const fd = new FormData(); fd.append("file", f); fd.append("upload_preset", "ml_default"); const r = await fetch("https://api.cloudinary.com/v1_1/dqdqg2wac/upload",{method:"POST",body:fd}); const d = await r.json(); return d.secure_url; }
+        
         window.uploadManga = async () => {
-            document.getElementById('pbm').innerText = "UPLOADING...";
             const c = await upCl(document.getElementById('upCover').files[0]);
             const p = await Promise.all(Array.from(document.getElementById('upPages').files).map(f => upCl(f)));
             await addDoc(collection(db, "chapters"), { seriesName: document.getElementById('upTitle').value, chapterNum: parseFloat(document.getElementById('upCh').value), coinPrice: parseInt(document.getElementById('upCoin').value)||0, category: document.getElementById('upCat').value, coverUrl: c, chapterImages: p, timestamp: serverTimestamp() });
             location.reload();
         };
 
+        window.uploadAnime = async () => {
+            const c = await upCl(document.getElementById('ac').files[0]);
+            let eps = []; document.querySelectorAll('.en').forEach((e, i) => { eps.push({n: e.value, u: document.querySelectorAll('.eu')[i].value}); });
+            await addDoc(collection(db, "animes"), { title: document.getElementById('at').value, story: document.getElementById('as').value, cover: c, episodes: eps, timestamp: serverTimestamp() });
+            location.reload();
+        };
+
+        window.openManga = async (t) => {
+            const s = manga.filter(m => m.seriesName === t);
+            document.getElementById('detContent').innerHTML = `<h3>${t}</h3>`;
+            document.getElementById('itemList').innerHTML = s.map(c => `<div style="padding:15px; border-bottom:1px solid #222;" onclick="readManga('${c.id}')">CH ${c.chapterNum} <span style="float:right">${userVIP?'FREE':c.coinPrice}</span></div>`).join('');
+            document.getElementById('detPage').style.display = 'block';
+        };
+
+        window.readManga = async (id) => {
+            currentId = id;
+            const c = manga.find(x => x.id === id);
+            const uRef = doc(db, "users", currentUser.uid), uS = await getDoc(uRef);
+            if(!userVIP && (uS.data().coins||0) < (c.coinPrice || 0)) return alert("Coins!");
+            if(!userVIP && c.coinPrice > 0) await updateDoc(uRef, { coins: uS.data().coins - c.coinPrice });
+            document.getElementById('bookBtn').style.color = (uS.data().bookmarks || []).includes(id) ? "var(--vip)" : "#fff";
+            document.getElementById('viewer').innerHTML = c.chapterImages.map(img => `<img src="${img}" style="width:100%;">`).join('');
+            document.getElementById('playPage').style.display = 'block';
+        };
+
+        window.openAnimeHome = () => {
+            document.getElementById('mainGrid').innerHTML = anime.map(a => `<div class="card" onclick="openAnimeDet('${a.id}')"><img src="${a.cover}"><div class="card-name">${a.title}</div></div>`).join('');
+            toggleSidebar();
+        };
+
+        window.openAnimeDet = (id) => {
+            currentId = id;
+            const a = anime.find(x => x.id === id);
+            document.getElementById('detContent').innerHTML = `<h3>${a.title}</h3>`;
+            document.getElementById('itemList').innerHTML = a.episodes.map(e => `<div style="padding:15px; border-bottom:1px solid #222;" onclick="watch('${e.u}','${e.n}','${id}')">${e.n}</div>`).join('');
+            document.getElementById('detPage').style.display = 'block';
+        };
+
+        window.watch = async (u, n, id) => {
+            currentId = id;
+            const uDoc = await getDoc(doc(db, "users", currentUser.uid));
+            document.getElementById('bookBtn').style.color = (uDoc.data().bookmarks || []).includes(id) ? "var(--vip)" : "#fff";
+            document.getElementById('playTitle').innerText = n;
+            document.getElementById('viewer').innerHTML = u.includes('t.me') ? `<button class="btn btn-gold" onclick="window.open('${u}')">WATCH</button>` : `<iframe src="${u}" style="width:100%; height:250px; border:none;"></iframe>`;
+            document.getElementById('playPage').style.display = 'block';
+        };
+
         window.handleAuth = async () => {
             const e = document.getElementById('authEmail').value, p = document.getElementById('authPass').value;
-            try { if(isSignup) await createUserWithEmailAndPassword(auth, e, p); else await signInWithEmailAndPassword(auth, e, p); location.reload(); } 
-            catch(err) { alert(err.message); }
+            try { if(isSignup) await createUserWithEmailAndPassword(auth, e, p); else await signInWithEmailAndPassword(auth, e, p); location.reload(); } catch(err) { alert(err); }
         };
 
         window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').style.display = document.getElementById('overlay').style.display==='none'?'block':'none'; };
         window.toggleAuthModal = () => document.getElementById('authModal').style.display = 'flex';
         window.switchAuth = () => { isSignup = !isSignup; document.getElementById('authTitle').innerText = isSignup ? "SIGNUP" : "LOGIN"; };
         window.checkAdmin = () => { if(prompt("PASS:") === "Admin@2026") document.getElementById('adminModal').style.display='flex'; };
-        window.showTab = (id) => { ['mUp','aUp','vipTab','mng'].forEach(t=>document.getElementById(t).style.display='none'); document.getElementById(id).style.display='block'; };
+        window.showTab = (id) => { ['mUp','aUp','keyTab','mng'].forEach(t=>document.getElementById(t).style.display='none'); document.getElementById(id).style.display='block'; };
+        window.addEp = () => { const d = document.createElement('div'); d.innerHTML = `<input class="en" placeholder="Ep"><input class="eu" placeholder="URL">`; document.getElementById('epList').appendChild(d); };
         window.closePage = (id) => document.getElementById(id).style.display = 'none';
-        window.renderGenres = () => { const cats = ["Action", "Romance", "Hentai", "Ecchi"]; document.getElementById('genreContainer').innerHTML = cats.map(c => `<div class="sidebar-item" onclick="filterGenre('${c}')" style="padding:10px; border-bottom:1px solid #222; font-size:13px;">${c}</div>`).join(''); document.getElementById('upCat').innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join(''); };
+        window.renderGenres = () => { const cats = ["Action", "Romance", "Hentai", "Ecchi"]; document.getElementById('genreContainer').innerHTML = cats.map(c => `<div style="padding:10px;" onclick="filterGenre('${c}')">${c}</div>`).join(''); document.getElementById('upCat').innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join(''); };
         window.filterGenre = (g) => { renderHome(manga.filter(m => m.category === g)); toggleSidebar(); };
         window.logout = () => signOut(auth);
         
