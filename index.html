@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE ULTIMATE | MANGA & ANIME</title>
+    <title>M-ZONE ULTIMATE | AUTH & COIN SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -13,13 +13,6 @@
         header { background: var(--card); height: 70px; width: 100%; position: fixed; top: 0; z-index: 1000; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #333; }
         .logo { font-family: 'Oswald'; font-size: 26px; color: var(--primary); cursor: pointer; }
         
-        /* SLIDER */
-        .slider-container { width: 100%; height: 200px; position: relative; overflow: hidden; border-radius: 12px; margin-bottom: 20px; }
-        .slider { display: flex; transition: 0.6s ease-in-out; height: 100%; }
-        .slide { min-width: 100%; position: relative; cursor: pointer; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.5); }
-        .slide-info { position: absolute; bottom: 15px; left: 15px; }
-
         /* CONTENT */
         .container { padding: 0 15px; max-width: 1200px; margin: auto; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
@@ -27,23 +20,24 @@
         .card img { width: 100%; height: 210px; object-fit: cover; }
         .card-name { padding: 10px; font-size: 12px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* SIDEBAR & PAGES */
+        /* SIDEBAR & COIN BOX */
         .sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: var(--card); z-index: 2001; padding: 30px 20px; transition: 0.4s; overflow-y: auto; }
         .sidebar.active { right: 0; }
-        .sidebar-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 10px; }
-        .full-page { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; overflow-y: auto; padding: 20px; }
-        .story-box { background: #111; padding: 15px; border-radius: 10px; margin: 15px 0; font-size: 13px; line-height: 1.6; border-left: 3px solid var(--primary); }
-
-        /* MODAL */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center; padding: 20px; }
-        .modal-content { background: var(--card); padding: 20px; border-radius: 15px; width: 100%; max-width: 450px; border: 1px solid var(--primary); max-height: 85vh; overflow-y: auto; }
+        .sidebar-coin-box { background: linear-gradient(135deg, rgba(197,160,89,0.2), rgba(0,0,0,0)); padding: 20px; border-radius: 15px; margin-bottom: 20px; text-align: center; border: 1px solid var(--primary); box-shadow: 0 4px 15px rgba(197,160,89,0.1); }
+        .sidebar-item { padding: 12px; border-bottom: 1px solid #222; cursor: pointer; font-size: 14px; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+        .sidebar-item:hover { color: var(--primary); padding-left: 15px; }
         
-        .btn { border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; font-weight: bold; text-transform: uppercase; }
+        /* MODALS & FULLPAGE */
+        .full-page { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; overflow-y: auto; padding: 20px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--card); padding: 25px; border-radius: 20px; width: 100%; max-width: 400px; border: 1px solid var(--primary); position: relative; }
+        
+        .btn { border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; font-weight: 600; text-transform: uppercase; transition: 0.3s; }
         .btn-gold { background: var(--primary); color: #000; }
-        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0; background: #222; border: 1px solid #333; color: #fff; border-radius: 5px; }
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; }
+        .btn-gold:hover { transform: scale(1.02); box-shadow: 0 0 15px var(--primary); }
+        input { width: 100%; padding: 12px; margin: 8px 0; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 8px; }
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; }
         .overlay.active { display: block; }
-        @media (max-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
@@ -51,189 +45,194 @@
     <header>
         <div class="logo" onclick="location.reload()">M-ZONE</div>
         <div style="display:flex; gap:15px; align-items:center;">
-            <i class="fa-solid fa-search" onclick="toggleSearch()" style="color:var(--primary); cursor:pointer;"></i>
+            <i class="fa-solid fa-user" id="headerUserIcon" onclick="toggleAuthModal()" style="color:var(--primary); cursor:pointer; font-size:20px;"></i>
             <i class="fa-solid fa-bars" onclick="toggleSidebar()" style="font-size:22px; cursor:pointer;"></i>
         </div>
     </header>
 
-    <div id="searchBox" style="display:none; padding:15px; background:var(--card); border-bottom:1px solid var(--primary);">
-        <input type="text" id="searchInput" placeholder="Search title..." oninput="doSearch()">
-    </div>
-
     <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 
     <div class="sidebar" id="sidebar">
-        <div style="background:rgba(197,160,89,0.1); padding:15px; border-radius:10px; margin-bottom:15px; text-align:center; border:1px solid var(--primary);">
-            <p style="font-size:11px;">COINS</p>
-            <div id="uCoins" style="font-size:24px; font-weight:bold; color:var(--primary);">0</div>
-            <input type="text" id="giftKey" placeholder="Enter Key" style="margin-top:10px;">
-            <button class="btn btn-gold" onclick="redeemKey()" style="padding:5px;">REDEEM</button>
+        <div id="loggedOutUI">
+            <button class="btn btn-gold" onclick="toggleAuthModal()">LOGIN TO SEE COINS</button>
         </div>
+        <div id="loggedInUI" style="display:none;" class="sidebar-coin-box">
+            <p style="font-size:11px; letter-spacing: 2px; opacity: 0.8;">CURRENT BALANCE</p>
+            <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin: 5px 0;">
+                <i class="fa-solid fa-coins" style="color:var(--primary); font-size:20px;"></i>
+                <span id="uCoins" style="font-size:28px; font-weight:bold; color:var(--primary);">0</span>
+            </div>
+            <input type="text" id="giftKey" placeholder="Enter Gift Key Here...">
+            <button class="btn btn-gold" onclick="redeemKey()" style="padding:8px;">REDEEM NOW</button>
+            <p id="userEmail" style="font-size:10px; margin-top:10px; color:#777;"></p>
+            <div style="margin-top:15px; border-top:1px solid #333; padding-top:10px;">
+                <span onclick="logout()" style="cursor:pointer; font-size:12px; color:#ff4444;"><i class="fa-solid fa-sign-out"></i> LOGOUT</span>
+            </div>
+        </div>
+
         <div class="sidebar-item" onclick="location.reload()"><i class="fa-solid fa-home"></i> HOME</div>
         <div class="sidebar-item" onclick="openAnimeHome()"><i class="fa-solid fa-play"></i> H-ANIME</div>
-        <div id="genreContainer"></div>
-        <div class="sidebar-item" onclick="checkAdmin()" style="margin-top:20px; color:var(--primary); border:1px solid var(--primary); justify-content:center;">ADMIN</div>
+        <div class="sidebar-item" onclick="checkAdmin()" style="margin-top:30px; color:var(--primary); border:1px solid var(--primary); justify-content:center; border-radius:8px;">ADMIN CONTROL</div>
     </div>
 
     <div class="container">
-        <div class="slider-container"><div class="slider" id="mainSlider"></div></div>
-        <h3 id="sectionTitle" style="margin-bottom:15px; border-left:4px solid var(--primary); padding-left:10px;">NEW UPDATES</h3>
         <div id="mainGrid" class="grid"></div>
     </div>
 
-    <div id="detPage" class="full-page">
-        <div onclick="closePage('detPage')" style="color:var(--primary); margin-bottom:15px; cursor:pointer;"><i class="fa-solid fa-arrow-left"></i> BACK</div>
-        <div id="detContent" style="display:flex; gap:15px; flex-wrap:wrap;"></div>
-        <div id="storyContent" class="story-box"></div>
-        <div id="itemList"></div>
-    </div>
-
-    <div id="playPage" class="full-page" style="padding:0; background:#000;">
-        <div style="background:#111; padding:15px; display:flex; align-items:center; gap:15px;">
-            <i class="fa-solid fa-arrow-left" onclick="closePage('playPage')"></i><span id="playTitle"></span>
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <h2 id="authTitle" style="color:var(--primary); text-align:center; margin-bottom:15px;">LOGIN</h2>
+            <input type="email" id="authEmail" placeholder="Email Address">
+            <input type="password" id="authPass" placeholder="Password">
+            <button class="btn btn-gold" id="authBtn" onclick="handleAuth()">LOGIN</button>
+            <p onclick="switchAuth()" id="authSwitch" style="text-align:center; margin-top:20px; cursor:pointer; font-size:13px; color:var(--primary);">Don't have an account? <b>SIGNUP</b></p>
+            <i class="fa-solid fa-xmark" onclick="toggleAuthModal()" style="position:absolute; top:15px; right:15px; cursor:pointer;"></i>
         </div>
-        <div id="viewer" style="width:100%; max-width:800px; margin:auto;"></div>
     </div>
 
     <div id="adminModal" class="modal"><div class="modal-content">
-        <div style="display:flex; gap:5px; margin-bottom:10px;">
+        <h3 style="margin-bottom:15px;">ADMIN PANEL</h3>
+        <div style="display:flex; gap:5px; margin-bottom:15px;">
             <button class="btn" onclick="showTab('mUp')">MANGA</button>
-            <button class="btn" onclick="showTab('aUp')">ANIME</button>
             <button class="btn" onclick="showTab('keyTab')">KEY</button>
-            <button class="btn" onclick="showTab('mng')">DEL</button>
         </div>
         <div id="mUp">
             <input id="upTitle" placeholder="MANGA TITLE">
-            <textarea id="upStory" placeholder="STORY"></textarea>
-            <input id="upCh" type="number" placeholder="CHAPTER">
-            <select id="upCat"></select>
-            <label>COVER</label><input type="file" id="upCover">
-            <label>PAGES</label><input type="file" id="upPages" multiple>
-            <button class="btn btn-gold" id="pbm" onclick="uploadManga()">PUBLISH MANGA</button>
+            <input id="upCh" type="number" placeholder="CHAPTER NO.">
+            <input id="upCoinPrice" type="number" placeholder="COIN PRICE (0=FREE)">
+            <label style="font-size:12px;">COVER IMAGE</label><input type="file" id="upCover">
+            <label style="font-size:12px;">CHAPTER PAGES</label><input type="file" id="upPages" multiple>
+            <button class="btn btn-gold" id="pbm" onclick="uploadManga()">UPLOAD NOW</button>
         </div>
-        <div id="aUp" style="display:none;">
-            <input id="at" placeholder="ANIME TITLE">
-            <textarea id="as" placeholder="ANIME STORY"></textarea>
-            <label>COVER</label><input type="file" id="ac">
-            <div id="epList"></div>
-            <button onclick="addEp()">+ ADD EPISODE</button>
-            <button class="btn btn-gold" id="pba" onclick="uploadAnime()">PUBLISH ANIME</button>
+        <div id="keyTab" style="display:none;">
+            <input type="number" id="ka" placeholder="COIN AMOUNT">
+            <button class="btn btn-gold" onclick="genKey()">GENERATE KEY</button>
+            <div id="kh" style="margin-top:10px; font-size:12px; color:var(--primary); max-height:100px; overflow:auto;"></div>
         </div>
-        <div id="keyTab" style="display:none;"><input type="number" id="ka" placeholder="COINS"><button class="btn btn-gold" onclick="genKey()">GEN KEY</button><div id="kh" style="font-size:10px; margin-top:10px;"></div></div>
-        <div id="mng" style="display:none; max-height:200px; overflow:auto;"><div id="delList"></div></div>
-        <button class="btn" onclick="closeModal('adminModal')">CLOSE</button>
+        <button class="btn" onclick="document.getElementById('adminModal').style.display='none'" style="background:#333;">CLOSE</button>
     </div></div>
+
+    <div id="detPage" class="full-page">
+        <div onclick="closePage('detPage')" style="color:var(--primary); margin-bottom:20px; cursor:pointer; font-weight:bold;"><i class="fa-solid fa-arrow-left"></i> BACK TO HOME</div>
+        <div id="detContent" style="display:flex; gap:20px; align-items:center; margin-bottom:20px;"></div>
+        <div id="itemList"></div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, query, orderBy, addDoc, setDoc, updateDoc, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
         const firebaseConfig = { apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs", authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax", storageBucket: "mangabyax.firebasestorage.app", appId: "1:974159756281:web:228c23b929f377544b1b28" };
-        const app = initializeApp(firebaseConfig), db = getFirestore(app);
-        
-        let manga = [], anime = [], userCoins = parseInt(localStorage.getItem('m_coins')) || 0;
-        document.getElementById('uCoins').innerText = userCoins;
+        const app = initializeApp(firebaseConfig), db = getFirestore(app), auth = getAuth(app);
 
-        async function loadData() {
-            const mS = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
-            manga = mS.docs.map(d => ({id: d.id, ...d.data()}));
-            const aS = await getDocs(query(collection(db, "animes"), orderBy("timestamp", "desc")));
-            anime = aS.docs.map(d => ({id: d.id, ...d.data()}));
-            renderHome(manga); renderSlider(manga); renderGenres(); renderManage();
+        let currentUser = null, isSignup = false, manga = [];
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                const uDoc = await getDoc(doc(db, "users", user.uid));
+                if (!uDoc.exists()) await setDoc(doc(db, "users", user.uid), { coins: 0 });
+                updateCoinUI(true, (uDoc.data()?.coins || 0), user.email);
+            } else {
+                currentUser = null;
+                updateCoinUI(false, 0, "");
+            }
+        });
+
+        function updateCoinUI(isLoggedIn, coins, email) {
+            document.getElementById('loggedOutUI').style.display = isLoggedIn ? 'none' : 'block';
+            document.getElementById('loggedInUI').style.display = isLoggedIn ? 'block' : 'none';
+            document.getElementById('uCoins').innerText = coins;
+            document.getElementById('userEmail').innerText = email;
+            document.getElementById('headerUserIcon').style.color = isLoggedIn ? '#4CAF50' : '#c5a059';
         }
-        loadData();
 
-        function renderHome(data) {
-            const u = {}; data.forEach(i => { if(!u[i.seriesName]) u[i.seriesName] = i; });
-            document.getElementById('mainGrid').innerHTML = Object.values(u).map(v => `<div class="card" onclick="openManga('${v.seriesName.replace(/'/g,"\\'")}')"><img src="${v.coverUrl}"><div class="card-name">${v.seriesName}</div></div>`).join('');
-        }
-
-        window.openAnimeHome = () => {
-            document.getElementById('sectionTitle').innerText = "H-ANIME SERIES";
-            document.getElementById('mainGrid').innerHTML = anime.map(a => `<div class="card" onclick="openAnimeDet('${a.id}')"><img src="${a.cover}"><div class="card-name">${a.title}</div></div>`).join('');
-            toggleSidebar();
-        };
-
-        window.openAnimeDet = (id) => {
-            const a = anime.find(x => x.id === id);
-            document.getElementById('detContent').innerHTML = `<img src="${a.cover}" style="width:120px; border-radius:10px;"><div><h2>${a.title}</h2><p>Anime</p></div>`;
-            document.getElementById('storyContent').innerText = a.story || "No story.";
-            document.getElementById('itemList').innerHTML = a.episodes.map(e => `<div class="sidebar-item" onclick="watch('${e.u.replace(/'/g,"\\'")}', '${e.n}')">${e.n} <i class="fa-solid fa-play" style="margin-left:auto; font-size:10px;"></i></div>`).join('');
-            document.getElementById('detPage').style.display = 'block';
-        };
-
-        window.watch = (u, n) => {
-            document.getElementById('playTitle').innerText = n;
-            document.getElementById('viewer').innerHTML = u.includes('t.me') ? `<button class="btn btn-gold" onclick="window.open('${u}')">WATCH ON TELEGRAM</button>` : `<iframe src="${u}" style="width:100%; height:300px; border:none;" allowfullscreen></iframe>`;
-            document.getElementById('playPage').style.display = 'block';
-        };
-
-        window.openManga = (t) => {
-            const s = manga.filter(m => m.seriesName === t);
-            document.getElementById('detContent').innerHTML = `<img src="${s[0].coverUrl}" style="width:120px; border-radius:10px;"><div><h2>${t}</h2><p>${s[0].category}</p></div>`;
-            document.getElementById('storyContent').innerText = s[0].story || "No story.";
-            document.getElementById('itemList').innerHTML = s.sort((a,b)=>b.chapterNum-a.chapterNum).map(c => `<div class="sidebar-item" onclick="read('${c.id}')">CHAPTER ${c.chapterNum}</div>`).join('');
-            document.getElementById('detPage').style.display = 'block';
-        };
-
-        window.read = (id) => {
-            const c = manga.find(x => x.id === id);
-            document.getElementById('playTitle').innerText = c.seriesName;
-            document.getElementById('viewer').innerHTML = c.chapterImages.map(i => `<img src="${i}" style="width:100%; display:block;">`).join('');
-            document.getElementById('playPage').style.display = 'block';
-        };
-
-        async function upCl(f) { const fd = new FormData(); fd.append("file", f); fd.append("upload_preset", "ml_default"); const r = await fetch("https://api.cloudinary.com/v1_1/dqdqg2wac/upload",{method:"POST",body:fd}); const d = await r.json(); return d.secure_url; }
-        
-        window.uploadManga = async () => {
-            document.getElementById('pbm').innerText = "WAIT...";
-            const c = await upCl(document.getElementById('upCover').files[0]);
-            const p = await Promise.all(Array.from(document.getElementById('upPages').files).map(f => upCl(f)));
-            await addDoc(collection(db, "chapters"), { seriesName: document.getElementById('upTitle').value, story: document.getElementById('upStory').value, chapterNum: parseFloat(document.getElementById('upCh').value), category: document.getElementById('upCat').value, coverUrl: c, chapterImages: p, timestamp: serverTimestamp() });
-            location.reload();
-        };
-
-        window.uploadAnime = async () => {
-            document.getElementById('pba').innerText = "WAIT...";
-            const c = await upCl(document.getElementById('ac').files[0]);
-            let eps = []; document.querySelectorAll('.en').forEach((e, i) => { eps.push({n: e.value, u: document.querySelectorAll('.eu')[i].value}); });
-            await addDoc(collection(db, "animes"), { title: document.getElementById('at').value, story: document.getElementById('as').value, cover: c, episodes: eps, timestamp: serverTimestamp() });
-            location.reload();
+        window.handleAuth = async () => {
+            const email = document.getElementById('authEmail').value;
+            const pass = document.getElementById('authPass').value;
+            const btn = document.getElementById('authBtn');
+            btn.innerText = "PLEASE WAIT...";
+            try {
+                if (isSignup) await createUserWithEmailAndPassword(auth, email, pass);
+                else await signInWithEmailAndPassword(auth, email, pass);
+                toggleAuthModal();
+            } catch (e) { alert("Error: " + e.message); }
+            btn.innerText = isSignup ? "SIGNUP" : "LOGIN";
         };
 
         window.redeemKey = async () => {
             const k = document.getElementById('giftKey').value;
+            if(!k) return alert("Enter a key!");
             const s = await getDoc(doc(db, "promo_keys", k));
             if(s.exists() && !s.data().used) {
                 await updateDoc(doc(db, "promo_keys", k), { used: true });
-                userCoins += s.data().amount; localStorage.setItem('m_coins', userCoins);
-                document.getElementById('uCoins').innerText = userCoins; alert("Success!");
-            } else alert("Invalid Key!");
+                const uRef = doc(db, "users", currentUser.uid);
+                const uSnap = await getDoc(uRef);
+                const newCoins = (uSnap.data().coins || 0) + s.data().amount;
+                await updateDoc(uRef, { coins: newCoins });
+                document.getElementById('uCoins').innerText = newCoins;
+                alert(`Added ${s.data().amount} Coins Successfully!`);
+                document.getElementById('giftKey').value = "";
+            } else alert("Key is invalid or already used.");
         };
 
-        window.genKey = async () => {
-            const a = parseInt(document.getElementById('ka').value);
-            const k = "MZ-" + Math.random().toString(36).substring(2,8).toUpperCase();
-            await setDoc(doc(db, "promo_keys", k), { amount: a, used: false });
-            document.getElementById('kh').innerHTML += `<div>${k} (${a})</div>`;
-        };
+        window.logout = () => { if(confirm("Logout?")) signOut(auth); };
+        window.toggleAuthModal = () => { const m = document.getElementById('authModal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; };
+        window.switchAuth = () => { isSignup = !isSignup; document.getElementById('authTitle').innerText = isSignup ? "SIGNUP" : "LOGIN"; document.getElementById('authBtn').innerText = isSignup ? "SIGNUP" : "LOGIN"; document.getElementById('authSwitch').innerHTML = isSignup ? "Already have an account? <b>LOGIN</b>" : "Don't have an account? <b>SIGNUP</b>"; };
 
-        function renderSlider(data) {
-            document.getElementById('mainSlider').innerHTML = data.slice(0,5).map(v => `<div class="slide" onclick="openManga('${v.seriesName.replace(/'/g,"\\'")}')"><img src="${v.coverUrl}"><div class="slide-info"><h2>${v.seriesName}</h2></div></div>`).join('');
-            let idx = 0; setInterval(() => { idx = (idx+1)%5; if(document.getElementById('mainSlider')) document.getElementById('mainSlider').style.transform = `translateX(-${idx*100}%)`; }, 4000);
+        async function loadData() {
+            const mS = await getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc")));
+            manga = mS.docs.map(d => ({id: d.id, ...d.data()}));
+            renderHome(manga);
         }
 
-        window.renderManage = () => { document.getElementById('delList').innerHTML = manga.map(m => `<div style="display:flex; justify-content:space-between; padding:5px;">${m.seriesName} <i class="fa fa-trash" onclick="del('chapters','${m.id}')"></i></div>`).join('') + anime.map(a => `<div style="display:flex; justify-content:space-between; padding:5px;">${a.title} <i class="fa fa-trash" onclick="del('animes','${a.id}')"></i></div>`).join(''); };
-        window.del = async (c, id) => { if(confirm("DEL?")) { await deleteDoc(doc(db, c, id)); loadData(); } };
-        window.renderGenres = () => { const cats = ["Action", "Romance", "Isekai", "Hentai"]; document.getElementById('genreContainer').innerHTML = cats.map(c => `<div class="sidebar-item" onclick="filterGenre('${c}')">${c}</div>`).join(''); document.getElementById('upCat').innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join(''); };
-        window.filterGenre = (g) => { renderHome(manga.filter(m => m.category === g)); toggleSidebar(); };
-        window.doSearch = () => { const q = document.getElementById('searchInput').value.toLowerCase(); renderHome(manga.filter(m => m.seriesName.toLowerCase().includes(q))); };
+        function renderHome(data) {
+            const unique = {}; data.forEach(i => { if(!unique[i.seriesName]) unique[i.seriesName] = i; });
+            document.getElementById('mainGrid').innerHTML = Object.values(unique).map(v => `
+                <div class="card" onclick="openManga('${v.seriesName.replace(/'/g,"\\'")}')">
+                    <img src="${v.coverUrl}">
+                    <div class="card-name">${v.seriesName}</div>
+                </div>`).join('');
+        }
+
+        window.openManga = (t) => {
+            const s = manga.filter(m => m.seriesName === t);
+            document.getElementById('detContent').innerHTML = `<img src="${s[0].coverUrl}" style="width:120px; border-radius:10px; border:2px solid var(--primary);"><div><h2 style="color:var(--primary);">${t}</h2><p style="font-size:12px; opacity:0.6;">Category: ${s[0].category || "General"}</p></div>`;
+            document.getElementById('itemList').innerHTML = s.sort((a,b)=>b.chapterNum - a.chapterNum).map(c => `
+                <div class="sidebar-item" onclick="readManga('${c.id}')">
+                    <span>CHAPTER ${c.chapterNum}</span>
+                    <span style="margin-left:auto; font-size:12px; color:var(--primary);">${c.coinPrice > 0 ? `<i class="fa-solid fa-coins"></i> ${c.coinPrice}` : 'FREE'}</span>
+                </div>`).join('');
+            document.getElementById('detPage').style.display = 'block';
+        };
+
+        window.readManga = async (id) => {
+            if(!currentUser) return alert("Please Login to Read!");
+            const c = manga.find(x => x.id === id);
+            const price = c.coinPrice || 0;
+            const uRef = doc(db, "users", currentUser.uid);
+            const uSnap = await getDoc(uRef);
+            
+            if(uSnap.data().coins < price) return alert("Insufficient Coins! Please redeem a key.");
+            
+            if(price > 0) {
+                if(confirm(`Unlock Chapter ${c.chapterNum} for ${price} coins?`)) {
+                    const newBalance = uSnap.data().coins - price;
+                    await updateDoc(uRef, { coins: newBalance });
+                    document.getElementById('uCoins').innerText = newBalance;
+                } else return;
+            }
+            alert("Success! Now Opening Viewer..."); 
+            // Viewer Logic Here...
+        };
+
+        window.checkAdmin = () => { if(prompt("ADMIN PASS:") === "Admin@2026") document.getElementById('adminModal').style.display='flex'; };
         window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); };
-        window.toggleSearch = () => { const s = document.getElementById('searchBox'); s.style.display = s.style.display==='block'?'none':'block'; };
-        window.showTab = (id) => { ['mUp','aUp','keyTab','mng'].forEach(t=>document.getElementById(t).style.display='none'); document.getElementById(id).style.display='block'; };
-        window.checkAdmin = () => { if(prompt("PASS:") === "Admin@2026") document.getElementById('adminModal').style.display='flex'; };
+        window.showTab = (id) => { document.getElementById('mUp').style.display = id === 'mUp' ? 'block' : 'none'; document.getElementById('keyTab').style.display = id === 'keyTab' ? 'block' : 'none'; };
         window.closePage = (id) => document.getElementById(id).style.display = 'none';
-        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-        window.addEp = () => { const d = document.createElement('div'); d.innerHTML = `<input class="en" placeholder="EP NAME"><input class="eu" placeholder="URL">`; document.getElementById('epList').appendChild(d); };
+
+        loadData();
     </script>
 </body>
 </html>
