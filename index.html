@@ -1,175 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | ULTIMATE FULL VERSION</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-ZONE | PRO EDITION</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --p: #FFD700; --b: #050505; --c: #121212; --g: rgba(255,255,255,0.1); }
+        :root { --p: #FFD700; --b: #050505; --c: #0d0d0d; --g: rgba(255,255,255,0.05); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--b); color: #fff; padding-top: 145px; overflow-x: hidden; }
+        body { background: var(--b); color: #fff; padding-top: 85px; }
 
-        /* PREMIUM HEADER */
-        header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(5,5,5,0.9); backdrop-filter: blur(25px); border-bottom: 1px solid var(--g); }
-        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; }
-        .logo { font-weight: 800; font-size: 24px; color: var(--p); letter-spacing: 1px; }
-        .search-area { padding: 0 20px 15px; }
-        .search-box { background: var(--g); border-radius: 12px; display: flex; align-items: center; padding: 0 15px; border: 1px solid transparent; }
-        .search-box:focus-within { border-color: var(--p); }
-        .search-box input { background: none; border: none; color: #fff; padding: 12px; width: 100%; outline: none; }
+        /* SLIM HEADER & SEARCH */
+        header { position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(5,5,5,0.85); backdrop-filter: blur(25px); border-bottom: 1px solid var(--g); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .logo { font-weight: 800; font-size: 20px; color: var(--p); letter-spacing: -0.5px; white-space: nowrap; }
+        .logo i { font-size: 16px; margin-left: 2px; color: #fff; }
 
-        /* HERO SLIDER */
-        .slider { width: 92%; height: 200px; margin: 0 auto 25px; border-radius: 20px; overflow: hidden; position: relative; border: 1px solid var(--g); }
+        .search-container { flex-grow: 1; position: relative; max-width: 400px; }
+        .search-box { background: var(--g); border-radius: 8px; display: flex; align-items: center; padding: 0 12px; border: 1px solid rgba(255,255,255,0.1); height: 38px; }
+        .search-box input { background: none; border: none; color: #fff; padding: 0 10px; width: 100%; outline: none; font-size: 13px; font-weight: 300; }
+        .search-box i { font-size: 12px; opacity: 0.4; }
+
+        /* MINIMAL ICONS */
+        .nav-icons { display: flex; gap: 18px; align-items: center; }
+        .nav-icons i { font-size: 18px; color: #fff; cursor: pointer; transition: 0.3s; }
+        .nav-icons i:hover { color: var(--p); }
+
+        /* SLIDER */
+        .slider { width: 94%; height: 180px; margin: 15px auto; border-radius: 15px; overflow: hidden; position: relative; }
         .track { display: flex; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); height: 100%; }
         .slide { min-width: 100%; position: relative; }
-        .slide img { width: 100%; height: 100%; object-fit: cover; }
-        .slide-overlay { position: absolute; inset: 0; background: linear-gradient(to top, #050505, transparent); padding: 20px; display: flex; flex-direction: column; justify-content: flex-end; }
+        .slide img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }
 
-        /* GENRE CHIPS */
-        .genre-wrap { display: flex; gap: 10px; overflow-x: auto; padding: 0 20px 20px; scrollbar-width: none; }
-        .genre-btn { background: var(--c); border: 1px solid var(--g); padding: 8px 18px; border-radius: 50px; font-size: 12px; white-space: nowrap; cursor: pointer; color: #aaa; }
-        .genre-btn.active { background: var(--p); color: #000; border-color: var(--p); font-weight: 700; }
+        /* GRID */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 10px 15px 100px; }
+        .card { background: var(--c); border-radius: 12px; overflow: hidden; border: 1px solid var(--g); position: relative; }
+        .card img { width: 100%; height: 220px; object-fit: cover; }
+        .card-title { padding: 10px; font-size: 12px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; color: #ccc; }
+        .type-tag { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); font-size: 9px; padding: 3px 8px; border-radius: 4px; border: 0.5px solid var(--p); color: var(--p); text-transform: uppercase; font-weight: 800; }
 
-        /* GRID SYSTEM */
-        .container { padding: 0 15px 100px; max-width: 1200px; margin: auto; }
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .card { background: var(--c); border-radius: 18px; overflow: hidden; border: 1px solid var(--g); position: relative; transition: 0.3s; }
-        .card img { width: 100%; height: 240px; object-fit: cover; }
-        .card-meta { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 4px 10px; border-radius: 8px; font-size: 10px; color: var(--p); border: 1px solid var(--p); }
-        .card-title { padding: 12px; font-size: 13px; font-weight: 600; text-align: center; }
-
-        /* SIDEBAR PRO */
-        .sidebar { position: fixed; top: 0; right: -320px; width: 310px; height: 100%; background: #080808; z-index: 2001; padding: 30px 20px; transition: 0.4s; border-left: 1px solid var(--g); }
+        /* SIDEBAR & CHAT */
+        .sidebar { position: fixed; top: 0; right: -310px; width: 300px; height: 100%; background: #0a0a0a; z-index: 2001; padding: 30px 20px; transition: 0.4s; border-left: 1px solid var(--g); }
         .sidebar.active { right: 0; }
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; }
+        .chat-area { background: #000; border-radius: 12px; height: 200px; margin-top: 20px; border: 1px solid var(--g); display: flex; flex-direction: column; overflow: hidden; }
+        #chatMsgs { flex: 1; overflow-y: auto; padding: 12px; font-size: 11px; color: #888; line-height: 1.6; }
         
-        .u-info { background: linear-gradient(135deg, #1a1a1a, #050505); padding: 20px; border-radius: 20px; border: 1px solid var(--g); margin-bottom: 20px; }
-        .chat-box { background: #000; border-radius: 15px; height: 180px; margin: 20px 0; border: 1px solid var(--g); display: flex; flex-direction: column; overflow: hidden; }
-        #chatMsgs { flex: 1; overflow-y: auto; padding: 12px; font-size: 11px; color: #ccc; }
-
-        /* PAGES */
+        /* MISC */
         .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 4000; overflow-y: auto; padding: 20px; }
-        .btn-p { background: var(--p); color: #000; border: none; padding: 15px; border-radius: 12px; font-weight: 800; width: 100%; cursor: pointer; transition: 0.2s; }
-        .btn-p:active { transform: scale(0.98); }
-        input, select { width: 100%; padding: 14px; margin: 10px 0; background: #151515; border: 1px solid var(--g); color: #fff; border-radius: 12px; outline: none; }
+        .btn-p { background: var(--p); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 800; width: 100%; cursor: pointer; font-size: 13px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #111; border: 1px solid var(--g); color: #fff; border-radius: 8px; font-size: 13px; }
 
-        @media (min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); } .slider { height: 380px; } }
+        @media (min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } .slider { height: 320px; } }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="top-bar">
-            <div class="logo" onclick="location.reload()">M-ZONE <i class="fa-solid fa-bolt"></i></div>
-            <div style="display:flex; gap:20px; align-items:center;">
-                <i class="fa-solid fa-ranking-star" onclick="showLeaderboard()" style="color:var(--p); font-size:22px;"></i>
-                <i class="fa-solid fa-bars-staggered" onclick="tgS()" style="font-size:26px;"></i>
+        <div class="logo" onclick="location.reload()">M-ZONE <i class="fa-solid fa-bolt-lightning"></i></div>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="gSearch" placeholder="Search..." oninput="handleSearch()">
             </div>
         </div>
-        <div class="search-area">
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass" style="opacity:0.5;"></i>
-                <input type="text" id="gSearch" placeholder="Search for series..." oninput="handleSearch()">
-            </div>
+
+        <div class="nav-icons">
+            <i class="fa-regular fa-square-plus" onclick="cA()"></i>
+            <i class="fa-solid fa-bars-staggered" onclick="tgS()"></i>
         </div>
     </header>
 
-    <div class="overlay" id="overlay" onclick="tgS()"></div>
-
     <div class="sidebar" id="sb">
-        <div id="uCard" style="display:none;" class="u-info">
-            <p id="uName" style="font-weight:800; font-size:18px;"></p>
-            <p style="font-size:12px; color:var(--p); margin-top:5px;"><i class="fa-solid fa-coins"></i> Gold: <span id="uCoins">0</span></p>
-            <div style="display:flex; gap:5px; margin-top:15px;">
-                <input type="text" id="vKey" placeholder="Redeem Key" style="margin:0; font-size:11px; padding:10px;">
-                <button onclick="redeemKey()" style="background:var(--p); border:none; padding:10px; border-radius:8px;"><i class="fa-solid fa-check"></i></button>
+        <div id="uCard" style="display:none; margin-bottom: 20px;">
+            <p id="uName" style="font-weight:800; font-size:16px; color:var(--p)"></p>
+            <p style="font-size:11px; opacity:0.6; margin-top:4px;"><i class="fa-solid fa-coins"></i> <span id="uCoins">0</span> Gold</p>
+            <div style="display:flex; gap:6px; margin-top:12px;">
+                <input type="text" id="vKey" placeholder="Redeem VIP" style="margin:0; font-size:11px; height:35px;">
+                <button onclick="rk()" style="background:var(--p); border:0; padding:0 12px; border-radius:8px;"><i class="fa-solid fa-check"></i></button>
             </div>
         </div>
-        <button id="lBtn" class="btn-p" onclick="tgM('authModal')"><i class="fa-solid fa-right-to-bracket"></i> GET STARTED</button>
+        <button id="lBtn" class="btn-p" onclick="tgM('authModal')">LOGIN / REGISTER</button>
 
-        <div class="chat-box">
+        <div class="chat-area">
             <div id="chatMsgs"></div>
-            <div style="display:flex; padding:8px; gap:5px; border-top:1px solid var(--g);">
-                <input type="text" id="cInput" placeholder="Chat..." style="margin:0; font-size:11px; padding:8px;">
-                <button onclick="sendChat()" style="background:var(--p); border:none; width:40px; border-radius:8px;"><i class="fa-solid fa-paper-plane"></i></button>
+            <div style="display:flex; padding:8px; gap:5px; background: #0d0d0d;">
+                <input type="text" id="ci" placeholder="Message..." style="margin:0; font-size:11px; height:32px;">
+                <button onclick="sc()" style="background:var(--p); border:none; width:35px; border-radius:6px;"><i class="fa-solid fa-paper-plane" style="font-size:10px;"></i></button>
             </div>
         </div>
 
-        <nav style="display:flex; flex-direction:column; gap:22px; font-weight:600;">
-            <p onclick="showList()" style="cursor:pointer;"><i class="fa-solid fa-heart-circle-check" style="color:#ff4757; margin-right:12px;"></i> My Library</p>
-            <p onclick="filterType('Anime')" style="cursor:pointer;"><i class="fa-solid fa-clapperboard" style="color:var(--p); margin-right:12px;"></i> Premium Anime</p>
-            <p onclick="cA()" style="opacity:0.2; font-size:11px; cursor:pointer;"><i class="fa-solid fa-user-shield"></i> STAFF PANEL</p>
+        <nav style="margin-top:25px; display:flex; flex-direction:column; gap:18px;">
+            <p onclick="showList()" style="font-size:13px; cursor:pointer;"><i class="fa-regular fa-bookmark" style="margin-right:12px; color:var(--p)"></i> MY LIBRARY</p>
+            <p onclick="fT('Anime')" style="font-size:13px; cursor:pointer;"><i class="fa-regular fa-circle-play" style="margin-right:12px;"></i> PREMIUM ANIME</p>
         </nav>
     </div>
 
-    <div class="container">
-        <div class="slider"><div class="track" id="st"></div></div>
+    <div class="slider"><div class="track" id="st"></div></div>
+    <div id="mg" class="grid"></div>
 
-        <div class="genre-wrap" id="gWrap">
-            <div class="genre-btn active" onclick="fG('All')">All</div>
-            <div class="genre-btn" onclick="fG('Action')">Action</div>
-            <div class="genre-btn" onclick="fG('Romance')">Romance</div>
-            <div class="genre-btn" onclick="fG('Hentai')">Hentai</div>
+    <div id="dp" class="full-page">
+        <i class="fa-solid fa-arrow-left-long" onclick="clP('dp')" style="font-size:22px; color:var(--p)"></i>
+        <div id="dh" style="margin-top:20px"></div>
+        <div id="cl" style="margin-top:25px"></div>
+    </div>
+
+    <div id="vp" class="full-page" style="padding:0; background:#000;">
+        <div style="padding:15px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.9); position:sticky; top:0; z-index:100;">
+            <i class="fa-solid fa-xmark" onclick="clP('vp')"></i><span id="vt" style="font-size:11px; letter-spacing:1px;"></span><i class="fa-regular fa-heart" onclick="tB()"></i>
         </div>
-
-        <h3 id="gTitle" style="margin-bottom:20px; font-size:16px; border-left:4px solid var(--p); padding-left:12px;">NEW RELEASES</h3>
-        <div id="mg" class="grid"></div>
+        <div id="vc"></div>
     </div>
 
-    <div id="detPage" class="full-page">
-        <i class="fa-solid fa-circle-chevron-left" onclick="clP('detPage')" style="font-size:30px; color:var(--p); margin-bottom:20px;"></i>
-        <div id="detHead"></div>
-        <div id="detList" style="margin-top:25px;"></div>
-    </div>
-
-    <div id="viewPage" class="full-page" style="padding:0; background:#000;">
-        <div style="padding:15px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.8); position:sticky; top:0; z-index:100;">
-            <i class="fa-solid fa-xmark" onclick="clP('viewPage')"></i>
-            <span id="vTitle" style="font-size:12px; font-weight:700;"></span>
-            <i class="fa-solid fa-heart" id="vHeart" onclick="tB()"></i>
-        </div>
-        <div id="vContent"></div>
-    </div>
-
-    <div id="authModal" class="full-page" style="background:rgba(0,0,0,0.9); display:none; align-items:center; justify-content:center;">
-        <div style="background:var(--c); padding:30px; border-radius:25px; width:90%; max-width:350px; border:1px solid var(--g);">
-            <h2 style="text-align:center; margin-bottom:20px;">Welcome</h2>
-            <input id="em" placeholder="Email"><input id="ps" type="password" placeholder="Password">
-            <button class="btn-p" onclick="hA()">JOIN NOW</button>
-            <p onclick="tgM('authModal')" style="text-align:center; margin-top:20px; font-size:12px; opacity:0.5;">Close</p>
-        </div>
-    </div>
-
-    <div id="admModal" class="full-page">
+    <div id="adm" class="full-page">
         <div style="max-width:500px; margin:auto;">
             <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <button class="btn-p" onclick="sT('m')">Manga</button>
-                <button class="btn-p" onclick="sT('a')">Anime</button>
-                <button class="btn-p" onclick="sT('k')">Keys</button>
+                <button class="btn-p" onclick="sT('m')">Manga</button><button class="btn-p" onclick="sT('a')">Anime</button><button class="btn-p" onclick="sT('k')">Keys</button>
             </div>
-            <div id="mT">
-                <input id="mt" placeholder="Manga Title">
-                <input id="mc" type="number" placeholder="Chapter No">
-                <input id="mp" type="number" placeholder="Price (Gold)">
-                <select id="mg"><option>Action</option><option>Romance</option><option>Hentai</option></select>
-                <input type="file" id="mCv"><input type="file" id="mPs" multiple>
-                <button class="btn-p" onclick="uM()">UPLOAD MANGA</button>
-            </div>
-            <div id="aT" style="display:none;">
-                <input id="at" placeholder="Anime Title">
-                <input type="file" id="acV">
-                <div id="epArea"></div>
-                <button onclick="aE()" style="background:#222; border:1px solid var(--g); color:#fff; padding:10px; width:100%; border-radius:10px; margin-bottom:10px;">+ Add Episode</button>
-                <button class="btn-p" onclick="uA()">UPLOAD ANIME</button>
-            </div>
-            <div id="kT" style="display:none;">
-                <input id="ka" type="number" placeholder="Gold Amount">
-                <button class="btn-p" onclick="gk()">GENERATE KEY</button>
-                <p id="kr" style="text-align:center; margin-top:15px; color:var(--p); font-family:monospace; font-size:18px;"></p>
-            </div>
-            <button class="btn-p" onclick="clP('admModal')" style="background:#222; margin-top:20px;">BACK TO HOME</button>
+            <div id="mT"><input id="mt" placeholder="Title"><input id="mc" type="number" placeholder="Ch"><input id="mp" type="number" placeholder="Price"><select id="mg"><option>Action</option><option>Romance</option><option>Hentai</option></select><input type="file" id="mCv"><input type="file" id="mPs" multiple><button class="btn-p" onclick="uM()">UPLOAD</button></div>
+            <div id="aT" style="display:none;"><input id="at" placeholder="Anime Title"><input type="file" id="acV"><div id="epA"></div><button onclick="aE()" style="background:#111; color:#fff; padding:10px; width:100%; border-radius:8px; margin-bottom:10px; border:1px solid var(--g);">+ Episode</button><button class="btn-p" onclick="uA()">UPLOAD ANIME</button></div>
+            <div id="kT" style="display:none;"><input id="ka" type="number" placeholder="Amount"><button class="btn-p" onclick="gk()">GEN KEY</button><p id="kr" style="margin-top:15px; color:var(--p); text-align:center; font-family:monospace;"></p></div>
+            <button class="btn-p" onclick="clP('adm')" style="background:#111; margin-top:20px; color:#555;">CLOSE</button>
+        </div>
+    </div>
+
+    <div id="authModal" class="full-page" style="background:rgba(0,0,0,0.95); display:none; align-items:center; justify-content:center;">
+        <div style="background:#0a0a0a; padding:30px; border-radius:20px; width:320px; border:1px solid var(--g);">
+            <h3 style="text-align:center; margin-bottom:20px; font-weight:400;">Account Login</h3>
+            <input id="em" placeholder="Email"><input id="ps" type="password" placeholder="Password">
+            <button class="btn-p" onclick="hA()">CONTINUE</button>
+            <p onclick="tgM('authModal')" style="text-align:center; margin-top:20px; font-size:11px; opacity:0.4;">Cancel</p>
         </div>
     </div>
 
@@ -190,80 +149,69 @@
         });
 
         async function ug() { const d = await getDoc(doc(db, "users", u.uid)); document.getElementById('uCoins').innerText = d.data().coins || 0; }
-
         async function init() {
             const [m, a] = await Promise.all([getDocs(query(collection(db,"chapters"),orderBy("timestamp","desc"))), getDocs(collection(db,"animes"))]);
             ad = [...m.docs.map(d=>({id:d.id,type:'Manga',...d.data()})), ...a.docs.map(d=>({id:d.id,type:'Anime',...d.data()}))];
-            renderGrid(ad); renderSlider(ad.filter(x=>x.type==='Manga').slice(0,5));
+            rh(ad); rs(ad.filter(x=>x.type==='Manga').slice(0,5));
         }
 
-        function renderGrid(data) {
+        function rh(data) {
             const un = {}; data.forEach(i => { const k = i.seriesName || i.title; if(!un[k]) un[k] = i; });
             document.getElementById('mg').innerHTML = Object.values(un).map(v => `
                 <div class="card" onclick="oD('${(v.seriesName||v.title).replace(/'/g,"\\'")}', '${v.type}')">
-                    <div class="card-meta">${v.genre || v.type}</div>
+                    <div class="type-tag">${v.genre || v.type}</div>
                     <img src="${v.coverUrl||v.cover}"><div class="card-title">${v.seriesName||v.title}</div>
                 </div>`).join('');
         }
 
         window.handleSearch = () => {
             const q = document.getElementById('gSearch').value.toLowerCase();
-            renderGrid(ad.filter(i => (i.seriesName || i.title).toLowerCase().includes(q)));
+            rh(ad.filter(i => (i.seriesName || i.title).toLowerCase().includes(q)));
         };
 
-        window.fG = (g) => {
-            document.querySelectorAll('.genre-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active');
-            renderGrid(g === 'All' ? ad : ad.filter(i => i.genre === g));
-        };
-
-        window.oD = (n, t) => { cID=n; const items = ad.filter(i=>(i.seriesName||i.title)===n);
-            document.getElementById('detHead').innerHTML = `<div style="display:flex; gap:20px;"><img src="${items[0].coverUrl||items[0].cover}" style="width:130px; border-radius:15px; border:1px solid var(--g);"><div><h2>${n}</h2><p style="color:var(--p); font-size:12px; margin-top:5px;">${items[0].genre||t}</p><button class="btn-p" onclick="tB()" style="padding:10px 20px; width:auto; margin-top:15px; font-size:11px;"><i class="fa-solid fa-heart"></i> MY LIST</button></div></div>`;
-            document.getElementById('detList').innerHTML = t==='Manga' ? items.map(c=>`<div onclick="rM('${c.id}')" style="background:var(--g); padding:18px; border-radius:15px; margin-bottom:12px; display:flex; justify-content:space-between;"><span>Chapter ${c.chapterNum}</span><i class="fa-solid fa-lock" style="color:var(--p)"></i></div>`).join('') : items[0].episodes.map(e=>`<div onclick="wA('${e.url}','${e.name}')" style="background:var(--g); padding:18px; border-radius:15px; margin-bottom:12px; display:flex; justify-content:space-between;"><span>${e.name}</span><i class="fa-solid fa-circle-play" style="color:var(--p)"></i></div>`).join('');
-            document.getElementById('detPage').style.display='block';
+        window.oD = (n, t) => { cID=n; const its = ad.filter(i=>(i.seriesName||i.title)===n);
+            document.getElementById('dh').innerHTML = `<div style="display:flex; gap:20px;"><img src="${its[0].coverUrl||its[0].cover}" style="width:110px; border-radius:10px; border:1px solid var(--g);"><div><h2 style="font-weight:600">${n}</h2><p style="color:var(--p); font-size:11px; margin-top:5px; letter-spacing:1px">${its[0].genre||t}</p><button class="btn-p" onclick="tB()" style="padding:8px 15px; width:auto; margin-top:15px; font-size:11px;"><i class="fa-regular fa-heart"></i> FAVORITE</button></div></div>`;
+            document.getElementById('cl').innerHTML = t==='Manga' ? its.map(c=>`<div onclick="rM('${c.id}')" style="background:var(--g); padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;"><span>Chapter ${c.chapterNum}</span><i class="fa-solid fa-lock-open" style="font-size:12px; opacity:0.3"></i></div>`).join('') : its[0].episodes.map(e=>`<div onclick="wA('${e.url}','${e.name}')" style="background:var(--g); padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between;"><span>${e.name}</span><i class="fa-regular fa-circle-play" style="color:var(--p)"></i></div>`).join('');
+            document.getElementById('dp').style.display='block';
         };
 
         window.rM = async (id) => { if(!u) return tgM('authModal'); const c = ad.find(x=>x.id===id); const uR = doc(db,"users",u.uid); const uS = await getDoc(uR);
-            if(uS.data().coins < (c.coinPrice||0)) return alert("Insufficient Gold!"); if(c.coinPrice>0) await updateDoc(uR,{coins:uS.data().coins-c.coinPrice});
-            document.getElementById('vTitle').innerText = `Chapter ${c.chapterNum}`; document.getElementById('vContent').innerHTML = c.chapterImages.map(img=>`<img src="${img}" style="width:100%; display:block;">`).join('');
-            document.getElementById('viewPage').style.display='block'; ug();
+            if(uS.data().coins < (c.coinPrice||0)) return alert("Gold!"); if(c.coinPrice>0) await updateDoc(uR,{coins:uS.data().coins-c.coinPrice});
+            document.getElementById('vt').innerText = `CHAPTER ${c.chapterNum}`; document.getElementById('vc').innerHTML = c.chapterImages.map(img=>`<img src="${img}" style="width:100%; display:block;">`).join('');
+            document.getElementById('vp').style.display='block'; ug();
         };
 
-        window.wA = (url, name) => { document.getElementById('vTitle').innerText=name; document.getElementById('vContent').innerHTML = `<iframe src="${url}" style="width:100%; height:300px; border:none;" allowfullscreen></iframe>`; document.getElementById('viewPage').style.display='block'; };
+        window.wA = (url, n) => { document.getElementById('vt').innerText=n; document.getElementById('vc').innerHTML = `<iframe src="${url}" style="width:100%; height:250px; border:none;" allowfullscreen></iframe>`; document.getElementById('viewPage').style.display='block'; };
 
-        window.redeemKey = async () => {
-            const k = document.getElementById('vKey').value;
-            const qS = await getDocs(query(collection(db,"keys"),where("key","==",k),where("used","==",false)));
-            if(qS.empty) return alert("Invalid Key!");
-            await updateDoc(doc(db,"users",u.uid),{coins:(await getDoc(doc(db,"users",u.uid))).data().coins + qS.docs[0].data().amount});
-            await updateDoc(doc(db,"keys",qS.docs[0].id),{used:true}); location.reload();
-        };
-
-        window.tB = async () => { if(!u) return tgM('authModal'); const uR = doc(db,"users",u.uid); let bks = (await getDoc(uR)).data().bookmarks || [];
-            bks = bks.includes(cID) ? bks.filter(i=>i!==cID) : [...bks, cID]; await updateDoc(uR,{bookmarks:bks}); alert("List Updated!"); };
-
-        window.showList = async () => { const bks = (await getDoc(doc(db,"users",u.uid))).data().bookmarks || []; renderGrid(ad.filter(i=>bks.includes(i.seriesName||i.title))); tgS(); };
-
-        window.sc = async () => { const m = document.getElementById('cInput').value; if(m&&u){await addDoc(collection(db,"chats"),{name:u.email.split('@')[0],msg:m,timestamp:serverTimestamp()});document.getElementById('cInput').value="";}};
-        function lc() { onSnapshot(query(collection(db,"chats"),orderBy("timestamp","desc")),s=>document.getElementById('chatMsgs').innerHTML=s.docs.slice(0,20).map(d=>`<div><b style="color:var(--p)">${d.data().name}:</b> ${d.data().msg}</div>`).reverse().join('')); }
-
+        window.sc = async () => { const m = document.getElementById('ci').value; if(m&&u){await addDoc(collection(db,"chats"),{name:u.email.split('@')[0],msg:m,timestamp:serverTimestamp()});document.getElementById('ci').value="";}};
+        function lc() { onSnapshot(query(collection(db,"chats"),orderBy("timestamp","desc")),s=>document.getElementById('chatMsgs').innerHTML=s.docs.slice(0,15).map(d=>`<div><b style="color:var(--p); font-weight:600">${d.data().name}:</b> <span style="font-weight:300">${d.data().msg}</span></div>`).reverse().join('')); }
+        
         async function ucl(f) { const fd = new FormData(); fd.append("file",f); fd.append("upload_preset","ml_default"); const r = await fetch("https://api.cloudinary.com/v1_1/dqdqg2wac/upload",{method:"POST",body:fd}); return (await r.json()).secure_url; }
         window.uM = async () => { const c = await ucl(document.getElementById('mCv').files[0]); const ps = await Promise.all(Array.from(document.getElementById('mPs').files).map(f=>ucl(f)));
             await addDoc(collection(db,"chapters"),{seriesName:document.getElementById('mt').value, chapterNum:parseFloat(document.getElementById('mc').value), coinPrice:parseInt(document.getElementById('mp').value), genre:document.getElementById('mg').value, coverUrl:c, chapterImages:ps, timestamp:serverTimestamp()}); location.reload();
         };
 
-        window.aE = () => { const d = document.createElement('div'); d.innerHTML = `<input class="en" placeholder="Ep Name"><input class="eu" placeholder="URL">`; document.getElementById('epArea').appendChild(d); };
+        window.rk = async () => { const k=document.getElementById('vKey').value; const qS=await getDocs(query(collection(db,"keys"),where("key","==",k),where("used","==",false)));
+            if(qS.empty) return alert("Invalid"); await updateDoc(doc(db,"users",u.uid),{coins:(await getDoc(doc(db,"users",u.uid))).data().coins+qS.docs[0].data().amount});
+            await updateDoc(doc(db,"keys",qS.docs[0].id),{used:true}); location.reload();
+        };
+
+        window.aE = () => { const d = document.createElement('div'); d.innerHTML = `<input class="en" placeholder="Ep Name"><input class="eu" placeholder="URL">`; document.getElementById('epA').appendChild(d); };
         window.uA = async () => { const c = await ucl(document.getElementById('acV').files[0]); const eps = Array.from(document.querySelectorAll('.en')).map((el, i) => ({ name: el.value, url: document.querySelectorAll('.eu')[i].value }));
             await addDoc(collection(db,"animes"), { title: document.getElementById('at').value, cover: c, episodes: eps, timestamp: serverTimestamp() }); location.reload();
         };
 
-        window.gk = async () => { const k = "VIP-" + Math.random().toString(36).substr(2, 8).toUpperCase(); await addDoc(collection(db,"keys"),{key:k, amount:parseInt(document.getElementById('ka').value), used:false}); document.getElementById('kr').innerText = k; };
-        window.tgS = () => { document.getElementById('sb').classList.toggle('active'); document.getElementById('overlay').style.display=document.getElementById('overlay').style.display==='block'?'none':'block'; };
+        window.tB = async () => { if(!u) return; const uR = doc(db,"users",u.uid); let bks = (await getDoc(uR)).data().bookmarks || []; bks = bks.includes(cID) ? bks.filter(i=>i!==cID) : [...bks, cID]; await updateDoc(uR,{bookmarks:bks}); alert("Saved!"); };
+        window.showList = async () => { const bks = (await getDoc(doc(db,"users",u.uid))).data().bookmarks || []; rh(ad.filter(i=>bks.includes(i.seriesName||i.title))); tgS(); };
+        window.gk = async () => { const k = "VIP-" + Math.random().toString(36).substr(2, 6).toUpperCase(); await addDoc(collection(db,"keys"),{key:k, amount:parseInt(document.getElementById('ka').value), used:false}); document.getElementById('kr').innerText = k; };
+        
+        window.tgS = () => document.getElementById('sb').classList.toggle('active');
         window.tgM = (id) => { const m = document.getElementById(id); m.style.display=m.style.display==='none'?'flex':'none'; };
         window.clP = (id) => document.getElementById(id).style.display='none';
-        window.cA = () => { if(prompt("Key:")==="Admin@2026") document.getElementById('admModal').style.display='block'; };
+        window.cA = () => { if(prompt("Pass:")==="Admin@2026") document.getElementById('adm').style.display='block'; };
         window.sT = (id) => { document.getElementById('mT').style.display=id==='m'?'block':'none'; document.getElementById('aT').style.display=id==='a'?'block':'none'; document.getElementById('kT').style.display=id==='k'?'block':'none'; };
         window.hA = async () => { const e=document.getElementById('em').value, p=document.getElementById('ps').value; try{await signInWithEmailAndPassword(auth,e,p);location.reload();}catch{await createUserWithEmailAndPassword(auth,e,p);location.reload();} };
-        function renderSlider(s) { document.getElementById('st').innerHTML=s.map(x=>`<div class="slide"><img src="${x.coverUrl}"><div class="slide-overlay"><h3>${x.seriesName}</h3></div></div>`).join(''); let i=0; setInterval(()=>{i=(i+1)%s.length; document.getElementById('st').style.transform=`translateX(-${i*100}%)`},5000); }
+        function rs(s) { document.getElementById('st').innerHTML=s.map(x=>`<div class="slide"><img src="${x.coverUrl}"></div>`).join(''); let i=0; setInterval(()=>{i=(i+1)%s.length; document.getElementById('st').style.transform=`translateX(-${i*100}%)`},4000); }
         
         init();
     </script>
