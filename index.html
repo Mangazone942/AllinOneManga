@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | THE ULTIMATE MANGA HUB</title>
+    <title>M-ZONE | PREMIUM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -12,30 +12,14 @@
 
     <header>
         <div class="logo" onclick="location.reload()">M-ZONE</div>
-        
         <div class="header-right">
             <div class="header-gold" onclick="openRedeem()">
-                <i class="fa-solid fa-coins"></i>
-                <span id="uCoins">0</span>
+                <i class="fa-solid fa-coins"></i> <span id="uCoins">0</span>
             </div>
-            <div class="icon-btn" onclick="toggleTheme()">
-                <i class="fa-solid fa-circle-half-stroke"></i>
-            </div>
-            <div class="icon-btn">
-                <i class="fa-solid fa-bell"></i>
-                <span class="dot"></span>
-            </div>
+            <i class="fa-solid fa-circle-half-stroke theme-toggle" onclick="toggleTheme()"></i>
             <i class="fa-solid fa-bars-staggered menu-trigger" onclick="tgS()"></i>
         </div>
     </header>
-
-    <div class="search-section">
-        <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input id="gSearch" placeholder="Search Manga, Anime, Author..." oninput="hSearch()">
-            <i class="fa-solid fa-sliders" onclick="toggleFilter()"></i>
-        </div>
-    </div>
 
     <div class="genre-bar" id="genreBar">
         <div class="genre-item active" onclick="fGenre('All', this)">All</div>
@@ -43,140 +27,47 @@
         <div class="genre-item" onclick="fGenre('Romance', this)">Romance</div>
         <div class="genre-item" onclick="fGenre('Hentai', this)">Hentai</div>
         <div class="genre-item" onclick="fGenre('Fantasy', this)">Fantasy</div>
-        <div class="genre-item" onclick="fGenre('Isekai', this)">Isekai</div>
-        <div class="genre-item" onclick="fGenre('Drama', this)">Drama</div>
     </div>
 
-    <div class="slider">
-        <div class="track" id="st"></div>
-        <div class="slider-dots" id="sDots"></div>
-    </div>
-
-    <main>
-        <div class="section-header">
-            <h3><i class="fa-solid fa-fire" style="color:#ff4d4d"></i> LATEST UPDATES</h3>
-            <span onclick="viewMore()">View All <i class="fa-solid fa-chevron-right"></i></span>
+    <div class="slider"><div class="track" id="st"></div></div>
+    
+    <div class="search-section">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="gSearch" placeholder="Search..." oninput="hSearch()">
         </div>
-        <div id="mg" class="grid"></div>
-    </main>
+    </div>
+
+    <div id="mg" class="grid"></div>
 
     <div class="sidebar" id="sb">
-        <div class="sidebar-header">
-            <div class="user-profile">
-                <div class="avatar"><i class="fa-solid fa-user"></i></div>
-                <div>
-                    <h4 id="uName">GUEST</h4>
-                    <p id="uRank">Newbie</p>
-                </div>
-            </div>
-            <i class="fa-solid fa-xmark close-sb" onclick="tgS()"></i>
-        </div>
-
         <div class="menu-list">
-            <div class="menu-item" onclick="showList()"><i class="fa-solid fa-heart"></i> My Library</div>
-            <div class="menu-item" onclick="fType('Anime')"><i class="fa-solid fa-clapperboard"></i> Anime List</div>
-            <div class="menu-item" onclick="openRedeem()"><i class="fa-solid fa-ticket"></i> Redeem Gold</div>
-            <div class="menu-item" onclick="openSettings()"><i class="fa-solid fa-gear"></i> Settings</div>
-            
-            <div id="staffZone" style="display:none;" class="staff-panel">
-                <p class="panel-label">ADMIN DASHBOARD</p>
-                <div class="menu-item" onclick="oAdm('m')"><i class="fa-solid fa-plus-circle"></i> Add Manga</div>
-                <div class="menu-item" onclick="oAdm('a')"><i class="fa-solid fa-video"></i> Add Anime</div>
-                <div class="menu-item" onclick="oAdm('k')"><i class="fa-solid fa-key"></i> Key Center</div>
-                <div class="menu-item" onclick="oAdm('d')"><i class="fa-solid fa-layer-group"></i> Content Manager</div>
+            <div class="menu-item" onclick="showList()"><i class="fa-solid fa-bookmark"></i> Library</div>
+            <div class="menu-item" onclick="openRedeem()"><i class="fa-solid fa-ticket"></i> Redeem</div>
+            <div id="staffZone" style="display:none;">
+                <p style="color:var(--p); font-size:10px; margin:20px 0 10px;">STAFF PANEL</p>
+                <div class="menu-item" onclick="oAdm('m')"><i class="fa-solid fa-plus"></i> Add Manga</div>
+                <div class="menu-item" onclick="oAdm('a')"><i class="fa-solid fa-film"></i> Add Anime</div>
+                <div class="menu-item" onclick="oAdm('d')"><i class="fa-solid fa-trash"></i> Delete Content</div>
             </div>
-            
-            <div class="menu-item" onclick="checkStaff()" style="opacity:0.3; margin-top:40px;"><i class="fa-solid fa-fingerprint"></i> Staff Portal</div>
+            <div class="menu-item" onclick="checkStaff()" style="opacity:0.3; margin-top:50px;"><i class="fa-solid fa-lock"></i> Staff Login</div>
         </div>
-        
-        <button id="lBtn" class="btn-p" onclick="toggleModal('authModal')">JOIN COMMUNITY</button>
+        <button id="lBtn" class="btn-p" onclick="toggleModal('authModal')">LOGIN</button>
     </div>
 
-    <div id="dp" class="full-page anim-slide-up">
-        <div class="dp-header">
-            <i class="fa-solid fa-arrow-left" onclick="clP('dp')"></i>
-            <i class="fa-solid fa-share-nodes"></i>
+    <div id="adm" class="full-page">
+        <div id="dT" style="display:none;">
+            <h3>Manage Content</h3>
+            <div id="delList" style="margin-top:20px;"></div>
         </div>
-        <div id="dh"></div> <div class="tab-bar">
-            <div class="tab-item active">Chapters</div>
-            <div class="tab-item">Comments</div>
-            <div class="tab-item">Related</div>
-        </div>
-        
-        <div id="cl" class="chapter-list"></div>
-    </div>
-
-    <div id="vp" class="full-page" style="padding:0; background:#000;">
-        <div class="view-header">
-            <i class="fa-solid fa-xmark" onclick="clP('vp')"></i>
-            <span id="vt">Chapter Name</span>
-            <div class="view-actions">
-                <i class="fa-solid fa-gear"></i>
-                <i class="fa-solid fa-download"></i>
-            </div>
-        </div>
-        <div id="vc"></div> <div class="reader-nav">
-            <button onclick="prevCh()"><i class="fa-solid fa-angle-left"></i> Prev</button>
-            <select id="chSelect"></select>
-            <button onclick="nextCh()">Next <i class="fa-solid fa-angle-right"></i></button>
-        </div>
+        <button class="btn-s" onclick="clP('adm')">BACK</button>
     </div>
 
     <div id="authModal" class="modal-overlay">
         <div class="modal-content">
-            <div class="auth-tabs">
-                <button class="active">Login</button>
-                <button>Sign Up</button>
-            </div>
-            <input id="em" type="email" placeholder="Email Address">
-            <input id="ps" type="password" placeholder="Password">
-            <button class="btn-p" onclick="hA()">Login to M-ZONE</button>
-            <p class="modal-close" onclick="clP('authModal')">Maybe Later</p>
+            <input id="em" placeholder="Email"><input id="ps" type="password" placeholder="Password">
+            <button class="btn-p" onclick="hA()">CONTINUE</button>
         </div>
-    </div>
-
-    <div id="redeemModal" class="modal-overlay">
-        <div class="modal-content">
-            <i class="fa-solid fa-gift" style="font-size:40px; color:var(--p); margin-bottom:15px;"></i>
-            <h3>Redeem Gold Key</h3>
-            <p style="font-size:11px; opacity:0.6; margin-bottom:15px;">Enter your 12-digit VIP key to top up gold.</p>
-            <input id="vKey" placeholder="XXXX-XXXX-XXXX" style="text-align:center; font-family:monospace; letter-spacing:2px;">
-            <button class="btn-p" onclick="rk()">ACTIVATE NOW</button>
-            <button class="btn-s" onclick="clP('redeemModal')">Cancel</button>
-        </div>
-    </div>
-
-    <div id="adm" class="full-page">
-        <div id="mT" class="admin-form">
-            <h3>Add New Manga</h3>
-            <input id="mt" placeholder="Manga Title">
-            <div class="row">
-                <input id="mc" type="number" placeholder="Chapter No">
-                <input id="mp" type="number" placeholder="Price (Gold)">
-            </div>
-            <select id="mgS">
-                <option value="Action">Action</option>
-                <option value="Romance">Romance</option>
-                <option value="Hentai">Hentai</option>
-                <option value="Fantasy">Fantasy</option>
-            </select>
-            <label>Cover Photo:</label>
-            <input type="file" id="mCv">
-            <label>Chapter Pages (Select All):</label>
-            <input type="file" id="mPs" multiple>
-            <button class="btn-p" onclick="uM()">PUBLISH MANGA</button>
-        </div>
-        
-        <div id="aT" class="admin-form" style="display:none;">
-             <h3>Add New Anime</h3>
-             <input id="at" placeholder="Anime Title">
-             <input type="file" id="acV">
-             <div id="epA"></div>
-             <button onclick="aE()" class="btn-s">+ Add Episode Link</button>
-             <button class="btn-p" onclick="uA()">PUBLISH ANIME</button>
-        </div>
-
-        <button class="btn-s" onclick="clP('adm')" style="margin-top:30px;">CLOSE ADMIN PANEL</button>
     </div>
 
     <script type="module" src="script.js"></script>
