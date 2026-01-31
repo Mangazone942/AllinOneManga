@@ -3,73 +3,247 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | PREMIUM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>M-ZONE | NEON BLUE EDITION</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root {
+            --p: #00d2ff; /* Neon Blue / Cyan */
+            --b: #050505; /* Deep Black */
+            --c: #0f172a; /* Dark Card Blue */
+            --t: #ffffff;
+            --g: rgba(0, 210, 255, 0.1);
+            --an: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--b); color: var(--t); padding-top: 70px; overflow-x: hidden; }
+
+        /* --- UI Components --- */
+        header {
+            position: fixed; top: 0; width: 100%; height: 70px; background: rgba(5, 5, 5, 0.8);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; border-bottom: 1px solid var(--g); z-index: 1000; backdrop-filter: blur(15px);
+        }
+
+        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 22px; letter-spacing: 2px; text-shadow: 0 0 10px var(--p); cursor: pointer; }
+
+        .header-right { display: flex; align-items: center; gap: 18px; }
+
+        .gold-tag {
+            background: rgba(0, 210, 255, 0.1); border: 1px solid var(--p); padding: 6px 14px;
+            border-radius: 50px; color: var(--p); font-weight: 800; cursor: pointer;
+            display: flex; align-items: center; gap: 8px; box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        /* Genre Bar */
+        .genre-bar { display: flex; gap: 10px; overflow-x: auto; padding: 15px; scrollbar-width: none; }
+        .genre-bar::-webkit-scrollbar { display: none; }
+        .genre-item {
+            padding: 10px 22px; background: var(--g); border-radius: 50px; font-size: 12px;
+            font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid transparent;
+        }
+        .genre-item.active { background: var(--p); color: #000; box-shadow: 0 0 15px var(--p); }
+
+        /* Grid */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px; margin-bottom: 50px; }
+        .card { 
+            background: var(--c); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s var(--an); position: relative;
+        }
+        .card:active { transform: scale(0.95); }
+        .card img { width: 100%; height: 240px; object-fit: cover; }
+        .card-info { padding: 12px; text-align: center; background: linear-gradient(transparent, rgba(0,0,0,0.8)); position: absolute; bottom: 0; width: 100%; }
+
+        /* Full Page View */
+        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 4000; padding: 20px; overflow-y: auto; animation: slideUp 0.4s var(--an); }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: #0a0f1d;
+            z-index: 2000; padding: 40px 20px; border-left: 1px solid var(--g); transition: 0.4s var(--an);
+        }
+        .sidebar.active { right: 0; }
+        .menu-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: 600; color: #cbd5e1; }
+        .menu-item i { color: var(--p); }
+        .menu-item:hover { background: var(--g); color: var(--p); }
+
+        /* Buttons & Inputs */
+        .btn-p { background: var(--p); color: #000; border: none; padding: 16px; border-radius: 14px; font-weight: 800; width: 100%; cursor: pointer; text-transform: uppercase; }
+        .btn-s { background: var(--g); color: var(--p); border: 1px solid var(--p); padding: 12px; border-radius: 12px; width: 100%; margin-top: 10px; cursor: pointer; }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; background: #1e293b; border: 1px solid rgba(255,255,255,0.1); color: #fff; border-radius: 12px; outline: none; }
+        
+        /* Delete List */
+        .del-item { background: rgba(255,0,0,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,0,0,0.1); }
+
+        /* Loading Animation */
+        #loader { position: fixed; inset: 0; background: var(--b); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--g); border-top-color: var(--p); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 </head>
-<body class="dark-mode">
+<body>
+
+    <div id="loader"><div class="spinner"></div></div>
 
     <header>
         <div class="logo" onclick="location.reload()">M-ZONE</div>
         <div class="header-right">
-            <div class="header-gold" onclick="openRedeem()">
-                <i class="fa-solid fa-coins"></i> <span id="uCoins">0</span>
+            <div class="gold-tag" onclick="openRedeem()">
+                <i class="fa-solid fa-bolt-lightning"></i> <span id="uCoins">0</span>
             </div>
-            <i class="fa-solid fa-circle-half-stroke theme-toggle" onclick="toggleTheme()"></i>
-            <i class="fa-solid fa-bars-staggered menu-trigger" onclick="tgS()"></i>
+            <i class="fa-solid fa-bars-staggered" style="font-size: 22px; cursor: pointer; color: var(--p);" onclick="tgS()"></i>
         </div>
     </header>
 
-    <div class="genre-bar" id="genreBar">
+    <div class="genre-bar">
         <div class="genre-item active" onclick="fGenre('All', this)">All</div>
         <div class="genre-item" onclick="fGenre('Action', this)">Action</div>
         <div class="genre-item" onclick="fGenre('Romance', this)">Romance</div>
-        <div class="genre-item" onclick="fGenre('Hentai', this)">Hentai</div>
         <div class="genre-item" onclick="fGenre('Fantasy', this)">Fantasy</div>
-    </div>
-
-    <div class="slider"><div class="track" id="st"></div></div>
-    
-    <div class="search-section">
-        <div class="search-box">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input id="gSearch" placeholder="Search..." oninput="hSearch()">
-        </div>
+        <div class="genre-item" onclick="fGenre('Hentai', this)">Hentai</div>
     </div>
 
     <div id="mg" class="grid"></div>
 
     <div class="sidebar" id="sb">
+        <h3 id="uName" style="margin-bottom: 20px; color: var(--p);">GUEST</h3>
         <div class="menu-list">
-            <div class="menu-item" onclick="showList()"><i class="fa-solid fa-bookmark"></i> Library</div>
-            <div class="menu-item" onclick="openRedeem()"><i class="fa-solid fa-ticket"></i> Redeem</div>
-            <div id="staffZone" style="display:none;">
-                <p style="color:var(--p); font-size:10px; margin:20px 0 10px;">STAFF PANEL</p>
-                <div class="menu-item" onclick="oAdm('m')"><i class="fa-solid fa-plus"></i> Add Manga</div>
-                <div class="menu-item" onclick="oAdm('a')"><i class="fa-solid fa-film"></i> Add Anime</div>
-                <div class="menu-item" onclick="oAdm('d')"><i class="fa-solid fa-trash"></i> Delete Content</div>
+            <div class="menu-item" onclick="showList()"><i class="fa-solid fa-heart"></i> My Library</div>
+            <div class="menu-item" onclick="openRedeem()"><i class="fa-solid fa-ticket"></i> Redeem Key</div>
+            
+            <div id="staffZone" style="display:none; border-top: 1px solid var(--g); margin-top: 20px; padding-top: 20px;">
+                <div class="menu-item" onclick="oAdm('m')"><i class="fa-solid fa-cloud-arrow-up"></i> Add Manga</div>
+                <div class="menu-item" onclick="oAdm('a')"><i class="fa-solid fa-video"></i> Add Anime</div>
+                <div class="menu-item" onclick="oAdm('d')"><i class="fa-solid fa-trash-can"></i> Manage Content</div>
             </div>
-            <div class="menu-item" onclick="checkStaff()" style="opacity:0.3; margin-top:50px;"><i class="fa-solid fa-lock"></i> Staff Login</div>
+            
+            <div class="menu-item" onclick="checkStaff()" style="opacity: 0.3; margin-top: 40px;"><i class="fa-solid fa-user-shield"></i> Staff Login</div>
         </div>
-        <button id="lBtn" class="btn-p" onclick="toggleModal('authModal')">LOGIN</button>
+        <button id="lBtn" class="btn-p" onclick="toggleModal('authModal')" style="margin-top: 30px;">JOIN NOW</button>
+    </div>
+
+    <div id="dp" class="full-page">
+        <i class="fa-solid fa-chevron-left" onclick="clP('dp')" style="font-size: 24px; color: var(--p);"></i>
+        <div id="dh" style="margin-top: 20px;"></div>
+        <div id="cl" style="margin-top: 20px;"></div>
+    </div>
+
+    <div id="vp" class="full-page" style="padding:0;">
+        <div style="padding:20px; display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.8);">
+            <i class="fa-solid fa-xmark" onclick="clP('vp')"></i>
+            <span id="vt" style="font-weight: 800; color: var(--p);"></span>
+            <i class="fa-solid fa-bookmark" onclick="toggleBookmark()"></i>
+        </div>
+        <div id="vc"></div>
     </div>
 
     <div id="adm" class="full-page">
         <div id="dT" style="display:none;">
-            <h3>Manage Content</h3>
-            <div id="delList" style="margin-top:20px;"></div>
+            <h2 style="color: var(--p); margin-bottom: 20px;">Manage Content</h2>
+            <div id="delList"></div>
         </div>
+        <div id="uploadForms"></div>
         <button class="btn-s" onclick="clP('adm')">BACK</button>
     </div>
 
-    <div id="authModal" class="modal-overlay">
-        <div class="modal-content">
-            <input id="em" placeholder="Email"><input id="ps" type="password" placeholder="Password">
-            <button class="btn-p" onclick="hA()">CONTINUE</button>
-        </div>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    <script type="module" src="script.js"></script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs",
+            authDomain: "mangabyax.firebaseapp.com",
+            projectId: "mangabyax",
+            storageBucket: "mangabyax.firebasestorage.app",
+            appId: "1:974159756281:web:228c23b929f377544b1b28"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let u = null, allData = [];
+
+        // Auth
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                u = user;
+                onSnapshot(doc(db, "users", u.uid), s => {
+                    if(s.exists()) document.getElementById('uCoins').innerText = s.data().coins || 0;
+                });
+                document.getElementById('uName').innerText = u.email.split('@')[0].toUpperCase();
+                document.getElementById('lBtn').style.display = 'none';
+            }
+            document.getElementById('loader').style.display = 'none';
+        });
+
+        // Init Data
+        async function init() {
+            const [m, a] = await Promise.all([
+                getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc"))),
+                getDocs(collection(db, "animes"))
+            ]);
+            allData = [
+                ...m.docs.map(d => ({ id: d.id, type: 'Manga', ...d.data() })),
+                ...a.docs.map(d => ({ id: d.id, type: 'Anime', ...d.data() }))
+            ];
+            renderHome(allData);
+        }
+
+        function renderHome(data) {
+            const grid = document.getElementById('mg');
+            const unique = {};
+            data.forEach(item => { if (!unique[item.seriesName || item.title]) unique[item.seriesName || item.title] = item; });
+            grid.innerHTML = Object.values(unique).map(v => `
+                <div class="card" onclick="openDetail('${(v.seriesName || v.title).replace(/'/g, "\\'")}', '${v.type}')">
+                    <img src="${v.coverUrl || v.cover}" loading="lazy">
+                    <div class="card-info">
+                        <h4 style="font-size: 13px;">${v.seriesName || v.title}</h4>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Feature: Delete
+        window.deleteContent = async (id, type) => {
+            if (confirm("ဒီ Item ကို အပြီးတိုင် ဖျက်မှာလား?")) {
+                await deleteDoc(doc(db, type === 'Manga' ? "chapters" : "animes", id));
+                alert("Deleted!");
+                location.reload();
+            }
+        };
+
+        window.oAdm = (type) => {
+            document.getElementById('dT').style.display = type === 'd' ? 'block' : 'none';
+            if(type === 'd') {
+                document.getElementById('delList').innerHTML = allData.map(i => `
+                    <div class="del-item">
+                        <span>${i.seriesName || i.title}</span>
+                        <i class="fa-solid fa-trash" onclick="deleteContent('${i.id}', '${i.type}')" style="color:#ff4d4d; cursor:pointer;"></i>
+                    </div>
+                `).join('');
+            }
+            // (Manga/Anime upload form logic can be added here)
+            document.getElementById('adm').style.display = 'block';
+            tgS();
+        };
+
+        // Window Globals
+        window.tgS = () => document.getElementById('sb').classList.toggle('active');
+        window.clP = id => document.getElementById(id).style.display = 'none';
+        window.fGenre = (g, el) => {
+            document.querySelectorAll('.genre-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            renderHome(g === 'All' ? allData : allData.filter(d => d.genre === g));
+        };
+        window.checkStaff = () => { if(prompt("Access Code:") === "Admin@2026") document.getElementById('staffZone').style.display = 'block'; };
+
+        init();
+    </script>
 </body>
 </html>
