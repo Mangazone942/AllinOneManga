@@ -3,225 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>M-ZONE | PREMIUM COIN SYSTEM</title>
+    <title>M-ZONE | PREMIUM SYSTEM</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --p: #FFD700; /* Premium Gold */
-            --b: #050505; /* Deep Black */
-            --c: #121212; /* Card Color */
-            --g: rgba(255, 215, 0, 0.3);
+            --p: #FFD700; 
+            --b: #050505; 
+            --c: #121212; 
+            --g: rgba(255, 215, 0, 0.25);
             --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--b); color: #fff; padding-top: 80px; overflow-x: hidden; }
+        body { background: var(--b); color: #fff; padding-top: 80px; }
 
-        /* --- Header & Coin UI --- */
+        /* --- Header --- */
         header {
             position: fixed; top: 0; width: 100%; height: 75px; background: rgba(5, 5, 5, 0.95);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; border-bottom: 1px solid var(--border); z-index: 1000; backdrop-filter: blur(20px);
+            padding: 0 20px; border-bottom: 1px solid var(--border); z-index: 1000; backdrop-filter: blur(15px);
         }
-        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 24px; letter-spacing: 2px; text-shadow: 0 0 10px var(--g); }
+        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 24px; letter-spacing: 2px; }
         
         .coin-box {
-            background: linear-gradient(135deg, #222, #000); border: 1.5px solid var(--p);
-            padding: 8px 16px; border-radius: 50px; color: var(--p); font-weight: 800;
-            display: flex; align-items: center; gap: 10px; font-size: 14px; box-shadow: 0 0 20px var(--g);
-            cursor: pointer; transition: 0.3s;
+            background: #111; border: 1.5px solid var(--p); padding: 7px 15px; border-radius: 50px;
+            color: var(--p); font-weight: 800; display: flex; align-items: center; gap: 8px; font-size: 14px;
         }
-        .coin-box:active { transform: scale(0.9); }
 
-        /* --- Main Content Grid --- */
-        .search-container { padding: 15px 20px; }
-        .search-bar {
-            background: var(--c); border: 1px solid var(--border); height: 55px;
-            border-radius: 15px; display: flex; align-items: center; padding: 0 20px;
-        }
-        .search-bar input { background: none; border: none; color: #fff; width: 100%; padding-left: 15px; outline: none; }
-        .search-bar i { color: var(--p); font-size: 18px; }
-
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; }
+        /* --- Content Grid --- */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
         .card { 
-            background: var(--c); border-radius: 20px; overflow: hidden; 
-            border: 1px solid var(--border); position: relative; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: var(--c); border-radius: 18px; overflow: hidden; 
+            border: 1px solid var(--border); position: relative;
         }
-        .card img { width: 100%; height: 260px; object-fit: cover; }
+        .card img { width: 100%; height: 250px; object-fit: cover; }
         .card-info { 
-            padding: 20px 10px; background: linear-gradient(transparent, rgba(0,0,0,0.95) 80%); 
+            padding: 15px 10px; background: linear-gradient(transparent, #000 90%); 
             position: absolute; bottom: 0; width: 100%; text-align: center; 
         }
-        .card-info h4 { font-size: 14px; color: var(--p); font-weight: 700; letter-spacing: 0.5px; }
+        .card-info h4 { font-size: 13px; color: var(--p); font-weight: 700; }
 
-        /* --- Premium Detail View --- */
-        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 2000; overflow-y: auto; scroll-behavior: smooth; }
-        .detail-banner { width: 100%; height: 450px; position: relative; }
-        .detail-banner img { width: 100%; height: 100%; object-fit: cover; }
-        .banner-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 20%, var(--b) 98%); }
-        
-        .float-btn { 
+        /* --- Detailed Page --- */
+        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 2000; overflow-y: auto; }
+        .float-back { 
             position: fixed; top: 20px; left: 20px; width: 45px; height: 45px; 
-            background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; 
-            align-items: center; justify-content: center; z-index: 2100; border: 1.5px solid var(--p); 
-            color: var(--p); backdrop-filter: blur(10px); 
+            background: rgba(0,0,0,0.7); border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; z-index: 2100; border: 1px solid var(--p); color: var(--p); 
         }
 
-        .detail-content { padding: 0 25px; margin-top: -140px; position: relative; text-align: center; }
-        .poster-main { 
-            width: 160px; height: 230px; border-radius: 20px; object-fit: cover;
-            border: 5px solid var(--b); box-shadow: 0 20px 50px #000; 
-        }
+        .banner-view { width: 100%; height: 420px; position: relative; }
+        .banner-view img { width: 100%; height: 100%; object-fit: cover; }
+        .overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, var(--b)); }
         
-        .action-row { display: flex; gap: 15px; margin: 30px 0; }
-        .btn-premium { 
-            flex: 1; background: var(--p); color: #000; height: 55px; border-radius: 15px; 
-            border: none; font-weight: 800; font-size: 15px; display: flex; 
-            align-items: center; justify-content: center; gap: 10px; box-shadow: 0 10px 20px var(--g);
+        .detail-body { padding: 0 20px; margin-top: -120px; position: relative; text-align: center; }
+        .main-poster { width: 150px; border-radius: 15px; border: 4px solid var(--b); box-shadow: 0 10px 30px #000; }
+
+        /* Action & Stats */
+        .stat-grid { 
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 30px 0;
+            background: var(--glass); padding: 20px; border-radius: 20px; border: 1px solid var(--border);
         }
-        .btn-share { 
-            width: 55px; height: 55px; background: var(--glass); border-radius: 15px; 
-            display: flex; align-items: center; justify-content: center; 
-            border: 1px solid var(--border); color: #fff; font-size: 20px;
+        .stat-item span { display: block; font-size: 10px; color: #888; text-transform: uppercase; }
+        .stat-item b { color: var(--p); font-size: 16px; font-family: 'Orbitron'; }
+
+        .btn-action { 
+            background: var(--p); color: #000; height: 55px; border-radius: 15px; 
+            width: 100%; font-weight: 800; border: none; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        /* Glassmorphism Stats */
-        .stats-glass { 
-            background: var(--glass); border: 1px solid var(--border); padding: 20px; 
-            border-radius: 25px; margin-top: 30px; display: flex; 
-            justify-content: space-around; backdrop-filter: blur(15px); 
-        }
-        .stat-item span { display: block; font-size: 11px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
-        .stat-item b { color: var(--p); font-size: 18px; font-family: 'Orbitron'; }
-
-        /* Chapter Boxes */
         .chapter-box { 
-            background: var(--c); padding: 22px; border-radius: 18px; margin-bottom: 15px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            border-left: 6px solid var(--p); transition: 0.3s;
+            background: var(--c); padding: 20px; border-radius: 15px; margin-bottom: 12px; 
+            display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--p);
         }
-        .chapter-box:active { background: var(--g); transform: scale(0.98); }
-        .price-tag { background: var(--g); color: var(--p); padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 800; }
+        .price-tag { background: var(--g); color: var(--p); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 800; }
 
-        /* --- Admin Panel & Forms --- */
-        .form-box { background: var(--c); padding: 30px; border-radius: 25px; margin: 20px; border: 1px solid var(--border); }
-        .form-box h3 { color: var(--p); font-family: 'Orbitron'; margin-bottom: 25px; font-size: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        .form-box input, .form-box select, .form-box textarea { 
-            width: 100%; padding: 15px; margin-bottom: 18px; background: #000; 
-            border: 1px solid #333; color: #fff; border-radius: 12px; outline: none; 
+        /* --- Admin --- */
+        .form-card { background: var(--c); padding: 25px; border-radius: 20px; margin: 20px; border: 1px solid var(--border); }
+        .form-card input, .form-card select, .form-card textarea { 
+            width: 100%; padding: 14px; margin-bottom: 12px; background: #000; border: 1px solid #333; color: #fff; border-radius: 10px; outline: none; 
         }
-        .form-box input:focus { border-color: var(--p); }
 
         /* --- Sidebar --- */
-        .sidebar { 
-            position: fixed; top: 0; right: -320px; width: 310px; height: 100%; 
-            background: #080808; z-index: 3000; padding: 50px 25px; 
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-left: 1.5px solid var(--g); 
-        }
+        .sidebar { position: fixed; top: 0; right: -320px; width: 300px; height: 100%; background: #080808; z-index: 3000; padding: 50px 25px; transition: 0.4s; border-left: 1px solid var(--g); }
         .sidebar.active { right: 0; }
-        .menu-item { 
-            padding: 18px; border-radius: 15px; margin-bottom: 15px; 
-            background: var(--glass); display: flex; align-items: center; 
-            gap: 15px; font-weight: 600; border: 1px solid transparent;
-        }
-        .menu-item:active { background: var(--g); border-color: var(--p); }
-        .menu-item i { color: var(--p); font-size: 20px; }
+        .menu-item { padding: 18px; border-radius: 12px; margin-bottom: 10px; background: var(--glass); display: flex; align-items: center; gap: 15px; font-weight: 600; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">M-ZONE</div>
-        <div class="header-right" style="display:flex; gap:15px; align-items:center;">
-            <div class="coin-box" onclick="openPage('topupPage')">
-                <i class="fa-solid fa-coins"></i> <span id="userCoins">0</span>
-            </div>
-            <i class="fa-solid fa-bars-staggered" style="font-size: 26px; color: var(--p);" onclick="tgS()"></i>
+        <div style="display:flex; gap:12px; align-items:center;">
+            <div class="coin-box" onclick="nav('topupPage')"><i class="fa-solid fa-coins"></i> <span id="uCoins">0</span></div>
+            <i class="fa-solid fa-bars-staggered" style="font-size: 24px; color: var(--p);" onclick="tgS()"></i>
         </div>
     </header>
 
-    <div class="search-container">
-        <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input id="gSearch" placeholder="Search premium series..." oninput="doSearch()">
-        </div>
-    </div>
-
-    <h3 style="padding: 10px 25px; font-size: 14px; color: var(--p); letter-spacing: 2px; text-transform: uppercase;">🔥 Popular Updates</h3>
     <div id="mainGrid" class="grid"></div>
 
     <div id="topupPage" class="full-page">
-        <div class="float-btn" onclick="clP('topupPage')"><i class="fa-solid fa-xmark"></i></div>
+        <div class="float-back" onclick="clP()"><i class="fa-solid fa-xmark"></i></div>
         <div style="padding-top: 100px;">
-            <div class="form-box">
-                <h3><i class="fa-solid fa-receipt"></i> REDEEM COINS</h3>
-                <input id="keyInput" placeholder="Enter Gift Card Key...">
-                <button class="btn-premium" onclick="redeemKey()">ACTIVATE KEY</button>
+            <div class="form-card">
+                <h3 style="color:var(--p); margin-bottom:15px;"><i class="fa-solid fa-key"></i> REDEEM KEY</h3>
+                <input id="keyIn" placeholder="Enter Gift Card Key">
+                <button class="btn-action" onclick="redeemKey()">REDEEM COINS</button>
             </div>
         </div>
     </div>
 
     <div id="dp" class="full-page">
-        <div class="float-btn" onclick="clP('dp')"><i class="fa-solid fa-arrow-left"></i></div>
-        <div class="detail-banner"><img id="dt-banner" src=""><div class="banner-overlay"></div></div>
-        <div class="detail-content">
-            <img id="dt-poster" class="poster-main" src="">
-            <h2 id="dt-name" style="margin-top:25px; font-size:26px; font-weight:800;"></h2>
+        <div class="float-back" onclick="clP()"><i class="fa-solid fa-arrow-left"></i></div>
+        <div class="banner-view"><img id="dt-banner" src=""><div class="overlay"></div></div>
+        <div class="detail-body">
+            <img id="dt-poster" class="main-poster" src="">
+            <h2 id="dt-name" style="margin-top:20px;"></h2>
             
-            <div class="action-row">
-                <button class="btn-premium"><i class="fa-solid fa-heart"></i> MY LIBRARY</button>
-                <div class="btn-share" onclick="copyLink()"><i class="fa-solid fa-share-nodes"></i></div>
-            </div>
-
-            <div class="stats-glass">
+            <div class="stat-grid">
                 <div class="stat-item"><span>Rating</span><b>9.9</b></div>
                 <div class="stat-item"><span>Status</span><b>Ongoing</b></div>
-                <div class="stat-item"><span>Views</span><b>52K</b></div>
+                <div class="stat-item"><span>Views</span><b>48K</b></div>
             </div>
 
-            <h3 style="margin-top:40px; margin-bottom:25px; text-align:left; border-left: 5px solid var(--p); padding-left: 15px; font-family:'Orbitron';">CHAPTERS</h3>
-            <div id="cl"></div>
+            <button class="btn-action" style="margin-bottom:30px;"><i class="fa-solid fa-share-nodes"></i> SHARE SERIES</button>
+            
+            <div id="chapterList" style="text-align:left;"></div>
         </div>
     </div>
 
-    <div id="vp" class="full-page" style="background:#000;">
-        <div class="float-btn" onclick="clP('vp')"><i class="fa-solid fa-xmark"></i></div>
-        <div id="vc"></div>
-    </div>
+    <div id="vp" class="full-page" style="background:#000;"><div class="float-back" onclick="clP()"><i class="fa-solid fa-xmark"></i></div><div id="vCont"></div></div>
 
     <div id="adm" class="full-page">
-        <div class="float-btn" onclick="clP('adm')"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="float-back" onclick="clP()"><i class="fa-solid fa-chevron-left"></i></div>
         <div style="padding: 90px 20px;">
-            <h2 style="color:var(--p); margin-bottom:30px; font-family:'Orbitron'; text-align:center;">STAFF DASHBOARD</h2>
-            
-            <div class="form-box">
-                <h3><i class="fa-solid fa-key"></i> GIFT CARD GEN</h3>
-                <input id="genAmt" type="number" placeholder="Coin Amount (e.g. 500)">
-                <button class="btn-premium" onclick="generateKey()">CREATE KEY</button>
-                <div id="keyOut" style="margin-top:20px; color:var(--p); text-align:center; font-weight:800; border:1px dashed var(--p); padding:10px; border-radius:10px;">KEY WILL APPEAR HERE</div>
+            <div class="form-card">
+                <h3 style="color:var(--p); margin-bottom:20px;">GIFT CARD GENERATOR</h3>
+                <input id="keyAmt" type="number" placeholder="Coin Amount">
+                <button class="btn-action" onclick="genKey()">GENERATE</button>
+                <div id="keyOut" style="margin-top:15px; color:var(--p); font-weight:800; text-align:center;"></div>
             </div>
 
-            <div class="form-box">
-                <h3><i class="fa-solid fa-cloud-arrow-up"></i> CONTENT UPLOAD</h3>
-                <select id="upType"><option value="Manga">Manga</option><option value="Anime">Anime</option></select>
+            <div class="form-card">
+                <h3 style="color:var(--p); margin-bottom:20px;">CONTENT UPLOADER</h3>
+                <select id="upType"><option value="chapters">Manga Chapter</option><option value="animes">Anime Episode</option></select>
                 <input id="upTitle" placeholder="Series Name">
-                <input id="upChapter" placeholder="Chapter/Episode No">
-                <input id="upPrice" type="number" placeholder="Coin Price (0 for free)">
+                <input id="upCh" placeholder="Chapter No">
+                <input id="upPrice" type="number" placeholder="Coin Price">
                 <input id="upCover" placeholder="Cover Image URL">
-                <textarea id="upData" rows="5" placeholder="Manga Pages (comma separated) or Anime Link"></textarea>
-                <button class="btn-premium" onclick="uploadContent()">UPLOAD TO FIREBASE</button>
+                <textarea id="upData" rows="4" placeholder="Pages (comma separated) or Video URL"></textarea>
+                <button class="btn-action" onclick="upload()">UPLOAD DATA</button>
             </div>
         </div>
     </div>
 
     <div class="sidebar" id="sb">
-        <h2 style="color:var(--p); margin-bottom:40px; font-family:'Orbitron'; letter-spacing:2px;">PREMIUM</h2>
+        <h2 style="color:var(--p); margin-bottom:30px; font-family:'Orbitron';">PREMIUM</h2>
         <div class="menu-item" onclick="location.reload()"><i class="fa-solid fa-house"></i> Home</div>
-        <div class="menu-item" onclick="adminAccess()" style="opacity:0.3; margin-top:60px;"><i class="fa-solid fa-user-shield"></i> Staff Login</div>
+        <div class="menu-item" onclick="adminAccess()" style="margin-top:50px; opacity:0.3;"><i class="fa-solid fa-user-shield"></i> Staff Access</div>
     </div>
 
     <script type="module">
@@ -237,38 +179,29 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         let allData = [];
-        let userCoins = parseInt(localStorage.getItem('m_coins') || "0");
+        let coins = parseInt(localStorage.getItem('m_coins') || "0");
 
-        // --- NAVIGATION LOGIC ---
-        window.onpopstate = () => { 
-            document.querySelectorAll('.full-page').forEach(p => p.style.display = 'none'); 
-            document.getElementById('sb').classList.remove('active'); 
-        };
-        window.clP = id => history.back();
+        window.onpopstate = () => { document.querySelectorAll('.full-page').forEach(p => p.style.display = 'none'); };
+        window.clP = () => history.back();
         window.tgS = () => document.getElementById('sb').classList.toggle('active');
-        window.openPage = id => { document.getElementById(id).style.display='block'; history.pushState({p:id},"","#"+id); };
+        window.nav = id => { document.getElementById(id).style.display='block'; history.pushState({p:id},"","#"+id); };
 
-        const updateCoinUI = () => { 
-            document.getElementById('userCoins').innerText = userCoins; 
-            localStorage.setItem('m_coins', userCoins); 
-        };
+        const updateCoins = () => { document.getElementById('uCoins').innerText = coins; localStorage.setItem('m_coins', coins); };
 
-        // --- CORE DATA SYSTEM ---
         async function init() {
-            const m = await getDocs(collection(db, "chapters"));
-            const a = await getDocs(collection(db, "animes"));
+            const [m, a] = await Promise.all([getDocs(collection(db, "chapters")), getDocs(collection(db, "animes"))]);
             allData = [...m.docs.map(d=>({id:d.id, ...d.data(), type:'Manga'})), ...a.docs.map(d=>({id:d.id, ...d.data(), type:'Anime'}))];
-            renderGrid(allData);
-            updateCoinUI();
+            renderGrid();
+            updateCoins();
         }
 
-        function renderGrid(data) {
+        function renderGrid() {
             const grid = document.getElementById('mainGrid');
             const unique = {};
-            data.forEach(i => { if(!unique[i.seriesName]) unique[i.seriesName] = i; });
+            allData.forEach(i => { if(i.seriesName) unique[i.seriesName] = i; });
             grid.innerHTML = Object.values(unique).map(v => `
                 <div class="card" onclick="openDetail('${v.seriesName.replace(/'/g, "\\'")}')">
-                    <img src="${v.coverUrl}" loading="lazy">
+                    <img src="${v.coverUrl}">
                     <div class="card-info"><h4>${v.seriesName}</h4></div>
                 </div>
             `).join('');
@@ -276,89 +209,64 @@
 
         window.openDetail = (name) => {
             const series = allData.filter(d => d.seriesName === name);
-            const master = series[0];
-            document.getElementById('dt-banner').src = master.coverUrl;
-            document.getElementById('dt-poster').src = master.coverUrl;
+            document.getElementById('dt-banner').src = series[0].coverUrl;
+            document.getElementById('dt-poster').src = series[0].coverUrl;
             document.getElementById('dt-name').innerText = name;
-            
-            document.getElementById('cl').innerHTML = series.sort((a,b)=>a.chapterNo-b.chapterNo).map(ch => `
-                <div class="chapter-box" onclick="unlockChapter('${ch.id}', ${ch.price || 0})">
+            document.getElementById('chapterList').innerHTML = series.map(ch => `
+                <div class="chapter-box" onclick="unlock('${ch.id}', ${ch.price || 0})">
                     <span>Chapter ${ch.chapterNo}</span>
                     <span class="price-tag">${ch.price > 0 ? '<i class="fa-solid fa-coins"></i> ' + ch.price : 'FREE'}</span>
                 </div>
             `).join('');
-            openPage('dp');
+            nav('dp');
         };
 
-        window.unlockChapter = (id, price) => {
-            if(price > 0 && userCoins < price) return alert("You need more Coins to unlock this!");
-            if(price > 0) {
-                if(confirm(`Use ${price} Coins to unlock this chapter?`)) {
-                    userCoins -= price;
-                    updateCoinUI();
-                    read(id);
-                }
-            } else read(id);
-        };
-
-        window.read = (id) => {
+        window.unlock = (id, price) => {
+            if(price > 0 && coins < price) return alert("Need more coins!");
+            if(price > 0 && confirm(`Unlock for ${price} coins?`)) { coins -= price; updateCoins(); }
             const item = allData.find(d => d.id === id);
-            const vc = document.getElementById('vc');
-            if(item.type === 'Manga') {
-                vc.innerHTML = item.pages.map(p => `<img src="${p.trim()}" loading="lazy" style="width:100%; display:block;">`).join('');
-            } else {
-                vc.innerHTML = `<iframe src="${item.videoUrl}" style="width:100%; height:350px; border:none;" allowfullscreen></iframe>`;
-            }
-            openPage('vp');
+            const v = document.getElementById('vCont');
+            v.innerHTML = item.type === 'Manga' ? item.pages.map(p => `<img src="${p.trim()}" style="width:100%;">`).join('') : `<iframe src="${item.videoUrl}" style="width:100%; height:300px; border:none;" allowfullscreen></iframe>`;
+            nav('vp');
         };
 
-        // --- ADMIN & COIN LOGIC ---
-        window.adminAccess = () => { if(prompt("Staff Password:") === "Admin@2026") { openPage('adm'); tgS(); } };
+        // Admin Logics
+        window.adminAccess = () => { if(prompt("Pass:") === "Admin@2026") { nav('adm'); tgS(); } };
 
-        window.generateKey = async () => {
-            const amt = parseInt(document.getElementById('genAmt').value);
-            if(!amt) return alert("Enter amount!");
-            const k = "MZ-GIFT-" + Math.random().toString(36).substring(2, 10).toUpperCase();
-            await addDoc(collection(db, "giftcards"), { key: k, amount: amt, status: "active" });
+        window.genKey = async () => {
+            const amt = parseInt(document.getElementById('keyAmt').value);
+            const k = "MZ-" + Math.random().toString(36).substring(2, 10).toUpperCase();
+            await addDoc(collection(db, "giftcards"), { key: k, amount: amt });
             document.getElementById('keyOut').innerText = k;
         };
 
         window.redeemKey = async () => {
-            const k = document.getElementById('keyInput').value;
-            const qry = query(collection(db, "giftcards"), where("key", "==", k));
-            const snap = await getDocs(qry);
+            const k = document.getElementById('keyIn').value;
+            const q = query(collection(db, "giftcards"), where("key", "==", k));
+            const snap = await getDocs(q);
             if(!snap.empty) {
-                const docRef = snap.docs[0];
-                userCoins += docRef.data().amount;
-                await deleteDoc(doc(db, "giftcards", docRef.id));
-                updateCoinUI();
-                alert("Successfully redeemed " + docRef.data().amount + " Coins!");
-                clP('topupPage');
-            } else alert("Invalid or Expired Key!");
+                coins += snap.docs[0].data().amount;
+                await deleteDoc(doc(db, "giftcards", snap.docs[0].id));
+                updateCoins(); alert("Success!"); clP();
+            } else alert("Invalid Key");
         };
 
-        window.uploadContent = async () => {
-            const type = document.getElementById('upType').value;
+        window.upload = async () => {
+            const col = document.getElementById('upType').value;
             const payload = {
                 seriesName: document.getElementById('upTitle').value,
-                chapterNo: document.getElementById('upChapter').value,
+                chapterNo: document.getElementById('upCh').value,
                 price: parseInt(document.getElementById('upPrice').value || 0),
-                coverUrl: document.getElementById('upCover').value,
-                [type === 'Manga' ? 'pages' : 'videoUrl']: type === 'Manga' ? document.getElementById('upData').value.split(',') : document.getElementById('upData').value
+                coverUrl: document.getElementById('upCover').value
             };
-            await addDoc(collection(db, type === 'Manga' ? "chapters" : "animes"), payload);
-            alert("Upload Success!");
-            location.reload();
+            if(col === 'chapters') payload.pages = document.getElementById('upData').value.split(',');
+            else payload.videoUrl = document.getElementById('upData').value;
+            
+            await addDoc(collection(db, col), payload);
+            alert("Uploaded!"); location.reload();
         };
-
-        window.doSearch = () => {
-            const q = document.getElementById('gSearch').value.toLowerCase();
-            renderGrid(allData.filter(d => d.seriesName.toLowerCase().includes(q)));
-        };
-
-        window.copyLink = () => { navigator.clipboard.writeText(window.location.href); alert("Series Link Copied!"); };
 
         init();
     </script>
 </body>
-    </html>
+</html>
