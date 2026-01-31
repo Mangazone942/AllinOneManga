@@ -2,72 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | GOLD EDITION</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>M-ZONE | GOLD PREMIUM</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
         :root {
-            --p: #FFD700; /* Premium Gold */
-            --b: #050505; /* Black Background */
-            --c: #121212; /* Card Gray */
-            --t: #ffffff;
-            --g: rgba(255, 215, 0, 0.1);
+            --p: #FFD700; /* Gold */
+            --b: #080808; /* Deep Black */
+            --c: #121212; /* Card */
+            --g: rgba(255, 215, 0, 0.15);
             --glass: rgba(255, 255, 255, 0.05);
-            --an: cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--b); color: var(--t); padding-top: 70px; overflow-x: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--b); color: #fff; padding-top: 75px; overflow-x: hidden; }
 
-        /* --- Header --- */
+        /* --- Custom Scrollbar --- */
+        ::-webkit-scrollbar { width: 0px; }
+
+        /* --- Header & Premium Coin --- */
         header {
-            position: fixed; top: 0; width: 100%; height: 70px; background: rgba(5, 5, 5, 0.9);
+            position: fixed; top: 0; width: 100%; height: 70px; background: rgba(8, 8, 8, 0.9);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; border-bottom: 1px solid var(--g); z-index: 1000; backdrop-filter: blur(10px);
+            padding: 0 15px; border-bottom: 1px solid var(--g); z-index: 1000; backdrop-filter: blur(15px);
         }
-        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 20px; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 22px; letter-spacing: 1.5px; }
 
-        .coin-box {
-            background: var(--glass); border: 1px solid var(--p); padding: 6px 15px;
-            border-radius: 50px; color: var(--p); font-weight: 800; cursor: pointer;
-            display: flex; align-items: center; gap: 8px; font-size: 14px;
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .coin-v2 {
+            background: linear-gradient(135deg, #1a1a1a, #000);
+            border: 1px solid var(--p); padding: 5px 12px; border-radius: 10px;
+            display: flex; align-items: center; gap: 8px; cursor: pointer;
+            box-shadow: 0 0 10px var(--g);
         }
+        .coin-v2 i { color: var(--p); font-size: 16px; animation: shine 2s infinite; }
+        @keyframes shine { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
-        /* --- Genre --- */
-        .genre-bar { display: flex; gap: 12px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; }
-        .genre-bar::-webkit-scrollbar { display: none; }
-        .genre-item {
-            padding: 8px 18px; background: var(--glass); border-radius: 8px; font-size: 12px;
-            font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid transparent; color: #888;
+        /* --- Modern Search Bar --- */
+        .search-container { padding: 10px 15px; }
+        .search-bar-v2 {
+            background: var(--c); border: 1px solid rgba(255,255,255,0.05);
+            height: 48px; border-radius: 12px; display: flex; align-items: center; padding: 0 15px;
+            transition: 0.3s;
         }
-        .genre-item.active { background: var(--p); color: #000; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+        .search-bar-v2:focus-within { border-color: var(--p); box-shadow: 0 0 15px var(--g); }
+        .search-bar-v2 input {
+            background: none; border: none; color: #fff; width: 100%; padding-left: 10px;
+            font-size: 14px; outline: none;
+        }
+        .search-bar-v2 i { color: #555; font-size: 18px; }
 
-        /* --- Grid --- */
-        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 15px 20px; }
-        .card { background: var(--c); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); position: relative; }
+        /* --- Manga Grid --- */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .card { 
+            background: var(--c); border-radius: 15px; overflow: hidden; 
+            border: 1px solid rgba(255,255,255,0.03); position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
         .card img { width: 100%; height: 230px; object-fit: cover; }
-        .card-title { padding: 10px; font-size: 13px; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .type-tag { position: absolute; top: 10px; left: 10px; background: var(--p); color: #000; font-size: 9px; font-weight: 900; padding: 3px 8px; border-radius: 4px; }
+        .card-tag { position: absolute; top: 8px; left: 8px; background: var(--p); color: #000; font-size: 9px; font-weight: 900; padding: 3px 8px; border-radius: 5px; }
+        .card-info { padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); position: absolute; bottom: 0; width: 100%; }
+        .card-info h4 { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- Full Page & Modals --- */
-        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 4000; overflow-y: auto; }
-        .page-header { height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--g); position: sticky; top: 0; background: var(--b); z-index: 10; }
+        /* --- Advanced Details Page UI --- */
+        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 2000; overflow-y: auto; padding-bottom: 30px; }
+        .detail-banner { width: 100%; height: 350px; position: relative; }
+        .detail-banner img { width: 100%; height: 100%; object-fit: cover; }
+        .banner-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, var(--b)); }
         
-        .chapter-btn { background: var(--glass); padding: 15px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
-        .chapter-btn:active { background: var(--g); border-color: var(--p); }
+        .float-back { position: fixed; top: 15px; left: 15px; width: 40px; height: 40px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); z-index: 100; border: 1px solid rgba(255,255,255,0.1); }
 
-        .manga-img { width: 100%; display: block; margin-bottom: 2px; }
+        .detail-content { padding: 0 20px; margin-top: -80px; position: relative; }
+        .detail-poster { width: 130px; border-radius: 12px; border: 3px solid var(--b); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        
+        .action-row { display: flex; gap: 10px; margin-top: 20px; }
+        .btn-bookmark { flex: 1; background: var(--p); color: #000; height: 45px; border-radius: 10px; border: none; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-bookmark.active { background: #fff; color: #000; }
+        .btn-share { width: 45px; height: 45px; background: var(--glass); border-radius: 10px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); }
 
-        /* Sidebar */
-        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #0a0a0a; z-index: 2000; padding: 40px 20px; transition: 0.3s var(--an); border-left: 1px solid var(--g); }
+        .stats-box { display: flex; gap: 20px; margin-top: 20px; background: var(--glass); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-item { text-align: center; flex: 1; }
+        .stat-item span { display: block; font-size: 10px; color: #888; text-transform: uppercase; }
+        .stat-item b { color: var(--p); font-size: 16px; }
+
+        /* --- Chapter List --- */
+        .chapter-v2 { background: var(--c); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.03); }
+        .chapter-v2:active { background: var(--g); border-color: var(--p); }
+
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #111; z-index: 3000; padding: 30px 20px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-left: 1px solid var(--g); }
         .sidebar.active { right: 0; }
-        .menu-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-radius: 10px; cursor: pointer; color: #ccc; }
-        .menu-item i { color: var(--p); }
-
-        .btn-p { background: var(--p); color: #000; border: none; padding: 16px; border-radius: 12px; font-weight: 800; width: 100%; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -75,51 +101,76 @@
     <header>
         <div class="logo">M-ZONE</div>
         <div class="header-right">
-            <div class="coin-box" onclick="openRedeem()">
-                <i class="fa-solid fa-coins"></i> <span id="uCoins">0</span>
+            <div class="coin-v2" onclick="openRedeem()">
+                <i class="fa-solid fa-coins"></i>
+                <span id="uCoins">0</span>
             </div>
-            <i class="fa-solid fa-bars-staggered" style="font-size: 20px; color: var(--p); cursor: pointer;" onclick="tgS()"></i>
+            <i class="fa-solid fa-bars-staggered" style="font-size: 22px; color: var(--p); cursor: pointer;" onclick="tgS()"></i>
         </div>
     </header>
 
-    <div class="genre-bar">
-        <div class="genre-item active" onclick="fGenre('All', this)">All</div>
-        <div class="genre-item" onclick="fGenre('Action', this)">Action</div>
-        <div class="genre-item" onclick="fGenre('Romance', this)">Romance</div>
-        <div class="genre-item" onclick="fGenre('Fantasy', this)">Fantasy</div>
-        <div class="genre-item" onclick="fGenre('Hentai', this)">Hentai</div>
+    <div class="search-container">
+        <div class="search-bar-v2">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="gSearch" placeholder="Search Manga, Anime or Author..." oninput="hSearch()">
+        </div>
     </div>
+
+    <div class="genre-bar" id="genreBar" style="display:flex; overflow-x:auto; padding:10px 15px; gap:10px;">
+        </div>
 
     <div id="mg" class="grid"></div>
 
     <div id="dp" class="full-page">
-        <div class="page-header"><i class="fa-solid fa-arrow-left" onclick="clP('dp')"></i> <span id="dt-title">DETAILS</span> <i></i></div>
-        <div id="dh" style="padding: 20px;"></div>
-        <div style="padding: 0 20px 20px;">
-            <h3 style="margin-bottom: 15px; color: var(--p);">CHAPTERS</h3>
+        <div class="float-back" onclick="clP('dp')"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="detail-banner">
+            <img id="dt-banner" src="">
+            <div class="banner-overlay"></div>
+        </div>
+        
+        <div class="detail-content">
+            <img id="dt-poster" class="detail-poster" src="">
+            <h2 id="dt-name" style="margin-top:15px; font-size:22px;"></h2>
+            
+            <div class="action-row">
+                <button id="bmBtn" class="btn-bookmark" onclick="toggleBookmark()">
+                    <i class="fa-solid fa-bookmark"></i> ADD BOOKMARK
+                </button>
+                <div class="btn-share"><i class="fa-solid fa-share-nodes"></i></div>
+            </div>
+
+            <div class="stats-box">
+                <div class="stat-item"><span>Rating</span><b>8.9</b></div>
+                <div class="stat-item"><span>Status</span><b>Ongoing</b></div>
+                <div class="stat-item"><span>Type</span><b id="dt-type">Manga</b></div>
+            </div>
+
+            <p id="dt-desc" style="margin-top:20px; font-size:13px; color:#aaa; line-height:1.6;">
+                This manga follows the journey of a hero in a dark fantasy world...
+            </p>
+
+            <h3 style="margin-top:30px; margin-bottom:15px; border-left: 4px solid var(--p); padding-left: 10px;">CHAPTERS</h3>
             <div id="cl"></div>
         </div>
     </div>
 
-    <div id="vp" class="full-page" style="padding:0;">
-        <div class="page-header"><i class="fa-solid fa-xmark" onclick="clP('vp')"></i> <span id="vt">READING</span> <i></i></div>
-        <div id="vc" style="background: #000;"></div>
+    <div id="vp" class="full-page" style="padding-bottom:0; background:#000;">
+        <div class="float-back" onclick="clP('vp')"><i class="fa-solid fa-xmark"></i></div>
+        <div id="vc"></div>
     </div>
 
     <div class="sidebar" id="sb">
-        <h2 id="uName" style="color: var(--p); margin-bottom: 20px;">GUEST</h2>
-        <div class="menu-list">
-            <div class="menu-item" onclick="openRedeem()"><i class="fa-solid fa-ticket"></i> Redeem Gold</div>
-            <div id="staffZone" style="display:none;">
-                <div class="menu-item" onclick="oAdm('d')"><i class="fa-solid fa-trash"></i> Delete Content</div>
-            </div>
-            <div class="menu-item" onclick="checkStaff()" style="opacity: 0.2; margin-top: 50px;"><i class="fa-solid fa-lock"></i> Staff</div>
+        <h3 style="color:var(--p); margin-bottom:20px;">MENU</h3>
+        <div onclick="showBookmarks()" style="padding:15px; border-radius:10px; background:var(--glass); margin-bottom:10px;"><i class="fa-solid fa-heart" style="color:var(--p);"></i> My Library</div>
+        <div onclick="checkStaff()" style="opacity:0.2; margin-top:50px;">Staff Login</div>
+        <div id="staffZone" style="display:none; margin-top:20px;">
+            <button class="btn-bookmark" onclick="oAdm('d')">MANAGE CONTENT</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, deleteDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const firebaseConfig = {
@@ -134,101 +185,96 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        let u = null, allData = [];
+        let u = null, allData = [], currentSeries = "";
 
-        // --- Back Navigation Logic ---
+        // --- Back Navigation (History Logic) ---
         window.onpopstate = () => {
-            const pages = ['dp', 'vp', 'adm'];
+            const pages = ['dp', 'vp'];
             pages.forEach(id => document.getElementById(id).style.display = 'none');
             document.getElementById('sb').classList.remove('active');
         };
-
-        function openPage(id) {
-            document.getElementById(id).style.display = 'block';
-            history.pushState({page: id}, id, "#" + id);
-        }
 
         window.clP = id => {
             document.getElementById(id).style.display = 'none';
             history.back();
         };
 
-        // --- Core Logic ---
+        // --- Core ---
         onAuthStateChanged(auth, user => {
             if (user) {
                 u = user;
                 onSnapshot(doc(db, "users", u.uid), s => {
                     if(s.exists()) document.getElementById('uCoins').innerText = s.data().coins || 0;
                 });
-                document.getElementById('uName').innerText = u.email.split('@')[0].toUpperCase();
             }
         });
 
         async function init() {
-            const [m, a] = await Promise.all([
-                getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc"))),
-                getDocs(collection(db, "animes"))
-            ]);
-            allData = [
-                ...m.docs.map(d => ({ id: d.id, type: 'Manga', ...d.data() })),
-                ...a.docs.map(d => ({ id: d.id, type: 'Anime', ...d.data() }))
-            ];
+            const m = await getDocs(collection(db, "chapters"));
+            const a = await getDocs(collection(db, "animes"));
+            allData = [...m.docs.map(d=>({id:d.id, type:'Manga', ...d.data()})), ...a.docs.map(d=>({id:d.id, type:'Anime', ...d.data()}))];
             renderHome(allData);
         }
 
         function renderHome(data) {
             const grid = document.getElementById('mg');
             const unique = {};
-            data.forEach(item => { if (!unique[item.seriesName || item.title]) unique[item.seriesName || item.title] = item; });
+            data.forEach(item => { if(!unique[item.seriesName || item.title]) unique[item.seriesName || item.title] = item; });
             grid.innerHTML = Object.values(unique).map(v => `
-                <div class="card" onclick="openDetail('${(v.seriesName || v.title).replace(/'/g, "\\'")}', '${v.type}')">
+                <div class="card" onclick="openDetail('${(v.seriesName || v.title).replace(/'/g, "\\'")}')">
                     <img src="${v.coverUrl || v.cover}" loading="lazy">
-                    <div class="type-tag">${v.type.toUpperCase()}</div>
-                    <div class="card-title">${v.seriesName || v.title}</div>
+                    <div class="card-tag">MANGA</div>
+                    <div class="card-info"><h4>${v.seriesName || v.title}</h4></div>
                 </div>
             `).join('');
         }
 
-        window.openDetail = (name, type) => {
+        window.openDetail = (name) => {
             const series = allData.filter(d => (d.seriesName || d.title) === name);
-            const first = series[0];
-            document.getElementById('dt-title').innerText = name;
-            document.getElementById('dh').innerHTML = `
-                <img src="${first.coverUrl || first.cover}" style="width:140px; border-radius:10px; box-shadow:0 10px 20px rgba(0,0,0,0.5);">
-                <h2 style="margin-top:15px; color:var(--p);">${name}</h2>
-                <p style="font-size:12px; opacity:0.6; margin-top:5px;">Genre: ${first.genre || 'Action'}</p>
-            `;
+            currentSeries = name;
+            document.getElementById('dt-banner').src = series[0].coverUrl || series[0].cover;
+            document.getElementById('dt-poster').src = series[0].coverUrl || series[0].cover;
+            document.getElementById('dt-name').innerText = name;
+            document.getElementById('dt-type').innerText = series[0].type;
             
-            // Chapter List Logic
             document.getElementById('cl').innerHTML = series.map(ch => `
-                <div class="chapter-btn" onclick="readManga('${ch.id}')">
+                <div class="chapter-v2" onclick="readManga('${ch.id}')">
                     <span>Chapter ${ch.chapterNo || ch.episodeNo || '1'}</span>
-                    <i class="fa-solid fa-play" style="color:var(--p);"></i>
+                    <i class="fa-solid fa-chevron-right" style="color:var(--p);"></i>
                 </div>
             `).join('');
-            
-            openPage('dp');
+
+            document.getElementById('dp').style.display = 'block';
+            history.pushState({page: 'dp'}, "Details", "#dp");
         };
 
-        window.readManga = async (id) => {
+        window.readManga = (id) => {
             const item = allData.find(d => d.id === id);
-            document.getElementById('vt').innerText = `READING: ${item.seriesName || item.title}`;
+            const container = document.getElementById('vc');
             if(item.type === 'Manga') {
-                document.getElementById('vc').innerHTML = item.pages.map(p => `<img src="${p}" class="manga-img" loading="lazy">`).join('');
+                container.innerHTML = item.pages.map(p => `<img src="${p}" style="width:100%; display:block; margin-bottom:2px;">`).join('');
             } else {
-                document.getElementById('vc').innerHTML = `<iframe src="${item.videoUrl}" style="width:100%; height:300px; border:none;" allowfullscreen></iframe>`;
+                container.innerHTML = `<iframe src="${item.videoUrl}" style="width:100%; height:300px; border:none;" allowfullscreen></iframe>`;
             }
-            openPage('vp');
+            document.getElementById('vp').style.display = 'block';
+            history.pushState({page: 'vp'}, "Reading", "#vp");
+        };
+
+        // Bookmark Logic (Save to LocalStorage)
+        window.toggleBookmark = () => {
+            let bks = JSON.parse(localStorage.getItem('mzone_bookmarks') || "[]");
+            if(bks.includes(currentSeries)) {
+                bks = bks.filter(b => b !== currentSeries);
+                alert("Removed from Library");
+            } else {
+                bks.push(currentSeries);
+                alert("Added to Library");
+            }
+            localStorage.setItem('mzone_bookmarks', JSON.stringify(bks));
         };
 
         window.tgS = () => document.getElementById('sb').classList.toggle('active');
         window.checkStaff = () => { if(prompt("Pass:") === "Admin@2026") document.getElementById('staffZone').style.display = 'block'; };
-        
-        window.fGenre = (g, el) => {
-            document.querySelectorAll('.genre-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            renderHome(g === 'All' ? allData : allData.filter(d => d.genre === g));
-        };
 
         init();
     </script>
