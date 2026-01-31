@@ -2,381 +2,191 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>M-ZONE SUPREME 2026 | CLOUD EDITION</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MANGAZONE PRO - CLOUD EDITION</title>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* ============================================================
-           PREMIUM CSS ARCHITECTURE (PART 1: THE CORE)
-           ============================================================ */
-        :root {
-            --gold: #FFD700; --bg: #050505; --card: #111111;
-            --glass: rgba(255, 255, 255, 0.08); --border: rgba(255, 215, 0, 0.3);
-            --text: #FFFFFF; --text-dim: #A0A0A0; --accent: #FF3B3B;
-            --nav-h: 80px;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+        :root { --primary: #e62117; --bg: #050505; --card: #121212; --text: #fff; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding-top: 60px; }
         
-        /* SCROLLBAR CUSTOMIZATION */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
-
-        /* HEADER UI */
-        header {
-            position: fixed; top: 0; width: 100%; height: var(--nav-h);
-            background: rgba(5,5,5,0.85); backdrop-filter: blur(25px);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 25px; border-bottom: 1px solid var(--border); z-index: 2000;
+        /* NAVIGATION */
+        header { 
+            background: var(--primary); height: 60px; width: 100%; position: fixed; top: 0; 
+            z-index: 1000; display: flex; align-items: center; justify-content: space-between; 
+            padding: 0 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
         }
-        .logo { font-family: 'Orbitron', sans-serif; font-size: 26px; color: var(--gold); font-weight: 900; letter-spacing: 1px; }
-        .header-tools { display: flex; gap: 15px; align-items: center; }
-        .coin-badge { background: rgba(255,215,0,0.1); padding: 8px 15px; border-radius: 50px; border: 1px solid var(--border); color: var(--gold); font-weight: 800; font-size: 14px; display: flex; align-items: center; gap: 8px; }
-        .nav-avatar { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--gold); cursor: pointer; transition: 0.3s; }
-        .nav-avatar:active { transform: scale(0.9); }
-
-        /* GRID SYSTEM */
-        .main-content { padding: 100px 15px 120px; }
-        .m-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
-        .m-card { 
-            background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .logo { font-family: 'Oswald'; font-size: 24px; color: #fff; text-decoration: none; }
+        .btn-top { background: rgba(0,0,0,0.3); border: 1px solid #fff; color: #fff; padding: 6px 15px; border-radius: 5px; font-size: 12px; cursor: pointer; font-weight: 600; }
+        
+        /* ADMIN PANEL UI */
+        #adminBox { 
+            display: none; background: var(--card); padding: 25px; border: 1px solid var(--primary); 
+            margin: 15px; border-radius: 10px; animation: fadeIn 0.4s ease-out; 
         }
-        .m-card:active { transform: scale(0.96); }
-        .m-card img { width: 100%; height: 240px; object-fit: cover; }
-        .m-card-info { position: absolute; bottom: 0; width: 100%; padding: 25px 10px 12px; background: linear-gradient(to top, #000 70%, transparent); text-align: center; }
-        .m-card-info h4 { font-size: 13px; font-weight: 700; color: var(--gold); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .admin-input { width: 100%; padding: 12px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 5px; }
+        .btn-pub { background: var(--primary); color: #fff; border: none; width: 100%; padding: 14px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-pub:disabled { background: #555; }
 
-        /* CINEMATIC VIEW (FIXED COVER UI) */
-        .full-layer { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 3000; overflow-y: auto; animation: slideIn 0.4s ease; }
-        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
-
-        .hero-section { width: 100%; height: 440px; position: relative; }
-        .hero-blur { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: blur(5px); }
-        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 20%, var(--bg) 95%); }
-        .hero-poster { 
-            width: 160px; height: 235px; border-radius: 18px; border: 4px solid var(--gold);
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.9); z-index: 5;
+        /* HERO SECTION */
+        .hero { 
+            height: 350px; background: linear-gradient(to right, #000 40%, transparent), 
+            url('https://image_2023-08-11_003823987.png.webp') center/cover; 
+            display: flex; align-items: center; padding: 30px; 
         }
+        .hero-content h4 { color: var(--primary); letter-spacing: 2px; font-size: 12px; }
+        .hero-content h1 { font-family: 'Oswald'; font-size: 50px; line-height: 1.1; margin: 10px 0; }
+        .hero-content p { font-size: 14px; color: #ccc; max-width: 400px; }
 
-        .meta-content { padding: 20px; text-align: center; margin-top: -10px; }
-        .meta-content h1 { font-family: 'Orbitron'; font-size: 28px; margin-bottom: 15px; letter-spacing: 1px; }
+        /* MANGA GRID */
+        .container { padding: 30px 15px; }
+        .section-title { border-left: 5px solid var(--primary); padding-left: 12px; font-size: 22px; margin-bottom: 25px; font-family: 'Oswald'; }
+        .manga-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .card { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid #222; transition: 0.3s; }
+        .card:hover { transform: translateY(-8px); border-color: var(--primary); box-shadow: 0 10px 20px rgba(230,33,23,0.2); }
+        .card img { width: 100%; height: 240px; object-fit: cover; background: #222; }
+        .card-info { padding: 15px; text-align: center; }
+        .card-info h3 { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-info small { color: #777; font-size: 11px; }
 
-        /* BUTTONS */
-        .action-row { display: flex; gap: 12px; margin: 25px 0; }
-        .btn-main { flex: 1; height: 58px; background: var(--gold); color: #000; border: none; border-radius: 16px; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
-        .btn-icon { width: 58px; height: 58px; background: var(--glass); border: 1px solid var(--border); border-radius: 16px; color: #fff; display: flex; align-items: center; justify-content: center; }
-
-        /* LISTS */
-        .chapter-box { background: var(--card); padding: 20px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 5px solid var(--gold); transition: 0.2s; }
-        .chapter-box:active { background: #1a1a1a; }
-        .ch-title { font-weight: 700; font-size: 15px; }
-        .ch-price { background: rgba(255,215,0,0.15); color: var(--gold); padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 800; }
-
-        /* PROFILE SECTION (USER UI) */
-        .profile-header { padding: 100px 20px 40px; text-align: center; background: linear-gradient(to bottom, #111, var(--bg)); }
-        .p-avatar-big { width: 125px; height: 125px; border-radius: 50%; border: 4px solid var(--gold); padding: 5px; background: #000; margin-bottom: 15px; }
-        .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; background: var(--card); border-radius: 20px; border: 1px solid var(--border); }
-        .av-item { width: 100%; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: 0.3s; }
-        .av-item.selected { border-color: var(--gold); transform: scale(1.1); background: rgba(255,215,0,0.1); }
-
-        /* ADMIN & UPLOAD UI */
-        .admin-form { background: var(--card); padding: 25px; border-radius: 22px; border: 1px solid var(--border); margin-bottom: 25px; }
-        input, select { width: 100%; padding: 16px; background: #000; border: 1px solid #333; color: #fff; border-radius: 14px; margin-bottom: 15px; font-family: inherit; }
-        input:focus { border-color: var(--gold); }
-        .drop-zone { border: 2px dashed #444; padding: 45px 15px; border-radius: 15px; text-align: center; color: var(--text-dim); position: relative; cursor: pointer; margin-bottom: 15px; }
-        .drop-zone:hover { border-color: var(--gold); color: #fff; }
-
-        /* BOTTOM NAV */
-        .bottom-bar { position: fixed; bottom: 0; width: 100%; height: 85px; background: #080808; border-top: 1px solid rgba(255,215,0,0.1); display: grid; grid-template-columns: repeat(4, 1fr); z-index: 2500; }
-        .nav-link { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dim); font-size: 11px; gap: 5px; text-decoration: none; }
-        .nav-link.active { color: var(--gold); }
-        .nav-link i { font-size: 24px; }
-
-        /* READER */
-        .reader-wrap img { width: 100%; display: block; border-bottom: 1px solid #000; }
+        @media (min-width: 768px) { .manga-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); } }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">M-ZONE</div>
-        <div class="header-tools">
-            <div class="coin-badge"><i class="fa-solid fa-bolt"></i> <span id="coinUI">0</span></div>
-            <img id="navUserAv" onclick="openProfile()" src="" class="nav-avatar">
+        <a href="#" class="logo">MANGAZONE</a>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-top" onclick="toggleAdmin()">ADMIN PANEL</button>
+            <button class="btn-top" style="background:white; color:red;">LOGIN</button>
         </div>
     </header>
 
-    <div id="homePage" class="main-content">
-        <div class="m-grid" id="mainGrid"></div>
+    <div id="adminBox">
+        <h2 style="color:var(--primary); font-family:'Oswald'; margin-bottom:10px;">Cloud Publisher</h2>
+        <input type="text" id="mangaTitle" class="admin-input" placeholder="Enter Manga Title (e.g., Solo Leveling)">
+        <p style="font-size: 12px; color: #888;">Select Cover Photo:</p>
+        <input type="file" id="mangaFile" class="admin-input" accept="image/*">
+        <button id="uploadBtn" class="btn-pub">PUBLISH TO M-ZONE</button>
     </div>
 
-    <div id="detailPage" class="full-layer">
-        <div style="position:fixed; top:25px; left:20px; z-index:3500; color:var(--gold);" onclick="clP()"><i class="fa-solid fa-circle-left fa-3xl"></i></div>
-        <div class="hero-section">
-            <img id="dtHero" class="hero-blur" src="">
-            <div class="hero-overlay"></div>
-            <img id="dtPoster" class="hero-poster" src="">
+    <section class="hero">
+        <div class="hero-content">
+            <h4>FEATURED STORY</h4>
+            <h1>VAGABOND</h1>
+            <p>The epic journey of Miyamoto Musashi as he seeks the meaning of true strength through the sword.</p>
+            <button class="btn-pub" style="width: auto; padding: 12px 30px; margin-top: 20px;">START READING</button>
         </div>
-        <div class="meta-content">
-            <h1 id="dtTitle">TITLE</h1>
-            <div class="action-row">
-                <button class="btn-main" id="bmBtn" onclick="toggleLibrary()"><i class="fa-solid fa-bookmark"></i> ADD TO LIBRARY</button>
-                <div class="btn-icon" onclick="alert('Shared!')"><i class="fa-solid fa-share-nodes fa-xl"></i></div>
-            </div>
-            <div id="chList" style="text-align:left;"></div>
+    </section>
+
+    <div class="container">
+        <h2 class="section-title">LATEST UPDATES</h2>
+        <div id="manga-list" class="manga-grid">
+            <p style="grid-column: span 2; text-align: center; color: #555;">Loading database...</p>
         </div>
-    </div>
-
-    <div id="libPage" class="full-layer">
-        <div class="main-content">
-            <h2 style="font-family:'Orbitron'; color:var(--gold); margin-bottom:25px; padding-left:10px;">MY COLLECTION</h2>
-            <div class="m-grid" id="libGrid"></div>
-        </div>
-    </div>
-
-    <div id="profilePage" class="full-layer">
-        <div style="position:fixed; top:25px; left:20px; z-index:3500; color:var(--gold);" onclick="clP()"><i class="fa-solid fa-xmark fa-3xl"></i></div>
-        <div class="profile-header">
-            <img id="profAvBig" class="p-avatar-big" src="">
-            <h2 id="profNick" style="font-family:'Orbitron';">GUEST USER</h2>
-            <p style="color:var(--gold); font-size:12px; font-weight:700; margin-top:5px;">SUPREME MEMBER</p>
-        </div>
-        <div style="padding: 20px;">
-            <h4 style="margin-bottom:15px; color:var(--gold);">CHOOSE YOUR STYLE</h4>
-            <div class="avatar-grid" id="avatarPicker"></div>
-            
-            <input id="nickEdit" placeholder="Change Nickname" style="margin-top:20px;">
-            <button class="btn-main" style="width:100%;" onclick="updateProfile()">SAVE CHANGES</button>
-
-            <div class="admin-form" style="margin-top:30px;">
-                <h4 style="margin-bottom:15px;">LOGIN TO CLOUD</h4>
-                <input id="loginMail" type="email" placeholder="Email Address">
-                <button class="btn-main" style="width:100%; background:#222; color:#fff;" onclick="login()">SYNC ACCOUNT</button>
-            </div>
-            
-            <button class="btn-main" style="width:100%; background:#000; border:1px solid #333;" onclick="checkStaff()">STAFF PORTAL</button>
-        </div>
-    </div>
-
-    <div id="adminPage" class="full-layer">
-        <div style="position:fixed; top:25px; left:20px; z-index:3500; color:var(--gold);" onclick="clP()"><i class="fa-solid fa-arrow-left fa-3xl"></i></div>
-        <div style="padding:100px 15px;">
-            <div class="admin-form">
-                <h2 style="font-family:'Orbitron'; color:var(--gold); margin-bottom:25px;">CLOUDINARY LINKING</h2>
-                <select id="admType"><option value="chapters">Manga Story</option><option value="animes">Anime Project</option></select>
-                <input id="admTitle" placeholder="Series Name">
-                <input id="admNo" type="number" placeholder="Chapter/Episode No.">
-                <input id="admPrice" type="number" placeholder="Coin Price (0 for Free)">
-                
-                <div class="drop-zone" onclick="document.getElementById('fileC').click()">
-                    <p id="lblC">Click to select Poster Image</p>
-                    <input type="file" id="fileC" hidden onchange="document.getElementById('lblC').innerText='Ready: '+this.files[0].name">
-                </div>
-                
-                <div class="drop-zone" onclick="document.getElementById('fileP').click()">
-                    <p id="lblP">Select Manga Pages (Batch)</p>
-                    <input type="file" id="fileP" multiple hidden onchange="document.getElementById('lblP').innerText=this.files.length+' Files Ready'">
-                </div>
-                
-                <button class="btn-main" id="upBtn" style="width:100%; margin-top:20px;" onclick="uploadProcess()">PUBLISH TO CLOUD</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="readerPage" class="full-layer" style="background:#000;">
-        <div style="position:fixed; top:25px; right:20px; z-index:4000; color:var(--gold);" onclick="clP()"><i class="fa-solid fa-xmark fa-3xl"></i></div>
-        <div id="readArea" class="reader-wrap"></div>
-    </div>
-
-    <div class="bottom-bar">
-        <div class="nav-link active" onclick="location.reload()"><i class="fa-solid fa-house-chimney"></i><span>Home</span></div>
-        <div class="nav-link" onclick="nav('libPage')"><i class="fa-solid fa-bookmark"></i><span>Library</span></div>
-        <div class="nav-link" onclick="alert('Searching...')"><i class="fa-solid fa-magnifying-glass"></i><span>Search</span></div>
-        <div class="nav-link" onclick="openProfile()"><i class="fa-solid fa-user-astronaut"></i><span>Profile</span></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // FIREBASE CONNECT
+        // CONFIGURATIONS (All Connected)
         const firebaseConfig = {
             apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs",
-            authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax",
-            storageBucket: "mangabyax.appspot.com", appId: "1:974159756281:web:228c23b929f377544b1b28"
+            authDomain: "mangabyax.firebaseapp.com",
+            projectId: "mangabyax",
+            storageBucket: "mangabyax.appspot.com",
+            appId: "1:974159756281:web:228c23b929f377544b1b28"
         };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // CLOUDINARY HARD-CODED
         const CLOUD_NAME = "drtm5p6qc";
         const UPLOAD_PRESET = "mzone_preset";
 
-        // STATE MANAGEMENT
-        let MASTER_DB = [];
-        let COINS = parseInt(localStorage.getItem('m_coins') || "500");
-        let USER = localStorage.getItem('m_user') || null;
-        let NICKNAME = localStorage.getItem('m_nick') || "Guest User";
-        let AVATAR = localStorage.getItem('m_av') || "Felix";
-        let LIBRARY = JSON.parse(localStorage.getItem('m_lib') || "[]");
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        // UI SYNC
-        window.nav = id => { document.getElementById(id).style.display='block'; history.pushState({p:id},"","#"+id); };
-        window.clP = () => history.back();
-        window.onpopstate = () => document.querySelectorAll('.full-layer').forEach(l=>l.style.display='none');
+        // UI ACTIONS
+        window.toggleAdmin = () => {
+            const box = document.getElementById('adminBox');
+            box.style.display = box.style.display === 'block' ? 'none' : 'block';
+        };
 
-        // APP BOOT
-        async function boot() {
+        // FETCH DATA FROM FIREBASE
+        async function fetchManga() {
+            const list = document.getElementById('manga-list');
             try {
-                const [m, a] = await Promise.all([getDocs(collection(db, "chapters")), getDocs(collection(db, "animes"))]);
-                MASTER_DB = [...m.docs.map(d=>({id:d.id, ...d.data(), type:'Manga'})), ...a.docs.map(d=>({id:d.id, ...d.data(), type:'Anime'}))];
+                const q = query(collection(db, "chapters"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
                 
-                renderGrid('mainGrid', MASTER_DB);
-                renderGrid('libGrid', MASTER_DB.filter(d => LIBRARY.includes(d.seriesName)));
-                syncUI();
-            } catch (e) { console.error("Boot Error: ", e); }
-        }
-
-        function renderGrid(target, items) {
-            const el = document.getElementById(target);
-            const map = {};
-            items.forEach(i => { if(i.seriesName) map[i.seriesName] = i; });
-            el.innerHTML = Object.values(map).map(v => `
-                <div class="m-card" onclick="openSeries('${v.seriesName.replace(/'/g, "\\'")}')">
-                    <img src="${v.coverUrl}" loading="lazy">
-                    <div class="m-card-info"><h4>${v.seriesName}</h4></div>
-                </div>
-            `).join('');
-        }
-
-        window.openSeries = title => {
-            const series = MASTER_DB.filter(d => d.seriesName === title);
-            document.getElementById('dtHero').src = series[0].coverUrl;
-            document.getElementById('dtPoster').src = series[0].coverUrl;
-            document.getElementById('dtTitle').innerText = title;
-            
-            document.getElementById('chList').innerHTML = series.sort((a,b)=>a.chapterNo-b.chapterNo).map(ch => `
-                <div class="chapter-box" onclick="unlock('${ch.id}', ${ch.price})">
-                    <span class="ch-title">EPISODE ${ch.chapterNo}</span>
-                    <span class="ch-price">${ch.price > 0 ? ch.price + ' C' : 'FREE'}</span>
-                </div>
-            `).join('');
-            
-            const btn = document.getElementById('bmBtn');
-            btn.innerHTML = LIBRARY.includes(title) ? '<i class="fa-solid fa-check"></i> SAVED' : '<i class="fa-solid fa-bookmark"></i> ADD TO LIBRARY';
-            nav('detailPage');
-        };
-
-        window.unlock = (id, price) => {
-            if(!USER) return openProfile();
-            if(COINS < price) return alert("Low Balance!");
-            if(price > 0 && confirm(`Unlock with ${price} coins?`)) { COINS -= price; syncUI(); }
-            
-            const data = MASTER_DB.find(d => d.id === id);
-            const area = document.getElementById('readArea');
-            area.innerHTML = data.pages.map(p => `<img src="${p}" loading="lazy">`).join('');
-            nav('readerPage');
-            window.scrollTo(0,0);
-        };
-
-        // PROFILE SYSTEM
-        window.openProfile = () => {
-            document.getElementById('profNick').innerText = NICKNAME;
-            document.getElementById('profAvBig').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${AVATAR}`;
-            document.getElementById('navUserAv').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${AVATAR}`;
-            
-            const seeds = ["Felix", "Aria", "Jack", "Luna", "Milo", "Zoe", "Leo", "Nova", "Jasper", "Ruby", "Shadow", "King"];
-            document.getElementById('avatarPicker').innerHTML = seeds.map(s => `
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${s}" class="av-item ${AVATAR === s ? 'selected' : ''}" onclick="setAv('${s}')">
-            `).join('');
-            nav('profilePage');
-        };
-
-        window.setAv = s => { AVATAR = s; openProfile(); };
-        window.updateProfile = () => {
-            const n = document.getElementById('nickEdit').value;
-            if(n) NICKNAME = n;
-            localStorage.setItem('m_nick', NICKNAME);
-            localStorage.setItem('m_av', AVATAR);
-            alert("Profile Synchronized!");
-            openProfile();
-        };
-
-        window.login = () => {
-            const m = document.getElementById('loginMail').value;
-            if(m.includes('@')) { USER = m; localStorage.setItem('m_user', m); openProfile(); }
-        };
-
-        // CLOUDINARY LOGIC (LINKING ONLY)
-        window.uploadProcess = async () => {
-            const btn = document.getElementById('upBtn');
-            const cFile = document.getElementById('fileC').files[0];
-            const pFiles = document.getElementById('fileP').files;
-
-            if(!cFile || pFiles.length === 0) return alert("Select Poster and Pages!");
-            btn.innerText = "LINKING TO CLOUD..."; btn.disabled = true;
-
-            try {
-                // 1. Link Poster
-                const cUrl = await cloudLink(cFile);
-                
-                // 2. Link Pages
-                const pUrls = [];
-                for(let i=0; i < pFiles.length; i++) {
-                    btn.innerText = `LINKING: ${i+1}/${pFiles.length}`;
-                    pUrls.push(await cloudLink(pFiles[i]));
+                if (querySnapshot.empty) {
+                    list.innerHTML = "<p style='grid-column:span 2; text-align:center;'>No manga found in Cloud.</p>";
+                    return;
                 }
-                
-                // 3. Store Links in Firebase
-                await addDoc(collection(db, document.getElementById('admType').value), {
-                    seriesName: document.getElementById('admTitle').value.trim(),
-                    chapterNo: parseInt(document.getElementById('admNo').value),
-                    price: parseInt(document.getElementById('admPrice').value || 0),
-                    coverUrl: cUrl, 
-                    pages: pUrls,
-                    created: Date.now()
+
+                list.innerHTML = querySnapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return `
+                        <div class="card">
+                            <img src="${data.coverUrl}" onerror="this.src='https://via.placeholder.com/240x350?text=No+Image'">
+                            <div class="card-info">
+                                <h3>${data.title}</h3>
+                                <small>ID: ${doc.id.substring(0,8)}</small>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = "<p>Database Error. Check Console.</p>";
+            }
+        }
+
+        // UPLOAD & LINKING LOGIC
+        document.getElementById('uploadBtn').onclick = async () => {
+            const titleInput = document.getElementById('mangaTitle');
+            const fileInput = document.getElementById('mangaFile');
+            const btn = document.getElementById('uploadBtn');
+
+            if (!titleInput.value || !fileInput.files[0]) return alert("အချက်အလက် အကုန်ဖြည့်ပါ!");
+
+            btn.innerText = "UPLOADING...";
+            btn.disabled = true;
+
+            try {
+                // 1. Upload to Cloudinary
+                const formData = new FormData();
+                formData.append("file", fileInput.files[0]);
+                formData.append("upload_preset", UPLOAD_PRESET);
+
+                const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+                    method: "POST",
+                    body: formData
                 });
-                
-                alert("Cloud Linking Complete!"); location.reload();
-            } catch (e) { alert(e.message); btn.innerText = "PUBLISH TO CLOUD"; btn.disabled = false; }
+
+                if (!cloudRes.ok) throw new Error("Cloudinary Failed");
+
+                const cloudData = await cloudRes.json();
+                const cloudUrl = cloudData.secure_url;
+
+                // 2. Store Link in Firebase
+                await addDoc(collection(db, "chapters"), {
+                    title: titleInput.value,
+                    coverUrl: cloudUrl,
+                    timestamp: serverTimestamp()
+                });
+
+                alert("Successfully Published!");
+                location.reload();
+
+            } catch (err) {
+                console.error(err);
+                alert("Fail: " + err.message);
+                btn.innerText = "PUBLISH TO M-ZONE";
+                btn.disabled = false;
+            }
         };
 
-        async function cloudLink(file) {
-            const fd = new FormData();
-            fd.append("file", file);
-            fd.append("upload_preset", UPLOAD_PRESET);
-            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: "POST", body: fd });
-            if(!res.ok) throw new Error("Cloud Link Failed");
-            const d = await res.json();
-            return d.secure_url;
-        }
-
-        // UTILS
-        window.toggleLibrary = () => {
-            const t = document.getElementById('dtTitle').innerText;
-            if(LIBRARY.includes(t)) LIBRARY = LIBRARY.filter(x => x !== t);
-            else LIBRARY.push(t);
-            localStorage.setItem('m_lib', JSON.stringify(LIBRARY));
-            openSeries(t);
-            renderGrid('libGrid', MASTER_DB.filter(d => LIBRARY.includes(d.seriesName)));
-        };
-
-        window.checkStaff = () => { if(prompt("STAFF KEY:") === "Admin@2026") nav('adminPage'); };
-        
-        function syncUI() {
-            document.getElementById('coinUI').innerText = COINS;
-            document.getElementById('navUserAv').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${AVATAR}`;
-            localStorage.setItem('m_coins', COINS);
-        }
-
-        boot();
+        fetchManga();
     </script>
 </body>
 </html>
