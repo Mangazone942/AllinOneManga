@@ -3,74 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>M-ZONE | GOLD PREMIUM</title>
+    <title>M-ZONE | PREMIUM GOLD</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        :root {
-            --p: #FFD700; /* Gold */
-            --b: #080808; 
-            --c: #121212; 
-            --g: rgba(255, 215, 0, 0.15);
-            --glass: rgba(255, 255, 255, 0.05);
-        }
-
+        :root { --p: #FFD700; --b: #050505; --c: #121212; --g: rgba(255, 215, 0, 0.2); --glass: rgba(255, 255, 255, 0.05); }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background: var(--b); color: #fff; padding-top: 75px; overflow-x: hidden; }
 
-        /* --- Header & Search --- */
-        header {
-            position: fixed; top: 0; width: 100%; height: 70px; background: rgba(8, 8, 8, 0.9);
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 15px; border-bottom: 1px solid var(--g); z-index: 1000; backdrop-filter: blur(15px);
-        }
-        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 20px; letter-spacing: 1.5px; }
-
-        .coin-v2 {
-            background: #111; border: 1px solid var(--p); padding: 5px 12px; border-radius: 8px;
-            display: flex; align-items: center; gap: 8px; cursor: pointer;
-        }
-
-        .search-container { padding: 10px 15px; }
-        .search-bar-v2 {
-            background: var(--c); border: 1px solid rgba(255,255,255,0.05);
-            height: 45px; border-radius: 10px; display: flex; align-items: center; padding: 0 15px;
-        }
-        .search-bar-v2 input { background: none; border: none; color: #fff; width: 100%; padding-left: 10px; outline: none; }
-
-        /* --- Grid --- */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .card { 
-            background: var(--c); border-radius: 12px; overflow: hidden; 
-            border: 1px solid rgba(255,255,255,0.03); position: relative;
-        }
-        .card img { width: 100%; height: 220px; object-fit: cover; }
-        .card-info { padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); position: absolute; bottom: 0; width: 100%; }
-
-        /* --- Full Page Detail --- */
-        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 2000; overflow-y: auto; }
-        .float-back { position: fixed; top: 15px; left: 15px; width: 35px; height: 35px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2100; border: 1px solid var(--p); }
+        /* --- UI COMPONENTS (Header, Search, Grid) --- */
+        header { position: fixed; top: 0; width: 100%; height: 75px; background: rgba(5, 5, 5, 0.9); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--g); z-index: 1000; backdrop-filter: blur(15px); }
+        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 22px; }
+        .premium-coin { background: #111; border: 1px solid var(--p); padding: 6px 14px; border-radius: 50px; color: var(--p); font-weight: 800; display: flex; align-items: center; gap: 8px; font-size: 14px; }
         
-        .detail-banner { width: 100%; height: 300px; position: relative; }
+        .search-area { padding: 10px 15px; }
+        .search-bar { background: var(--c); border: 1px solid rgba(255,255,255,0.08); height: 50px; border-radius: 15px; display: flex; align-items: center; padding: 0 18px; }
+        .search-bar input { background: none; border: none; color: #fff; width: 100%; padding-left: 12px; outline: none; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .card { background: var(--c); border-radius: 15px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.05); }
+        .card img { width: 100%; height: 230px; object-fit: cover; }
+        .card-info { padding: 10px; background: linear-gradient(transparent, #000); position: absolute; bottom: 0; width: 100%; text-align: center; }
+
+        /* --- PAGES --- */
+        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 2000; overflow-y: auto; }
+        .detail-banner { width: 100%; height: 350px; position: relative; }
         .detail-banner img { width: 100%; height: 100%; object-fit: cover; }
         .banner-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, var(--b)); }
+        .float-btn { position: fixed; top: 15px; left: 15px; width: 40px; height: 40px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2100; border: 1px solid var(--p); color: var(--p); }
+        .detail-content { padding: 0 20px; margin-top: -80px; position: relative; text-align: center; }
+        .poster-main { width: 130px; border-radius: 12px; border: 3px solid var(--b); box-shadow: 0 10px 30px #000; }
         
-        .detail-content { padding: 0 20px; margin-top: -60px; position: relative; }
-        .detail-poster { width: 110px; border-radius: 10px; border: 2px solid var(--p); }
+        .btn-action { width: 100%; background: var(--p); color: #000; height: 50px; border-radius: 12px; font-weight: 800; margin: 20px 0; border: none; }
+        .btn-action.active { background: #222; color: var(--p); border: 1px solid var(--p); }
 
-        .btn-bookmark { width: 100%; background: var(--p); color: #000; height: 45px; border-radius: 8px; border: none; font-weight: 800; margin-top: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-bookmark.active { background: #333; color: var(--p); border: 1px solid var(--p); }
+        .chapter-item { background: var(--c); padding: 18px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; border-left: 4px solid var(--p); }
 
-        /* --- Sidebar --- */
-        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #0a0a0a; z-index: 3000; padding: 40px 20px; transition: 0.3s; border-left: 1px solid var(--g); }
+        /* --- ADMIN UI --- */
+        .admin-item { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .btn-del { background: #ff4444; color: #fff; border: none; padding: 8px 15px; border-radius: 5px; font-size: 12px; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #080808; z-index: 3000; padding: 40px 20px; transition: 0.3s; border-left: 1px solid var(--g); }
         .sidebar.active { right: 0; }
-        .menu-item { padding: 15px; border-radius: 8px; margin-bottom: 10px; background: var(--glass); display: flex; align-items: center; gap: 15px; cursor: pointer; }
-        .menu-item i { color: var(--p); }
-
-        /* Empty State */
-        #empty-msg { text-align: center; padding: 50px 20px; color: #555; display: none; }
+        .menu-item { padding: 15px; border-radius: 10px; margin-bottom: 10px; background: var(--glass); display: flex; align-items: center; gap: 15px; }
     </style>
 </head>
 <body>
@@ -78,59 +56,56 @@
     <header>
         <div class="logo">M-ZONE</div>
         <div class="header-right">
-            <div class="coin-v2" onclick="alert('Redeem feature coming soon!')">
-                <i class="fa-solid fa-coins"></i> <span id="uCoins">0</span>
-            </div>
-            <i class="fa-solid fa-bars-staggered" style="font-size: 20px; color: var(--p);" onclick="tgS()"></i>
+            <div class="premium-coin"><i class="fa-solid fa-crown"></i> <span id="uCoins">0</span></div>
+            <i class="fa-solid fa-bars-staggered" style="font-size: 24px; color: var(--p);" onclick="toggleSidebar()"></i>
         </div>
     </header>
 
-    <div class="search-container">
-        <div class="search-bar-v2">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input id="gSearch" placeholder="Search your favorite..." oninput="handleSearch()">
+    <div class="search-area">
+        <div class="search-bar">
+            <i class="fa-solid fa-magnifying-glass" style="color:var(--p)"></i>
+            <input id="userSearch" placeholder="Search Manga..." oninput="UserLogic.search()">
         </div>
     </div>
 
-    <h3 id="section-title" style="padding: 10px 15px; font-size: 16px; color: var(--p);">LATEST UPDATES</h3>
-    
-    <div id="empty-msg">No items found in your library.</div>
-    <div id="mg" class="grid"></div>
+    <h3 id="listHeading" style="padding: 10px 20px; color: var(--p); font-size: 14px;">POPULAR UPDATES</h3>
+    <div id="mainGrid" class="grid"></div>
 
-    <div id="dp" class="full-page">
-        <div class="float-back" onclick="clP('dp')"><i class="fa-solid fa-chevron-left"></i></div>
-        <div class="detail-banner"><img id="dt-banner" src=""><div class="banner-overlay"></div></div>
+    <div id="detailPage" class="full-page">
+        <div class="float-btn" onclick="closePage('detailPage')"><i class="fa-solid fa-arrow-left"></i></div>
+        <div class="detail-banner"><img id="dtBanner" src=""><div class="banner-overlay"></div></div>
         <div class="detail-content">
-            <img id="dt-poster" class="detail-poster" src="">
-            <h2 id="dt-name" style="margin-top:15px;"></h2>
-            <button id="bmBtn" class="btn-bookmark" onclick="toggleBookmark()">
-                <i class="fa-solid fa-heart"></i> <span>ADD TO LIBRARY</span>
-            </button>
-            <h3 style="margin-top:30px; margin-bottom:15px; color: var(--p);">CHAPTERS</h3>
-            <div id="cl"></div>
+            <img id="dtPoster" class="poster-main" src="">
+            <h2 id="dtTitle"></h2>
+            <button id="libBtn" class="btn-action" onclick="UserLogic.toggleLib()"></button>
+            <div id="chapterList" style="text-align: left; margin-top: 20px;"></div>
         </div>
     </div>
 
-    <div id="vp" class="full-page" style="background:#000;">
-        <div class="float-back" onclick="clP('vp')"><i class="fa-solid fa-xmark"></i></div>
-        <div id="vc"></div>
+    <div id="viewerPage" class="full-page" style="background:#000;">
+        <div class="float-btn" onclick="closePage('viewerPage')"><i class="fa-solid fa-xmark"></i></div>
+        <div id="viewerContent"></div>
     </div>
 
-    <div class="sidebar" id="sb">
-        <h2 style="color:var(--p); margin-bottom:30px;">MY ACCOUNT</h2>
-        <div class="menu-item" onclick="renderHome(allData); tgS();"><i class="fa-solid fa-house"></i> Home</div>
-        <div class="menu-item" onclick="showBookmarks()"><i class="fa-solid fa-bookmark"></i> My Library</div>
-        <div class="menu-item" onclick="checkStaff()"><i class="fa-solid fa-user-shield"></i> Staff Mode</div>
-        <div id="staffZone" style="display:none; margin-top:20px;">
-            <div class="menu-item" onclick="oAdm('d')"><i class="fa-solid fa-trash"></i> Delete Content</div>
+    <div id="adminPage" class="full-page">
+        <div class="float-btn" onclick="closePage('adminPage')"><i class="fa-solid fa-chevron-left"></i></div>
+        <div style="padding: 70px 20px;">
+            <h2 style="color:var(--p); margin-bottom: 20px;">ADMIN CONTROL</h2>
+            <div id="adminList"></div>
         </div>
+    </div>
+
+    <div class="sidebar" id="sidebar">
+        <h2 style="color:var(--p); margin-bottom: 30px;">PREMIUM</h2>
+        <div class="menu-item" onclick="UserLogic.showHome()"><i class="fa-solid fa-house"></i> Home</div>
+        <div class="menu-item" onclick="UserLogic.showLibrary()"><i class="fa-solid fa-bookmark"></i> My Library</div>
+        <div class="menu-item" onclick="AdminLogic.checkAccess()" style="opacity: 0.3; margin-top: 40px;"><i class="fa-solid fa-lock"></i> Admin Mode</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
+        import { getFirestore, collection, getDocs, doc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        
         const firebaseConfig = {
             apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs",
             authDomain: "mangabyax.firebaseapp.com",
@@ -141,115 +116,113 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const auth = getAuth(app);
+        let allData = [];
 
-        let allData = [], currentSeries = "";
-
-        // --- Back Nav Logic (Fix back issue) ---
+        // --- GLOBAL NAVIGATION ---
         window.onpopstate = () => {
             document.querySelectorAll('.full-page').forEach(p => p.style.display = 'none');
-            document.getElementById('sb').classList.remove('active');
+            document.getElementById('sidebar').classList.remove('active');
+        };
+        window.closePage = id => history.back();
+        window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('active');
+
+        // ================= USER LOGIC =================
+        const UserLogic = {
+            init: async () => {
+                const [m, a] = await Promise.all([getDocs(collection(db, "chapters")), getDocs(collection(db, "animes"))]);
+                allData = [...m.docs.map(d=>({id:d.id, ...d.data(), type:'Manga'})), ...a.docs.map(d=>({id:d.id, ...d.data(), type:'Anime'}))];
+                UserLogic.render(allData);
+            },
+            render: (data, title = "POPULAR UPDATES") => {
+                const grid = document.getElementById('mainGrid');
+                document.getElementById('listHeading').innerText = title;
+                const unique = {};
+                data.forEach(item => { if(!unique[item.seriesName || item.title]) unique[item.seriesName || item.title] = item; });
+                grid.innerHTML = Object.values(unique).map(v => `
+                    <div class="card" onclick="UserLogic.openDetail('${(v.seriesName || v.title).replace(/'/g, "\\'")}')">
+                        <img src="${v.coverUrl || v.cover}" loading="lazy">
+                        <div class="card-info"><h4>${v.seriesName || v.title}</h4></div>
+                    </div>
+                `).join('');
+            },
+            openDetail: (name) => {
+                window.currentSeries = name;
+                const series = allData.filter(d => (d.seriesName || d.title) === name);
+                document.getElementById('dtBanner').src = series[0].coverUrl || series[0].cover;
+                document.getElementById('dtPoster').src = series[0].coverUrl || series[0].cover;
+                document.getElementById('dtTitle').innerText = name;
+                
+                // Library Button Update
+                const lib = JSON.parse(localStorage.getItem('m_lib') || "[]");
+                const btn = document.getElementById('libBtn');
+                btn.innerHTML = lib.includes(name) ? '<i class="fa-solid fa-check"></i> IN LIBRARY' : '<i class="fa-solid fa-heart"></i> ADD TO LIBRARY';
+                btn.className = lib.includes(name) ? 'btn-action active' : 'btn-action';
+
+                document.getElementById('chapterList').innerHTML = series.map(ch => `
+                    <div class="chapter-item" onclick="UserLogic.read('${ch.id}')">
+                        <span>Chapter ${ch.chapterNo || ch.episodeNo || '1'}</span>
+                        <i class="fa-solid fa-play"></i>
+                    </div>
+                `).join('');
+                UserLogic.nav('detailPage');
+            },
+            toggleLib: () => {
+                let lib = JSON.parse(localStorage.getItem('m_lib') || "[]");
+                if(lib.includes(currentSeries)) lib = lib.filter(i => i !== currentSeries);
+                else lib.push(currentSeries);
+                localStorage.setItem('m_lib', JSON.stringify(lib));
+                UserLogic.openDetail(currentSeries);
+            },
+            read: (id) => {
+                const item = allData.find(d => d.id === id);
+                document.getElementById('viewerContent').innerHTML = item.type === 'Manga' ? 
+                    item.pages.map(p => `<img src="${p}" style="width:100%; display:block;">`).join('') :
+                    `<iframe src="${item.videoUrl}" style="width:100%; height:300px; border:none;" allowfullscreen></iframe>`;
+                UserLogic.nav('viewerPage');
+            },
+            search: () => {
+                const q = document.getElementById('userSearch').value.toLowerCase();
+                UserLogic.render(allData.filter(d => (d.seriesName || d.title).toLowerCase().includes(q)));
+            },
+            showLibrary: () => {
+                const lib = JSON.parse(localStorage.getItem('m_lib') || "[]");
+                UserLogic.render(allData.filter(d => lib.includes(d.seriesName || d.title)), "MY LIBRARY");
+                toggleSidebar();
+            },
+            showHome: () => { UserLogic.render(allData); toggleSidebar(); },
+            nav: (id) => { document.getElementById(id).style.display = 'block'; history.pushState({p: id}, "", "#"+id); }
         };
 
-        window.clP = id => { history.back(); };
-
-        // --- Fetch Data ---
-        async function init() {
-            const m = await getDocs(collection(db, "chapters"));
-            const a = await getDocs(collection(db, "animes"));
-            allData = [...m.docs.map(d=>({id:d.id, ...d.data(), type:'Manga'})), ...a.docs.map(d=>({id:d.id, ...d.data(), type:'Anime'}))];
-            renderHome(allData);
-        }
-
-        function renderHome(data) {
-            const grid = document.getElementById('mg');
-            const unique = {};
-            data.forEach(item => { if(!unique[item.seriesName || item.title]) unique[item.seriesName || item.title] = item; });
-            
-            grid.innerHTML = Object.values(unique).map(v => `
-                <div class="card" onclick="openDetail('${(v.seriesName || v.title).replace(/'/g, "\\'")}')">
-                    <img src="${v.coverUrl || v.cover}" loading="lazy">
-                    <div class="card-info"><h4>${v.seriesName || v.title}</h4></div>
-                </div>
-            `).join('');
-            document.getElementById('section-title').innerText = "LATEST UPDATES";
-            document.getElementById('empty-msg').style.display = 'none';
-        }
-
-        // --- Detail Logic ---
-        window.openDetail = (name) => {
-            const series = allData.filter(d => (d.seriesName || d.title) === name);
-            currentSeries = name;
-            document.getElementById('dt-banner').src = series[0].coverUrl || series[0].cover;
-            document.getElementById('dt-poster').src = series[0].coverUrl || series[0].cover;
-            document.getElementById('dt-name').innerText = name;
-            
-            // Check if bookmarked
-            const bks = JSON.parse(localStorage.getItem('mzone_lib') || "[]");
-            const btn = document.getElementById('bmBtn');
-            if(bks.includes(name)) {
-                btn.classList.add('active');
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> IN LIBRARY';
-            } else {
-                btn.classList.remove('active');
-                btn.innerHTML = '<i class="fa-solid fa-heart"></i> ADD TO LIBRARY';
+        // ================= ADMIN LOGIC =================
+        const AdminLogic = {
+            checkAccess: () => {
+                if(prompt("Admin Access Code:") === "Admin@2026") AdminLogic.open();
+                else alert("Access Denied!");
+            },
+            open: () => {
+                const list = document.getElementById('adminList');
+                list.innerHTML = allData.map(i => `
+                    <div class="admin-item">
+                        <span style="font-size:13px; color:#ccc;">${i.seriesName || i.title} (Ch-${i.chapterNo || '1'})</span>
+                        <button class="btn-del" onclick="AdminLogic.delete('${i.id}', '${i.type}')">DELETE</button>
+                    </div>
+                `).join('');
+                document.getElementById('adminPage').style.display = 'block';
+                history.pushState({p: 'admin'}, "", "#admin");
+                toggleSidebar();
+            },
+            delete: async (id, type) => {
+                if(confirm("Are you sure you want to delete this?")) {
+                    await deleteDoc(doc(db, type === 'Manga' ? "chapters" : "animes", id));
+                    alert("Deleted Successfully!");
+                    location.reload();
+                }
             }
-
-            document.getElementById('cl').innerHTML = series.map(ch => `
-                <div style="padding:15px; background:var(--c); margin-bottom:10px; border-radius:8px; display:flex; justify-content:space-between;" onclick="readContent('${ch.id}')">
-                    <span>Chapter ${ch.chapterNo || ch.episodeNo || '1'}</span>
-                    <i class="fa-solid fa-play" style="color:var(--p);"></i>
-                </div>
-            `).join('');
-
-            document.getElementById('dp').style.display = 'block';
-            history.pushState({page: 'dp'}, "Details", "#dp");
         };
 
-        // --- Bookmark Logic Fix ---
-        window.toggleBookmark = () => {
-            let bks = JSON.parse(localStorage.getItem('mzone_lib') || "[]");
-            const btn = document.getElementById('bmBtn');
-            
-            if(bks.includes(currentSeries)) {
-                bks = bks.filter(b => b !== currentSeries);
-                btn.classList.remove('active');
-                btn.innerHTML = '<i class="fa-solid fa-heart"></i> ADD TO LIBRARY';
-            } else {
-                bks.push(currentSeries);
-                btn.classList.add('active');
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> IN LIBRARY';
-            }
-            localStorage.setItem('mzone_lib', JSON.stringify(bks));
-        };
-
-        window.showBookmarks = () => {
-            const bks = JSON.parse(localStorage.getItem('mzone_lib') || "[]");
-            const filtered = allData.filter(d => bks.includes(d.seriesName || d.title));
-            renderHome(filtered);
-            document.getElementById('section-title').innerText = "MY LIBRARY";
-            if(bks.length === 0) document.getElementById('empty-msg').style.display = 'block';
-            tgS();
-        };
-
-        window.readContent = (id) => {
-            const item = allData.find(d => d.id === id);
-            const vc = document.getElementById('vc');
-            vc.innerHTML = item.type === 'Manga' ? item.pages.map(p => `<img src="${p}" style="width:100%; display:block;">`).join('') : `<iframe src="${item.videoUrl}" style="width:100%; height:300px; border:none;"></iframe>`;
-            document.getElementById('vp').style.display = 'block';
-            history.pushState({page: 'vp'}, "Reading", "#vp");
-        };
-
-        window.handleSearch = () => {
-            const q = document.getElementById('gSearch').value.toLowerCase();
-            const res = allData.filter(d => (d.seriesName || d.title).toLowerCase().includes(q));
-            renderHome(res);
-        };
-
-        window.tgS = () => document.getElementById('sb').classList.toggle('active');
-        window.checkStaff = () => { if(prompt("Access:") === "Admin@2026") document.getElementById('staffZone').style.display = 'block'; };
-
-        init();
+        window.UserLogic = UserLogic;
+        window.AdminLogic = AdminLogic;
+        UserLogic.init();
     </script>
 </body>
 </html>
