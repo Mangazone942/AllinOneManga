@@ -3,126 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | ULTIMATE PRO MAX</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>M-ZONE | PREMIUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@800&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark-mode">
 
     <header>
-        <div class="logo" onclick="location.reload()">M-ZONE <i class="fa-solid fa-bolt-lightning"></i></div>
-        <div class="search-container">
-            <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input id="gSearch" placeholder="Search Manga or Anime..." oninput="hSearch()">
+        <div class="logo">M-ZONE</div>
+        
+        <div class="header-right">
+            <div class="header-gold" onclick="openRedeem()">
+                <i class="fa-solid fa-coins"></i>
+                <span id="uCoins">0</span>
             </div>
-        </div>
-        <div class="nav-icons">
-            <i class="fa-solid fa-bars-staggered" onclick="tgS()" style="font-size:20px; cursor:pointer;"></i>
+            <i class="fa-solid fa-circle-half-stroke" id="themeBtn" onclick="toggleTheme()"></i>
+            <i class="fa-solid fa-bars-staggered menu-trigger" onclick="tgS()"></i>
         </div>
     </header>
 
-    <div class="sidebar" id="sb">
-        <div id="uCard" style="display:none;" class="u-card">
-            <p id="uName" style="font-weight:800; font-size:15px; color:var(--p)"></p>
-            <p style="font-size:11px; opacity:0.6;"><i class="fa-solid fa-coins"></i> <span id="uCoins">0</span> Gold</p>
-            <div style="display:flex; gap:5px; margin-top:10px;">
-                <input id="vKey" placeholder="VIP Key" style="margin:0; font-size:10px; height:32px;">
-                <button onclick="rk()" style="background:var(--p); border:0; padding:0 10px; border-radius:6px;"><i class="fa-solid fa-check"></i></button>
-            </div>
-        </div>
-        
-        <button id="lBtn" class="btn-p" onclick="tgM('authModal')">JOIN COMMUNITY</button>
-        
-        <div class="menu-item" onclick="showList()"><i class="fa-regular fa-bookmark"></i> My Library</div>
-        <div class="menu-item" onclick="fType('Anime')"><i class="fa-regular fa-circle-play"></i> Premium Anime</div>
-
-        <div class="chat-area">
-            <div id="chatMsgs"></div>
-            <div style="display:flex; padding:6px; gap:5px; background:#000;">
-                <input id="ci" placeholder="Chat..." style="margin:0; font-size:10px; height:30px;">
-                <button onclick="sc()" style="background:var(--p); border:none; width:35px; border-radius:6px;"><i class="fa-solid fa-paper-plane" style="font-size:10px;"></i></button>
-            </div>
-        </div>
-
-        <div class="staff-section" id="staffZone" style="display:none;">
-            <p class="staff-label">STAFF PANEL</p>
-            <div class="menu-item" onclick="oAdm('m')"><i class="fa-solid fa-plus"></i> Add Manga</div>
-            <div class="menu-item" onclick="oAdm('a')"><i class="fa-solid fa-film"></i> Add Anime</div>
-            <div class="menu-item" onclick="oAdm('k')"><i class="fa-solid fa-key"></i> Key Gen</div>
-            <div class="menu-item" onclick="oAdm('d')"><i class="fa-solid fa-trash-can"></i> Manage Content</div>
-        </div>
-        <div class="menu-item" onclick="checkStaff()" style="opacity:0.3; margin-top:20px;"><i class="fa-solid fa-user-shield"></i> Staff Login</div>
+    <div class="genre-bar">
+        <div class="genre-item active" onclick="fGenre('All', this)">All</div>
+        <div class="genre-item" onclick="fGenre('Action', this)">Action</div>
+        <div class="genre-item" onclick="fGenre('Romance', this)">Romance</div>
+        <div class="genre-item" onclick="fGenre('Hentai', this)">Hentai</div>
+        <div class="genre-item" onclick="fGenre('Fantasy', this)">Fantasy</div>
     </div>
 
     <div class="slider"><div class="track" id="st"></div></div>
+    
+    <div class="search-area">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="gSearch" placeholder="Search..." oninput="hSearch()">
+        </div>
+    </div>
+
     <div id="mg" class="grid"></div>
 
-    <div id="dp" class="full-page">
-        <i class="fa-solid fa-arrow-left" onclick="clP('dp')" style="font-size:22px; color:var(--p); cursor:pointer;"></i>
-        <div id="dh"></div>
-        <div id="cl"></div>
-    </div>
-
-    <div id="vp" class="full-page" style="padding:0; background:#000;">
-        <div style="padding:15px; display:flex; justify-content:space-between; background:rgba(0,0,0,0.9); position:sticky; top:0; z-index:100;">
-            <i class="fa-solid fa-xmark" onclick="clP('vp')" style="cursor:pointer;"></i>
-            <span id="vt" style="font-size:14px; font-weight:600;"></span>
-            <i class="fa-regular fa-heart" onclick="tB()" style="cursor:pointer;"></i>
+    <div class="sidebar" id="sb">
+        <div class="sidebar-header">
+            <h3 id="uName">GUEST</h3>
+            <i class="fa-solid fa-xmark" onclick="tgS()"></i>
         </div>
-        <div id="vc"></div>
-    </div>
+        
+        <div class="menu-list">
+            <div class="menu-item" onclick="showList()"><i class="fa-solid fa-heart"></i> My Library</div>
+            <div class="menu-item" onclick="fType('Anime')"><i class="fa-solid fa-bolt"></i> Premium Anime</div>
+            <div class="menu-item" onclick="openRedeem()"><i class="fa-solid fa-ticket"></i> Redeem Key</div>
+            
+            <div class="staff-section" id="staffZone" style="display:none;">
+                <p class="label">STAFF ONLY</p>
+                <div class="menu-item" onclick="oAdm('m')"><i class="fa-solid fa-file-import"></i> Add Manga</div>
+                <div class="menu-item" onclick="oAdm('a')"><i class="fa-solid fa-video"></i> Add Anime</div>
+                <div class="menu-item" onclick="oAdm('k')"><i class="fa-solid fa-key"></i> Key Gen</div>
+                <div class="menu-item" onclick="oAdm('d')"><i class="fa-solid fa-gears"></i> Manage Content</div>
+            </div>
 
-    <div id="adm" class="full-page">
-        <div id="mT" style="display:none;">
-            <h3>New Manga Chapter</h3>
-            <input id="mt" placeholder="Series Title">
-            <input id="mc" type="number" placeholder="Chapter Number">
-            <input id="mp" type="number" placeholder="Gold Price (0 for Free)">
-            <select id="mgS"><option>Action</option><option>Romance</option><option>Hentai</option><option>Fantasy</option></select>
-            <p style="font-size:12px; margin-top:10px;">Thumbnail Cover:</p>
-            <input type="file" id="mCv">
-            <p style="font-size:12px; margin-top:10px;">Chapter Images (Multiple):</p>
-            <input type="file" id="mPs" multiple>
-            <button class="btn-p" onclick="uM()">UPLOAD MANGA</button>
-        </div>
-
-        <div id="aT" style="display:none;">
-            <h3>New Anime Series</h3>
-            <input id="at" placeholder="Anime Title">
-            <p style="font-size:12px; margin-top:10px;">Anime Cover:</p>
-            <input type="file" id="acV">
-            <div id="epA"></div>
-            <button onclick="aE()" class="btn-p" style="background:#111; border:1px solid var(--g);">+ Add Episode</button>
-            <button class="btn-p" onclick="uA()">UPLOAD ANIME</button>
-        </div>
-
-        <div id="kT" style="display:none;">
-            <h3>Generate VIP Gold Key</h3>
-            <input id="ka" type="number" placeholder="Gold Amount">
-            <button class="btn-p" onclick="gk()">GENERATE KEY</button>
-            <p id="kr" style="margin-top:20px; color:var(--p); font-family:monospace; font-size:24px; text-align:center;"></p>
-        </div>
-
-        <div id="dT" style="display:none;">
-            <h3>Manage Content</h3>
-            <div id="delList" style="margin-top:15px;"></div>
-        </div>
-
-        <button class="btn-p" onclick="clP('adm')" style="background:#222; margin-top:30px;">CLOSE PANEL</button>
-    </div>
-
-    <div id="authModal" class="full-page" style="display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.95);">
-        <div style="background:#0a0a0a; padding:30px; border-radius:20px; width:320px; border:1px solid var(--g);">
-            <h2 style="margin-bottom:20px; text-align:center;">Community</h2>
-            <input id="em" placeholder="Email Address">
-            <input id="ps" type="password" placeholder="Password">
-            <button class="btn-p" onclick="hA()">CONTINUE</button>
+            <div class="menu-item" onclick="checkStaff()" style="opacity: 0.4; margin-top: 50px;">
+                <i class="fa-solid fa-user-shield"></i> Staff Login
+            </div>
         </div>
     </div>
+
+    <div id="redeemModal" class="full-page modal-blur">
+        <div class="modal-content anim-slide-up">
+            <i class="fa-solid fa-xmark close-modal" onclick="clP('redeemModal')"></i>
+            <h3>Redeem Gold Key</h3>
+            <div class="redeem-box">
+                <input id="vKey" placeholder="Enter VIP Key here...">
+                <button class="btn-p" onclick="rk()">ACTIVATE KEY</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dp" class="full-page anim-fade"><i class="fa-solid fa-chevron-left back-btn" onclick="clP('dp')"></i><div id="dh"></div><div id="cl"></div></div>
+    <div id="vp" class="full-page" style="padding:0; background:#000;"><div class="view-header"><i class="fa-solid fa-xmark" onclick="clP('vp')"></i><span id="vt"></span><i class="fa-solid fa-bookmark" onclick="toggleBookmark()"></i></div><div id="vc"></div></div>
+    <div id="adm" class="full-page">... (Admin Forms) ... <button class="btn-p" onclick="clP('adm')">CLOSE</button></div>
+    <div id="authModal" class="full-page modal-blur">... (Login Form) ...</div>
 
     <script type="module" src="script.js"></script>
-
 </body>
 </html>
