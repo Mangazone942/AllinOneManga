@@ -3,52 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>M-ZONE | PREMIUM GOLD</title>
+    <title>M-ZONE | PREMIUM GOLD EDITION</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        :root { --p: #FFD700; --b: #050505; --c: #121212; --g: rgba(255, 215, 0, 0.2); --glass: rgba(255, 255, 255, 0.05); }
+        :root {
+            --p: #FFD700; /* Gold */
+            --b: #050505; /* Black */
+            --c: #121212; /* Card Gray */
+            --g: rgba(255, 215, 0, 0.25);
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--b); color: #fff; padding-top: 75px; overflow-x: hidden; }
+        body { background: var(--b); color: #fff; padding-top: 80px; overflow-x: hidden; }
 
-        /* --- UI COMPONENTS (Header, Search, Grid) --- */
-        header { position: fixed; top: 0; width: 100%; height: 75px; background: rgba(5, 5, 5, 0.9); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--g); z-index: 1000; backdrop-filter: blur(15px); }
-        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 22px; }
-        .premium-coin { background: #111; border: 1px solid var(--p); padding: 6px 14px; border-radius: 50px; color: var(--p); font-weight: 800; display: flex; align-items: center; gap: 8px; font-size: 14px; }
-        
-        .search-area { padding: 10px 15px; }
-        .search-bar { background: var(--c); border: 1px solid rgba(255,255,255,0.08); height: 50px; border-radius: 15px; display: flex; align-items: center; padding: 0 18px; }
-        .search-bar input { background: none; border: none; color: #fff; width: 100%; padding-left: 12px; outline: none; }
+        /* --- Header & Premium Navigation --- */
+        header {
+            position: fixed; top: 0; width: 100%; height: 75px; background: rgba(5, 5, 5, 0.9);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; border-bottom: 1px solid var(--g); z-index: 1000; backdrop-filter: blur(20px);
+        }
+        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 24px; letter-spacing: 2px; text-shadow: 0 0 10px var(--g); }
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .card { background: var(--c); border-radius: 15px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.05); }
-        .card img { width: 100%; height: 230px; object-fit: cover; }
-        .card-info { padding: 10px; background: linear-gradient(transparent, #000); position: absolute; bottom: 0; width: 100%; text-align: center; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .premium-coin {
+            background: linear-gradient(135deg, #222, #000); border: 1.5px solid var(--p);
+            padding: 7px 15px; border-radius: 50px; color: var(--p); font-weight: 800;
+            display: flex; align-items: center; gap: 10px; font-size: 14px; box-shadow: 0 0 15px var(--g);
+        }
 
-        /* --- PAGES --- */
-        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 2000; overflow-y: auto; }
-        .detail-banner { width: 100%; height: 350px; position: relative; }
+        /* --- Search System --- */
+        .search-container { padding: 15px; }
+        .search-bar-premium {
+            background: var(--c); border: 1px solid var(--glass-border);
+            height: 55px; border-radius: 18px; display: flex; align-items: center; padding: 0 20px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .search-bar-premium:focus-within { border-color: var(--p); box-shadow: 0 0 20px var(--g); }
+        .search-bar-premium input {
+            background: none; border: none; color: #fff; width: 100%; padding-left: 15px;
+            outline: none; font-size: 15px; font-weight: 500;
+        }
+        .search-bar-premium i { color: var(--p); font-size: 20px; }
+
+        /* --- Main Grid --- */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; }
+        .card { 
+            background: var(--c); border-radius: 20px; overflow: hidden; 
+            border: 1px solid var(--glass-border); position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s;
+        }
+        .card:active { transform: scale(0.95); }
+        .card img { width: 100%; height: 260px; object-fit: cover; }
+        .card-info { 
+            padding: 20px 10px; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.95) 80%); 
+            position: absolute; bottom: 0; width: 100%; text-align: center; 
+        }
+        .card-info h4 { font-size: 14px; font-weight: 700; color: var(--p); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* --- Premium Cover View (Detail Page) --- */
+        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 2000; overflow-y: auto; scroll-behavior: smooth; }
+        .detail-banner { width: 100%; height: 450px; position: relative; }
         .detail-banner img { width: 100%; height: 100%; object-fit: cover; }
-        .banner-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, var(--b)); }
-        .float-btn { position: fixed; top: 15px; left: 15px; width: 40px; height: 40px; background: rgba(0,0,0,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2100; border: 1px solid var(--p); color: var(--p); }
-        .detail-content { padding: 0 20px; margin-top: -80px; position: relative; text-align: center; }
-        .poster-main { width: 130px; border-radius: 12px; border: 3px solid var(--b); box-shadow: 0 10px 30px #000; }
+        .banner-overlay { 
+            position: absolute; inset: 0; 
+            background: linear-gradient(to bottom, transparent 20%, var(--b) 95%); 
+        }
         
-        .btn-action { width: 100%; background: var(--p); color: #000; height: 50px; border-radius: 12px; font-weight: 800; margin: 20px 0; border: none; }
-        .btn-action.active { background: #222; color: var(--p); border: 1px solid var(--p); }
+        .float-back { 
+            position: fixed; top: 20px; left: 20px; width: 45px; height: 45px; 
+            background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; 
+            align-items: center; justify-content: center; backdrop-filter: blur(10px); 
+            z-index: 2100; border: 1px solid var(--p); color: var(--p); 
+        }
 
-        .chapter-item { background: var(--c); padding: 18px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; border-left: 4px solid var(--p); }
+        .detail-content { padding: 0 25px; margin-top: -140px; position: relative; text-align: center; }
+        .poster-main { 
+            width: 160px; height: 230px; border-radius: 20px; object-fit: cover;
+            border: 5px solid var(--b); box-shadow: 0 20px 50px #000; 
+        }
+        
+        /* Action Buttons */
+        .action-row { display: flex; gap: 15px; margin: 30px 0; }
+        .btn-lib { 
+            flex: 1; background: var(--p); color: #000; height: 55px; border-radius: 15px; 
+            border: none; font-weight: 800; font-size: 15px; display: flex; 
+            align-items: center; justify-content: center; gap: 12px; box-shadow: 0 8px 20px var(--g);
+        }
+        .btn-lib.active { background: #222; color: var(--p); border: 1.5px solid var(--p); }
+        .btn-share { 
+            width: 55px; height: 55px; background: var(--glass); border-radius: 15px; 
+            display: flex; align-items: center; justify-content: center; 
+            border: 1px solid var(--glass-border); color: #fff; font-size: 20px;
+        }
 
-        /* --- ADMIN UI --- */
-        .admin-item { background: #1a1a1a; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .btn-del { background: #ff4444; color: #fff; border: none; padding: 8px 15px; border-radius: 5px; font-size: 12px; }
+        /* Glassmorphism Stats */
+        .stats-glass { 
+            background: var(--glass); border: 1px solid var(--glass-border); 
+            padding: 20px; border-radius: 25px; margin-top: 25px; 
+            display: flex; justify-content: space-around; backdrop-filter: blur(15px); 
+        }
+        .stat-item { text-align: center; }
+        .stat-item span { display: block; font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+        .stat-item b { color: var(--p); font-size: 18px; font-family: 'Orbitron'; }
 
-        /* --- SIDEBAR --- */
-        .sidebar { position: fixed; top: 0; right: -300px; width: 280px; height: 100%; background: #080808; z-index: 3000; padding: 40px 20px; transition: 0.3s; border-left: 1px solid var(--g); }
+        /* Chapter List */
+        .chapter-box { 
+            background: var(--c); padding: 22px; border-radius: 18px; 
+            margin-bottom: 15px; display: flex; justify-content: space-between; 
+            align-items: center; border-left: 6px solid var(--p);
+            transition: 0.3s;
+        }
+        .chapter-box:active { background: var(--g); transform: translateX(10px); }
+
+        /* --- Viewer Page --- */
+        #viewer-content img { width: 100%; display: block; margin-bottom: 5px; }
+
+        /* --- Sidebar & Admin --- */
+        .sidebar { 
+            position: fixed; top: 0; right: -320px; width: 310px; height: 100%; 
+            background: #080808; z-index: 3000; padding: 50px 25px; 
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); border-left: 1px solid var(--g); 
+        }
         .sidebar.active { right: 0; }
-        .menu-item { padding: 15px; border-radius: 10px; margin-bottom: 10px; background: var(--glass); display: flex; align-items: center; gap: 15px; }
+        .menu-item { 
+            padding: 18px; border-radius: 15px; margin-bottom: 15px; 
+            background: var(--glass); display: flex; align-items: center; 
+            gap: 18px; font-weight: 600; font-size: 16px; border: 1px solid transparent;
+        }
+        .menu-item:active { border-color: var(--p); background: var(--g); }
+        .menu-item i { color: var(--p); font-size: 20px; }
+
+        .adm-card { 
+            background: #111; padding: 20px; border-radius: 15px; 
+            margin-bottom: 12px; display: flex; justify-content: space-between; 
+            align-items: center; border: 1px solid var(--glass-border); 
+        }
     </style>
 </head>
 <body>
@@ -57,172 +152,210 @@
         <div class="logo">M-ZONE</div>
         <div class="header-right">
             <div class="premium-coin"><i class="fa-solid fa-crown"></i> <span id="uCoins">0</span></div>
-            <i class="fa-solid fa-bars-staggered" style="font-size: 24px; color: var(--p);" onclick="toggleSidebar()"></i>
+            <i class="fa-solid fa-bars-staggered" style="font-size: 26px; color: var(--p); cursor: pointer;" onclick="tgS()"></i>
         </div>
     </header>
 
-    <div class="search-area">
-        <div class="search-bar">
-            <i class="fa-solid fa-magnifying-glass" style="color:var(--p)"></i>
-            <input id="userSearch" placeholder="Search Manga..." oninput="UserLogic.search()">
+    <div class="search-container">
+        <div class="search-bar-premium">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input id="userSearch" placeholder="Search Manga or Anime..." oninput="doSearch()">
         </div>
     </div>
 
-    <h3 id="listHeading" style="padding: 10px 20px; color: var(--p); font-size: 14px;">POPULAR UPDATES</h3>
+    <h3 id="st" style="padding: 10px 25px; color: var(--p); font-size: 14px; letter-spacing: 2px; text-transform: uppercase;">🔥 Popular Updates</h3>
     <div id="mainGrid" class="grid"></div>
 
-    <div id="detailPage" class="full-page">
-        <div class="float-btn" onclick="closePage('detailPage')"><i class="fa-solid fa-arrow-left"></i></div>
-        <div class="detail-banner"><img id="dtBanner" src=""><div class="banner-overlay"></div></div>
+    <div id="dp" class="full-page">
+        <div class="float-back" onclick="clP('dp')"><i class="fa-solid fa-arrow-left"></i></div>
+        <div class="detail-banner"><img id="dt-banner" src=""><div class="banner-overlay"></div></div>
+        
         <div class="detail-content">
-            <img id="dtPoster" class="poster-main" src="">
-            <h2 id="dtTitle"></h2>
-            <button id="libBtn" class="btn-action" onclick="UserLogic.toggleLib()"></button>
-            <div id="chapterList" style="text-align: left; margin-top: 20px;"></div>
+            <img id="dt-poster" class="poster-main" src="">
+            <h2 id="dt-name" style="margin-top:20px; font-size:26px; font-weight:800; letter-spacing:1px;"></h2>
+            
+            <div class="action-row">
+                <button id="libBtn" class="btn-lib" onclick="toggleLib()">
+                    <i class="fa-solid fa-heart"></i> ADD TO LIBRARY
+                </button>
+                <div class="btn-share" onclick="copyLink()"><i class="fa-solid fa-share-nodes"></i></div>
+            </div>
+
+            <div class="stats-glass">
+                <div class="stat-item"><span>Rating</span><b>9.9</b></div>
+                <div class="stat-item"><span>Status</span><b>Ongoing</b></div>
+                <div class="stat-item"><span>Views</span><b>48K</b></div>
+            </div>
+
+            <h3 style="margin-top:40px; margin-bottom:20px; text-align:left; border-left: 5px solid var(--p); padding-left: 15px; font-family: 'Orbitron'; font-size: 18px;">CHAPTERS</h3>
+            <div id="cl"></div>
         </div>
     </div>
 
-    <div id="viewerPage" class="full-page" style="background:#000;">
-        <div class="float-btn" onclick="closePage('viewerPage')"><i class="fa-solid fa-xmark"></i></div>
-        <div id="viewerContent"></div>
+    <div id="vp" class="full-page" style="background:#000;">
+        <div class="float-back" onclick="clP('vp')"><i class="fa-solid fa-xmark"></i></div>
+        <div id="vc"></div>
     </div>
 
-    <div id="adminPage" class="full-page">
-        <div class="float-btn" onclick="closePage('adminPage')"><i class="fa-solid fa-chevron-left"></i></div>
-        <div style="padding: 70px 20px;">
-            <h2 style="color:var(--p); margin-bottom: 20px;">ADMIN CONTROL</h2>
-            <div id="adminList"></div>
+    <div id="adm" class="full-page">
+        <div class="float-back" onclick="clP('adm')"><i class="fa-solid fa-chevron-left"></i></div>
+        <div style="padding: 90px 25px;">
+            <h2 style="color:var(--p); margin-bottom:30px; font-family:'Orbitron';">STAFF DASHBOARD</h2>
+            <div id="admList"></div>
         </div>
     </div>
 
-    <div class="sidebar" id="sidebar">
-        <h2 style="color:var(--p); margin-bottom: 30px;">PREMIUM</h2>
-        <div class="menu-item" onclick="UserLogic.showHome()"><i class="fa-solid fa-house"></i> Home</div>
-        <div class="menu-item" onclick="UserLogic.showLibrary()"><i class="fa-solid fa-bookmark"></i> My Library</div>
-        <div class="menu-item" onclick="AdminLogic.checkAccess()" style="opacity: 0.3; margin-top: 40px;"><i class="fa-solid fa-lock"></i> Admin Mode</div>
+    <div class="sidebar" id="sb">
+        <h2 style="color:var(--p); margin-bottom:40px; font-family:'Orbitron'; letter-spacing:2px;">PREMIUM</h2>
+        <div class="menu-item" onclick="goHome()"><i class="fa-solid fa-house"></i> Home</div>
+        <div class="menu-item" onclick="showLib()"><i class="fa-solid fa-bookmark"></i> My Library</div>
+        <div class="menu-item" onclick="adminAccess()" style="opacity:0.3; margin-top:60px;"><i class="fa-solid fa-user-shield"></i> Staff Login</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs",
-            authDomain: "mangabyax.firebaseapp.com",
-            projectId: "mangabyax",
-            storageBucket: "mangabyax.firebasestorage.app",
-            appId: "1:974159756281:web:228c23b929f377544b1b28"
+            authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax",
+            storageBucket: "mangabyax.firebasestorage.app", appId: "1:974159756281:web:228c23b929f377544b1b28"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let allData = [];
+        let allData = [], curName = "";
 
-        // --- GLOBAL NAVIGATION ---
-        window.onpopstate = () => {
-            document.querySelectorAll('.full-page').forEach(p => p.style.display = 'none');
-            document.getElementById('sidebar').classList.remove('active');
+        // --- GLOBAL LOGIC ---
+        window.onpopstate = () => { 
+            document.querySelectorAll('.full-page').forEach(p => p.style.display = 'none'); 
+            document.getElementById('sb').classList.remove('active'); 
         };
-        window.closePage = id => history.back();
-        window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('active');
+        window.clP = id => history.back();
+        window.tgS = () => document.getElementById('sb').classList.toggle('active');
 
-        // ================= USER LOGIC =================
-        const UserLogic = {
-            init: async () => {
-                const [m, a] = await Promise.all([getDocs(collection(db, "chapters")), getDocs(collection(db, "animes"))]);
-                allData = [...m.docs.map(d=>({id:d.id, ...d.data(), type:'Manga'})), ...a.docs.map(d=>({id:d.id, ...d.data(), type:'Anime'}))];
-                UserLogic.render(allData);
-            },
-            render: (data, title = "POPULAR UPDATES") => {
-                const grid = document.getElementById('mainGrid');
-                document.getElementById('listHeading').innerText = title;
-                const unique = {};
-                data.forEach(item => { if(!unique[item.seriesName || item.title]) unique[item.seriesName || item.title] = item; });
-                grid.innerHTML = Object.values(unique).map(v => `
-                    <div class="card" onclick="UserLogic.openDetail('${(v.seriesName || v.title).replace(/'/g, "\\'")}')">
-                        <img src="${v.coverUrl || v.cover}" loading="lazy">
-                        <div class="card-info"><h4>${v.seriesName || v.title}</h4></div>
-                    </div>
-                `).join('');
-            },
-            openDetail: (name) => {
-                window.currentSeries = name;
-                const series = allData.filter(d => (d.seriesName || d.title) === name);
-                document.getElementById('dtBanner').src = series[0].coverUrl || series[0].cover;
-                document.getElementById('dtPoster').src = series[0].coverUrl || series[0].cover;
-                document.getElementById('dtTitle').innerText = name;
-                
-                // Library Button Update
-                const lib = JSON.parse(localStorage.getItem('m_lib') || "[]");
-                const btn = document.getElementById('libBtn');
-                btn.innerHTML = lib.includes(name) ? '<i class="fa-solid fa-check"></i> IN LIBRARY' : '<i class="fa-solid fa-heart"></i> ADD TO LIBRARY';
-                btn.className = lib.includes(name) ? 'btn-action active' : 'btn-action';
+        async function init() {
+            const [m, a] = await Promise.all([getDocs(collection(db, "chapters")), getDocs(collection(db, "animes"))]);
+            allData = [...m.docs.map(d=>({id:d.id, ...d.data(), type:'Manga'})), ...a.docs.map(d=>({id:d.id, ...d.data(), type:'Anime'}))];
+            render(allData);
+        }
 
-                document.getElementById('chapterList').innerHTML = series.map(ch => `
-                    <div class="chapter-item" onclick="UserLogic.read('${ch.id}')">
-                        <span>Chapter ${ch.chapterNo || ch.episodeNo || '1'}</span>
-                        <i class="fa-solid fa-play"></i>
-                    </div>
-                `).join('');
-                UserLogic.nav('detailPage');
-            },
-            toggleLib: () => {
-                let lib = JSON.parse(localStorage.getItem('m_lib') || "[]");
-                if(lib.includes(currentSeries)) lib = lib.filter(i => i !== currentSeries);
-                else lib.push(currentSeries);
-                localStorage.setItem('m_lib', JSON.stringify(lib));
-                UserLogic.openDetail(currentSeries);
-            },
-            read: (id) => {
-                const item = allData.find(d => d.id === id);
-                document.getElementById('viewerContent').innerHTML = item.type === 'Manga' ? 
-                    item.pages.map(p => `<img src="${p}" style="width:100%; display:block;">`).join('') :
-                    `<iframe src="${item.videoUrl}" style="width:100%; height:300px; border:none;" allowfullscreen></iframe>`;
-                UserLogic.nav('viewerPage');
-            },
-            search: () => {
-                const q = document.getElementById('userSearch').value.toLowerCase();
-                UserLogic.render(allData.filter(d => (d.seriesName || d.title).toLowerCase().includes(q)));
-            },
-            showLibrary: () => {
-                const lib = JSON.parse(localStorage.getItem('m_lib') || "[]");
-                UserLogic.render(allData.filter(d => lib.includes(d.seriesName || d.title)), "MY LIBRARY");
-                toggleSidebar();
-            },
-            showHome: () => { UserLogic.render(allData); toggleSidebar(); },
-            nav: (id) => { document.getElementById(id).style.display = 'block'; history.pushState({p: id}, "", "#"+id); }
+        window.render = (data, title = "🔥 Popular Updates") => {
+            const grid = document.getElementById('mainGrid');
+            document.getElementById('st').innerText = title;
+            const unique = {};
+            data.forEach(i => { if(!unique[i.seriesName || i.title]) unique[i.seriesName || i.title] = i; });
+            
+            grid.innerHTML = Object.values(unique).map(v => `
+                <div class="card" onclick="openDetail('${(v.seriesName || v.title).replace(/'/g, "\\'")}')">
+                    <img src="${v.coverUrl || v.cover}" loading="lazy">
+                    <div class="card-info"><h4>${v.seriesName || v.title}</h4></div>
+                </div>
+            `).join('');
         };
 
-        // ================= ADMIN LOGIC =================
-        const AdminLogic = {
-            checkAccess: () => {
-                if(prompt("Admin Access Code:") === "Admin@2026") AdminLogic.open();
-                else alert("Access Denied!");
-            },
-            open: () => {
-                const list = document.getElementById('adminList');
-                list.innerHTML = allData.map(i => `
-                    <div class="admin-item">
-                        <span style="font-size:13px; color:#ccc;">${i.seriesName || i.title} (Ch-${i.chapterNo || '1'})</span>
-                        <button class="btn-del" onclick="AdminLogic.delete('${i.id}', '${i.type}')">DELETE</button>
+        window.openDetail = (name) => {
+            curName = name;
+            const series = allData.filter(d => (d.seriesName || d.title) === name);
+            const master = series[0];
+            
+            document.getElementById('dt-banner').src = master.coverUrl || master.cover;
+            document.getElementById('dt-poster').src = master.coverUrl || master.cover;
+            document.getElementById('dt-name').innerText = name;
+            
+            // Library Button Logic
+            const lib = JSON.parse(localStorage.getItem('m_lib') || "[]");
+            const btn = document.getElementById('libBtn');
+            const isFav = lib.includes(name);
+            btn.innerHTML = isFav ? '<i class="fa-solid fa-check"></i> IN LIBRARY' : '<i class="fa-solid fa-heart"></i> ADD TO LIBRARY';
+            btn.className = isFav ? 'btn-lib active' : 'btn-lib';
+
+            // Chapters Logic
+            document.getElementById('cl').innerHTML = series.sort((a,b) => (a.chapterNo||0) - (b.chapterNo||0)).map(ch => `
+                <div class="chapter-box" onclick="read('${ch.id}')">
+                    <div>
+                        <b style="display:block; font-size:15px;">Chapter ${ch.chapterNo || ch.episodeNo || '1'}</b>
+                        <small style="color:#666;">Free Release</small>
+                    </div>
+                    <i class="fa-solid fa-circle-play" style="color:var(--p); font-size:22px;"></i>
+                </div>
+            `).join('');
+
+            document.getElementById('dp').style.display = 'block';
+            history.pushState({p:'dp'}, "", "#dp");
+        };
+
+        window.toggleLib = () => {
+            let lib = JSON.parse(localStorage.getItem('m_lib') || "[]");
+            if(lib.includes(curName)) {
+                lib = lib.filter(i => i !== curName);
+                alert("Removed from Library");
+            } else {
+                lib.push(curName);
+                alert("Added to Library");
+            }
+            localStorage.setItem('m_lib', JSON.stringify(lib));
+            openDetail(curName);
+        };
+
+        window.read = (id) => {
+            const item = allData.find(d => d.id === id);
+            const container = document.getElementById('vc');
+            if(item.type === 'Manga') {
+                container.innerHTML = item.pages.map(p => `<img src="${p}" loading="lazy" style="width:100%;">`).join('');
+            } else {
+                container.innerHTML = `<iframe src="${item.videoUrl}" style="width:100%; height:350px; border:none;" allowfullscreen></iframe>`;
+            }
+            document.getElementById('vp').style.display = 'block';
+            history.pushState({p:'vp'}, "", "#vp");
+        };
+
+        window.doSearch = () => {
+            const q = document.getElementById('userSearch').value.toLowerCase();
+            const res = allData.filter(d => (d.seriesName || d.title).toLowerCase().includes(q));
+            render(res, q ? `Search results for: ${q}` : "🔥 Popular Updates");
+        };
+
+        window.showLib = () => {
+            const lib = JSON.parse(localStorage.getItem('m_lib') || "[]");
+            const res = allData.filter(d => lib.includes(d.seriesName || d.title));
+            render(res, "📚 My Library");
+            tgS();
+        };
+
+        window.goHome = () => { render(allData); tgS(); };
+
+        window.copyLink = () => {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Manga Link Copied!");
+        };
+
+        // --- ADMIN ACCESS ---
+        window.adminAccess = () => {
+            if(prompt("Staff Password:") === "Admin@2026") {
+                document.getElementById('admList').innerHTML = allData.map(i => `
+                    <div class="adm-card">
+                        <div>
+                            <b style="font-size:13px; color:var(--p);">${i.seriesName || i.title}</b>
+                            <div style="font-size:11px; color:#777;">ID: ${i.id} | Type: ${i.type}</div>
+                        </div>
+                        <i class="fa-solid fa-trash-can" style="color:#ff4444; font-size:18px;" onclick="del('${i.id}','${i.type}')"></i>
                     </div>
                 `).join('');
-                document.getElementById('adminPage').style.display = 'block';
-                history.pushState({p: 'admin'}, "", "#admin");
-                toggleSidebar();
-            },
-            delete: async (id, type) => {
-                if(confirm("Are you sure you want to delete this?")) {
-                    await deleteDoc(doc(db, type === 'Manga' ? "chapters" : "animes", id));
-                    alert("Deleted Successfully!");
-                    location.reload();
-                }
+                document.getElementById('adm').style.display = 'block';
+                history.pushState({p:'adm'}, "", "#adm");
+                tgS();
             }
         };
 
-        window.UserLogic = UserLogic;
-        window.AdminLogic = AdminLogic;
-        UserLogic.init();
+        window.del = async (id, type) => {
+            if(confirm("Permanently delete this content?")) {
+                await deleteDoc(doc(db, type === 'Manga' ? "chapters" : "animes", id));
+                location.reload();
+            }
+        };
+
+        init();
     </script>
 </body>
 </html>
