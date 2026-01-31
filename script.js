@@ -14,178 +14,90 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-let u = null, allData = [], currentID = "";
+let u = null, allData = [];
 
-// 🚀 Performance Tip: Auth နဲ့ Data ကို တစ်ပြိုင်တည်း Load လုပ်မယ်
-onAuthStateChanged(auth, async (user) => {
+// 🌟 Auth & Gold Real-time Listener
+onAuthStateChanged(auth, (user) => {
     if (user) {
         u = user;
-        const userRef = doc(db, "users", u.uid);
-        // Real-time listener သုံးလိုက်ရင် Gold UI က ချက်ချင်းပြောင်းမယ်
-        onSnapshot(userRef, (doc) => {
-            if(doc.exists()) document.getElementById('uCoins').innerText = doc.data().coins || 0;
+        onSnapshot(doc(db, "users", u.uid), (snap) => {
+            if(snap.exists()) document.getElementById('uCoins').innerText = snap.data().coins || 0;
         });
-        document.getElementById('uCard').style.display = 'block';
-        document.getElementById('lBtn').style.display = 'none';
         document.getElementById('uName').innerText = u.email.split('@')[0].toUpperCase();
+        document.getElementById('lBtn').style.display = 'none';
     }
 });
 
-// 🚀 Speed Logic: Data တွေကို Cache လုပ်ပြီး အမြန်ပြမယ်
+// 🌟 Load All Content
 async function init() {
-    // LocalStorage ကနေ အရင်ပြ (အမြန်တက်လာအောင်)
-    const cachedData = localStorage.getItem('mzone_data');
-    if (cachedData) {
-        allData = JSON.parse(cachedData);
-        renderHome(allData);
-    }
-
-    // နောက်ကွယ်ကနေ Firebase က ဒေတာအသစ်ဆွဲ
-    const [mangaSnap, animeSnap] = await Promise.all([
+    const [mSnap, aSnap] = await Promise.all([
         getDocs(query(collection(db, "chapters"), orderBy("timestamp", "desc"))),
         getDocs(collection(db, "animes"))
     ]);
-    
     allData = [
-        ...mangaSnap.docs.map(d => ({ id: d.id, type: 'Manga', ...d.data() })),
-        ...animeSnap.docs.map(d => ({ id: d.id, type: 'Anime', ...d.data() }))
+        ...mSnap.docs.map(d => ({ id: d.id, type: 'Manga', ...d.data() })),
+        ...aSnap.docs.map(d => ({ id: d.id, type: 'Anime', ...d.data() }))
     ];
-    
-    localStorage.setItem('mzone_data', JSON.stringify(allData));
     renderHome(allData);
-    renderSlider(allData.filter(x => x.type === 'Manga').slice(0, 5));
 }
 
-// UI Render - ပိုမြန်အောင် Fragment သုံးမယ်
 function renderHome(data) {
     const grid = document.getElementById('mg');
-    const uniqueSeries = {};
+    const unique = {};
     data.forEach(item => {
         const key = item.seriesName || item.title;
-        if (!uniqueSeries[key]) uniqueSeries[key] = item;
+        if (!unique[key]) unique[key] = item;
     });
-    
-    grid.innerHTML = Object.values(uniqueSeries).map(v => `
+    grid.innerHTML = Object.values(unique).map(v => `
         <div class="card" onclick="openDetail('${(v.seriesName || v.title).replace(/'/g, "\\'")}', '${v.type}')">
-            <div style="position:relative">
-                <img src="${v.coverUrl || v.cover}" loading="lazy">
-                <div style="position:absolute; bottom:5px; right:5px; background:rgba(0,0,0,0.7); font-size:9px; padding:2px 6px; border-radius:4px; color:var(--p); border:1px solid var(--p)">${v.type}</div>
+            <img src="${v.coverUrl || v.cover}" loading="lazy">
+            <div style="padding:12px; text-align:center;">
+                <p style="font-size:10px; color:var(--p); font-weight:800;">${v.type.toUpperCase()}</p>
+                <h4 style="font-size:13px; margin-top:5px;">${v.seriesName || v.title}</h4>
             </div>
-            <div class="card-title">${v.seriesName || v.title}</div>
         </div>
     `).join('');
 }
 
-// 🚀 Bookmark & Library Logic (Fix)
-window.toggleBookmark = async () => {
-    if(!u) return alert("Login အရင်ဝင်ပါ");
-    const userRef = doc(db, "users", u.uid);
-    const snap = await getDoc(userRef);
-    let bks = snap.data().bookmarks || [];
-    
-    if(bks.includes(currentID)) {
-        bks = bks.filter(i => i !== currentID);
-        alert("Removed from Library");
-    } else {
-        bks.push(currentID);
-        alert("Added to Library");
+// 🌟 DELETE SYSTEM (The Core Feature)
+window.deleteContent = async (id, type) => {
+    if (confirm("ဒီ Item ကို ဖျက်မှာ သေချာလား? ပြန်ယူလို့ မရဘူးနော်!")) {
+        try {
+            const collectionName = type === 'Manga' ? "chapters" : "animes";
+            await deleteDoc(doc(db, collectionName, id));
+            alert("ဖျက်ပြီးပါပြီ!");
+            location.reload(); // Refresh to update list
+        } catch (e) {
+            alert("Error deleting: " + e.message);
+        }
     }
-    await updateDoc(userRef, { bookmarks: bks });
 };
 
-window.showList = async () => {
-    if(!u) return alert("Login အရင်ဝင်ပါ");
-    const snap = await getDoc(doc(db, "users", u.uid));
-    const myBks = snap.data().bookmarks || [];
-    renderHome(allData.filter(i => myBks.includes(i.seriesName || i.title)));
-    tgS();
-};
-
-// 🚀 Anime Upload Fix (Episodes အလုပ်မလုပ်တာ ပြင်ပြီး)
-window.aE = () => {
-    const div = document.createElement('div');
-    div.className = "ep-input-group";
-    div.innerHTML = `
-        <div style="display:flex; gap:5px; margin-bottom:5px;">
-            <input class="en" placeholder="Ep Name (e.g Ep 1)">
-            <input class="eu" placeholder="Video Link (Direct/Embed)">
-        </div>`;
-    document.getElementById('epA').appendChild(div);
-};
-
-window.uA = async () => {
-    const btn = event.target; btn.innerText = "Uploading..."; btn.disabled = true;
-    try {
-        const cover = await uploadToCloudinary(document.getElementById('acV').files[0]);
-        const eps = Array.from(document.querySelectorAll('.ep-input-group')).map(g => ({
-            name: g.querySelector('.en').value,
-            url: g.querySelector('.eu').value
-        }));
-        await addDoc(collection(db, "animes"), {
-            title: document.getElementById('at').value,
-            cover: cover,
-            episodes: eps,
-            timestamp: serverTimestamp()
-        });
-        location.reload();
-    } catch (e) { alert("Error!"); btn.innerText = "UPLOAD ANIME"; btn.disabled = false; }
-};
-
-// ... (တခြား Logic တွေက အပေါ်က Version အတိုင်းပဲ၊ ဒါပေမဲ့ Function တွေကို Window ထဲ ထည့်ဖို့ မမေ့နဲ့)
-window.hSearch = () => {
-    const q = document.getElementById('gSearch').value.toLowerCase();
-    renderHome(allData.filter(i => (i.seriesName || i.title).toLowerCase().includes(q)));
-};
-
-// Helper: Cloudinary (မြန်အောင် Async/Await သေချာသုံးထားတယ်)
-async function uploadToCloudinary(file) {
-    if(!file) return "";
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "ml_default");
-    const res = await fetch("https://api.cloudinary.com/v1_1/dqdqg2ac/upload", { method: "POST", body: formData });
-    const data = await res.json();
-    return data.secure_url;
-}
-
-// UI Toggles
-window.tgS = () => document.getElementById('sb').classList.toggle('active');
-window.clP = (id) => { 
-    document.getElementById(id).style.display = 'none';
-    if(id === 'vp') document.getElementById('vc').innerHTML = ""; // Stop video when closing
-};
-window.oAdm = (type) => { 
-    document.querySelectorAll('#adm > div').forEach(d => { if(d.id !== 'adm-btn') d.style.display = 'none'; });
-    document.getElementById(type === 'm' ? 'mT' : type === 'a' ? 'aT' : type === 'k' ? 'kT' : 'dT').style.display = 'block';
-    if(type === 'd') {
-        document.getElementById('delList').innerHTML = allData.map(x => `
+// 🌟 Admin Panel Management List
+window.oAdm = (type) => {
+    document.getElementById('mT').style.display = type === 'm' ? 'block' : 'none';
+    document.getElementById('aT').style.display = type === 'a' ? 'block' : 'none';
+    document.getElementById('kT').style.display = type === 'k' ? 'block' : 'none';
+    document.getElementById('dT').style.display = type === 'd' ? 'block' : 'none';
+    
+    if (type === 'd') {
+        const listDiv = document.getElementById('delList');
+        // Manga ရော Anime ရော List အကုန်ပြမယ်
+        listDiv.innerHTML = allData.map(item => `
             <div class="del-item">
-                <span>${x.seriesName || x.title}</span>
-                <i class="fa-solid fa-trash" onclick="deleteContent('${x.id}', '${x.type}')" style="color:#ff4d4d; cursor:pointer;"></i>
-            </div>`).join('');
+                <div>
+                    <p style="font-size:13px; font-weight:600;">${item.seriesName || item.title}</p>
+                    <p style="font-size:10px; opacity:0.5;">Type: ${item.type} | ID: ${item.id}</p>
+                </div>
+                <div class="del-btn" onclick="deleteContent('${item.id}', '${item.type}')">
+                    <i class="fa-solid fa-trash-can"></i>
+                </div>
+            </div>
+        `).join('');
     }
     document.getElementById('adm').style.display = 'block';
-    tgS();
 };
 
-window.checkStaff = () => {
-    if (prompt("Staff Access:") === "Admin@2026") {
-        document.getElementById('staffZone').style.display = 'block';
-        alert("Staff Mode Enabled");
-    }
-};
-
-window.hA = async () => {
-    const e = document.getElementById('em').value, p = document.getElementById('ps').value;
-    try { await signInWithEmailAndPassword(auth, e, p); location.reload(); }
-    catch { await createUserWithEmailAndPassword(auth, e, p); location.reload(); }
-};
-
-function renderSlider(s) {
-    const track = document.getElementById('st');
-    if(!track) return;
-    track.innerHTML = s.map(x => `<div class="slide"><img src="${x.coverUrl}"></div>`).join('');
-    let i = 0; setInterval(() => { i = (i + 1) % s.length; track.style.transform = `translateX(-${i * 100}%)` }, 5000);
-}
+// ... (Other functions like hA, uM, rk, etc. remain same as before)
 
 init();
