@@ -3,316 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>M-ZONE | ULTIMATE PRO MAX</title>
+    <title>M-ZONE | SUPREME EDITION</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Plus+Jakarta+Sans:wght@300;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-        /* ========================================
-           ULTIMATE CSS FRAMEWORK (LINE 20 - 450)
-           ========================================
-        */
+        /* ============================================================
+           PREMIUM CSS STYLING (LINE 20 - 500)
+           ============================================================ */
         :root {
-            --p: #FFD700; /* Gold Premium */
-            --b: #050505; /* Pure Black */
-            --c: #121212; /* Deep Grey Card */
-            --border: rgba(255, 215, 0, 0.15);
-            --glass: rgba(255, 255, 255, 0.03);
-            --text-main: #FFFFFF;
-            --text-sec: #A0A0A0;
-            --danger: #FF4757;
-            --success: #2ED573;
+            --gold: #FFD700; --bg: #050505; --card: #121212;
+            --text: #ffffff; --text-dim: #a0a0a0; --border: rgba(255, 215, 0, 0.2);
+            --accent: #ff3e3e; --safe-area: 20px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: var(--b); color: var(--text-main); 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            overflow-x: hidden; scroll-behavior: smooth;
-        }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
 
-        /* CUSTOM SCROLLBAR */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--b); }
-        ::-webkit-scrollbar-thumb { background: var(--p); border-radius: 10px; }
-
-        /* HEADER UI */
+        /* HEADER */
         header {
             position: fixed; top: 0; width: 100%; height: 75px; 
-            background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(25px);
+            background: rgba(5,5,5,0.8); backdrop-filter: blur(20px);
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 20px; border-bottom: 1px solid var(--border);
-            z-index: 1000; transition: 0.4s;
+            padding: 0 var(--safe-area); border-bottom: 1px solid var(--border); z-index: 1000;
         }
-        .logo { 
-            font-family: 'Orbitron', sans-serif; font-size: 24px; 
-            font-weight: 900; color: var(--p); letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-        }
-        .header-tools { display: flex; gap: 12px; align-items: center; }
-        .coin-pill {
-            background: var(--glass); border: 1.5px solid var(--p);
-            padding: 6px 15px; border-radius: 50px; color: var(--p);
-            font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 8px;
-        }
-        .user-avatar {
-            width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border);
-            overflow: hidden; cursor: pointer;
-        }
-
-        /* GRID SYSTEM */
-        .grid-container { padding: 90px 15px 100px; }
-        .m-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
-        .m-card {
-            background: var(--c); border-radius: 20px; overflow: hidden;
-            border: 1px solid var(--border); position: relative;
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .m-card:hover { transform: translateY(-10px); border-color: var(--p); }
-        .m-card img { width: 100%; height: 250px; object-fit: cover; }
-        .m-card-meta {
-            position: absolute; bottom: 0; width: 100%; padding: 25px 10px 15px;
-            background: linear-gradient(transparent, rgba(0,0,0,0.95) 70%);
-            text-align: center;
-        }
-        .m-card-meta h4 { font-size: 14px; color: var(--p); margin-bottom: 5px; }
-
-        /* FULL PAGE LAYERS */
-        .page-layer {
-            display: none; position: fixed; inset: 0; background: var(--b);
-            z-index: 2000; overflow-y: auto; animation: slideUp 0.4s ease;
-        }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        /* CINEMATIC VIEW */
-        .c-banner { width: 100%; height: 450px; position: relative; }
-        .c-banner img { width: 100%; height: 100%; object-fit: cover; }
-        .c-mask { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, var(--b)); }
-        .c-poster {
-            width: 160px; height: 230px; border-radius: 18px; border: 4px solid var(--b);
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
-            box-shadow: 0 20px 50px #000;
-        }
-
-        .c-content { padding: 20px; text-align: center; margin-top: -20px; }
-        .c-title { font-family: 'Orbitron'; font-size: 28px; margin-bottom: 15px; color: var(--p); }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 24px; color: var(--gold); font-weight: 900; letter-spacing: 2px; }
         
-        .ch-list { margin-top: 30px; text-align: left; }
-        .ch-box {
-            background: var(--c); padding: 20px; border-radius: 15px;
-            margin-bottom: 12px; border: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
+        /* GRID */
+        .grid-content { padding: 95px 15px 100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .m-card { 
+            background: var(--card); border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); position: relative;
+            transition: 0.3s ease;
         }
-        .ch-box:active { background: var(--glass); transform: scale(0.98); }
+        .m-card:active { transform: scale(0.95); }
+        .m-card img { width: 100%; height: 240px; object-fit: cover; }
+        .m-card-info { position: absolute; bottom: 0; width: 100%; padding: 20px 10px; background: linear-gradient(transparent, #000 80%); text-align: center; }
+        .m-card-info h4 { font-size: 13px; color: var(--gold); font-weight: 700; }
 
-        /* AUTH UI */
-        .auth-container { padding: 120px 25px; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 12px; color: var(--text-sec); }
-        input {
-            width: 100%; background: var(--c); border: 1px solid var(--border);
-            padding: 16px; border-radius: 12px; color: #fff; outline: none;
+        /* ULTRA CINEMATIC VIEW */
+        .full-view { display: none; position: fixed; inset: 0; background: var(--bg); z-index: 2000; overflow-y: auto; }
+        .hero-banner { width: 100%; height: 420px; position: relative; }
+        .hero-banner img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 20%, var(--bg) 98%); }
+        .floating-poster { 
+            width: 150px; height: 220px; border-radius: 15px; border: 4px solid var(--bg);
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.8); object-fit: cover;
         }
-        .btn-gold {
-            width: 100%; padding: 16px; background: var(--p); color: #000;
-            border: none; border-radius: 12px; font-weight: 900; cursor: pointer;
-            font-family: 'Orbitron'; margin-top: 10px;
-        }
+        .detail-body { padding: 20px; text-align: center; margin-top: -10px; }
+        .detail-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
 
-        /* BOTTOM BAR */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; height: 75px;
-            background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px);
-            display: grid; grid-template-columns: repeat(4, 1fr);
-            border-top: 1px solid var(--border); z-index: 1000;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            color: var(--text-sec); font-size: 10px; gap: 5px; transition: 0.3s;
-        }
-        .nav-item.active { color: var(--p); }
-        .nav-item i { font-size: 22px; }
+        /* UI BUTTONS */
+        .btn-row { display: flex; gap: 10px; margin: 20px 0; justify-content: center; }
+        .btn-main { background: var(--gold); color: #000; padding: 15px 30px; border-radius: 14px; font-weight: 800; border: none; flex: 1; }
+        .btn-icon { width: 55px; height: 55px; background: rgba(255,255,255,0.05); border-radius: 14px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,0.1); color: #fff; }
 
-        /* ADMIN TABLE */
-        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        .admin-table th { color: var(--p); font-size: 12px; text-align: left; padding: 12px; border-bottom: 2px solid var(--border); }
-        .admin-table td { padding: 15px 12px; font-size: 13px; border-bottom: 1px solid var(--border); }
+        /* CHAPTERS */
+        .ch-box { background: var(--card); padding: 18px; border-radius: 15px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--gold); }
+        .ch-price { background: rgba(255,215,0,0.1); color: var(--gold); padding: 5px 12px; border-radius: 8px; font-weight: 800; font-size: 12px; }
 
-        /* LOADER */
-        #loading-screen {
-            position: fixed; inset: 0; background: var(--b); z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .spinner { width: 50px; height: 50px; border: 3px solid var(--glass); border-top-color: var(--p); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        /* PROFILE */
+        .profile-hero { height: 300px; background: linear-gradient(45deg, #1a1a1a, #000); display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 1px solid var(--border); }
+        .user-avatar { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--gold); margin-bottom: 15px; background: #222; }
+        .avatar-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px; }
+        .avatar-grid img { width: 100%; border-radius: 50%; border: 2px solid transparent; }
+        .avatar-grid img.selected { border-color: var(--gold); }
 
-        /* BACK BUTTON */
-        .back-btn {
-            position: fixed; top: 25px; left: 20px; z-index: 3000;
-            width: 45px; height: 45px; border-radius: 50%; background: rgba(0,0,0,0.5);
-            display: flex; align-items: center; justify-content: center; color: var(--p);
-            border: 1px solid var(--p); backdrop-filter: blur(5px);
-        }
+        /* NAVIGATION BAR */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: #080808; border-top: 1px solid rgba(255,255,255,0.05); display: grid; grid-template-columns: repeat(4, 1fr); z-index: 1000; }
+        .nav-tab { display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-dim); font-size: 10px; gap: 5px; }
+        .nav-tab.active { color: var(--gold); }
+        .nav-tab i { font-size: 20px; }
 
-        /* MANGA READER */
-        .reader-frame img { width: 100%; display: block; margin-bottom: 0; }
+        /* ADMIN FORM */
+        .box { background: var(--card); padding: 25px; border-radius: 20px; border: 1px solid var(--border); margin: 20px 15px; }
+        input, select { width: 100%; padding: 15px; background: #000; border: 1px solid #333; color: #fff; border-radius: 12px; margin-bottom: 15px; outline: none; }
+        .file-input { position: relative; border: 2px dashed #333; padding: 30px; text-align: center; border-radius: 12px; margin-bottom: 15px; color: var(--text-dim); }
+        .file-input input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+        /* READER */
+        .reader img { width: 100%; display: block; }
     </style>
 </head>
 <body>
 
-    <div id="loading-screen">
-        <div class="spinner"></div>
-        <h1 style="font-family: 'Orbitron'; color: var(--p); margin-top: 20px; letter-spacing: 5px;">M-ZONE</h1>
-    </div>
-
     <header>
         <div class="logo">M-ZONE</div>
-        <div class="header-tools">
-            <div class="coin-pill" onclick="nav('topupPage')">
-                <i class="fa-solid fa-coins"></i> <span id="uCoins">0</span>
-            </div>
-            <div class="user-avatar" onclick="checkUserStatus()">
-                <img id="uImg" src="https://api.dicebear.com/7.x/bottts/svg?seed=Guest" style="width:100%;">
-            </div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="color: var(--gold); font-weight: 800; font-size: 14px;"><i class="fa-solid fa-coins"></i> <span id="uCoins">0</span></div>
+            <i class="fa-solid fa-circle-user fa-xl" onclick="openProfile()" style="color: var(--gold);"></i>
         </div>
     </header>
 
-    <div class="grid-container">
-        <div class="m-grid" id="mainGrid"></div>
-    </div>
+    <div id="homePage" class="grid-content"></div>
 
-    <div id="authPage" class="page-layer">
-        <div class="back-btn" onclick="clP()"><i class="fa-solid fa-xmark"></i></div>
-        <div class="auth-container">
-            <div style="text-align: center; margin-bottom: 40px;">
-                <h2 style="font-family: 'Orbitron'; color: var(--p); font-size: 30px;">JOIN M-ZONE</h2>
-                <p style="color: var(--text-sec); font-size: 12px; margin-top: 10px;">Login to access premium chapters</p>
+    <div id="dp" class="full-view">
+        <div style="position:fixed; top:20px; left:20px; z-index:2200; color:var(--gold);" onclick="clP()"><i class="fa-solid fa-chevron-left fa-2xl"></i></div>
+        <div class="hero-banner">
+            <img id="dtBanner" src=""><div class="hero-overlay"></div>
+            <img id="dtPoster" class="floating-poster" src="">
+        </div>
+        <div class="detail-body">
+            <h1 id="dtTitle" class="detail-title"></h1>
+            <div class="btn-row">
+                <button class="btn-main" id="btnAction" onclick="bookmark()"><i class="fa-solid fa-bookmark"></i> BOOKMARK</button>
+                <div class="btn-icon" onclick="share()"><i class="fa-solid fa-share-nodes"></i></div>
             </div>
-            <div class="input-group">
-                <label>EMAIL ADDRESS</label>
-                <input id="authEmail" type="email" placeholder="name@example.com">
-            </div>
-            <div class="input-group">
-                <label>SECURE PASSWORD</label>
-                <input id="authPass" type="password" placeholder="••••••••">
-            </div>
-            <button class="btn-gold" onclick="performAuth()">ACCESS ACCOUNT</button>
+            <div id="chapterList"></div>
         </div>
     </div>
 
-    <div id="profilePage" class="page-layer">
-        <div class="back-btn" onclick="clP()"><i class="fa-solid fa-chevron-left"></i></div>
-        <div style="padding: 100px 20px;">
-            <div style="background: var(--c); border-radius: 25px; padding: 40px 20px; text-align: center; border: 1px solid var(--border);">
-                <img id="dashImg" src="" style="width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--p); margin-bottom: 20px;">
-                <h2 id="dashEmail" style="font-size: 20px;"></h2>
-                <p style="color: var(--p); font-size: 12px; margin-top: 5px;">VERIFIED MEMBER</p>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 30px;">
-                    <div style="background: var(--b); padding: 15px; border-radius: 15px;">
-                        <span style="font-size: 10px; color: var(--text-sec);">BALANCE</span>
-                        <h3 id="dashCoins" style="color: var(--p);">0</h3>
-                    </div>
-                    <div style="background: var(--b); padding: 15px; border-radius: 15px;">
-                        <span style="font-size: 10px; color: var(--text-sec);">RANK</span>
-                        <h3 style="color: var(--p);">GOLD</h3>
-                    </div>
-                </div>
-
-                <button class="btn-gold" style="background: #111; color: var(--danger); border: 1px solid var(--danger); margin-top: 30px;" onclick="logout()">LOGOUT SYSTEM</button>
-            </div>
-
-            <div style="margin-top: 30px;">
-                <div class="ch-box" onclick="secureAdmin()"><span>Staff Portal</span><i class="fa-solid fa-shield-halved"></i></div>
-                <div class="ch-box" onclick="nav('topupPage')"><span>Top-up Wallet</span><i class="fa-solid fa-wallet"></i></div>
-            </div>
+    <div id="profilePage" class="full-view">
+        <div style="position:fixed; top:20px; left:20px; z-index:2200; color:var(--gold);" onclick="clP()"><i class="fa-solid fa-xmark fa-2xl"></i></div>
+        <div class="profile-hero">
+            <img id="currentAvatar" class="user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix">
+            <h2 id="userNameDisplay">Guest User</h2>
+            <p style="color:var(--gold); font-size:12px; margin-top:5px;">PREMIUM MEMBER</p>
         </div>
-    </div>
-
-    <div id="dp" class="page-layer">
-        <div class="back-btn" onclick="clP()"><i class="fa-solid fa-arrow-left"></i></div>
-        <div class="c-banner">
-            <img id="dtBanner" src="">
-            <div class="c-mask"></div>
-            <img id="dtPoster" class="c-poster" src="">
-        </div>
-        <div class="c-content">
-            <h1 id="dtTitle" class="c-title"></h1>
-            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 20px;">
-                <span style="background: var(--glass); padding: 5px 12px; border-radius: 50px; font-size: 10px; color: var(--p); border: 1px solid var(--border);">ACTIVE</span>
-                <span style="background: var(--glass); padding: 5px 12px; border-radius: 50px; font-size: 10px; color: var(--p); border: 1px solid var(--border);">PREMIUM</span>
-            </div>
-            <div id="chapterList" class="ch-list"></div>
-        </div>
-    </div>
-
-    <div id="topupPage" class="page-layer">
-        <div class="back-btn" onclick="clP()"><i class="fa-solid fa-xmark"></i></div>
-        <div style="padding: 100px 20px;">
-            <div style="background: var(--c); padding: 30px; border-radius: 20px; border: 1px solid var(--border);">
-                <h3 style="font-family: 'Orbitron'; color: var(--p); margin-bottom: 20px;">REDEEM GIFT CARD</h3>
-                <input id="giftCode" style="text-align: center; letter-spacing: 5px; font-weight: 900; font-size: 20px;" placeholder="XXXX-XXXX">
-                <button class="btn-gold" onclick="redeemGift()">ACTIVATE CARD</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="adm" class="page-layer">
-        <div class="back-btn" onclick="clP()"><i class="fa-solid fa-chevron-left"></i></div>
-        <div style="padding: 100px 15px;">
-            <h2 style="font-family: 'Orbitron'; color: var(--p); text-align: center; margin-bottom: 30px;">STAFF HUB</h2>
+        <div style="padding: 20px;">
+            <h3 style="margin-bottom: 15px; font-size: 14px; color: var(--gold);">CHOOSE YOUR AVATAR</h3>
+            <div class="avatar-grid" id="avatarGrid"></div>
             
-            <div style="background: var(--c); padding: 25px; border-radius: 20px; border: 1px solid var(--border); margin-bottom: 30px;">
-                <h4 style="margin-bottom: 20px;">UPLOAD CONTENT</h4>
-                <select id="upType" style="width:100%; padding:15px; background:var(--b); color:#fff; border-radius:10px; margin-bottom:15px; border:1px solid var(--border);">
-                    <option value="chapters">MANGA CHAPTER</option>
-                    <option value="animes">ANIME EPISODE</option>
-                </select>
-                <input id="upTitle" placeholder="Series Title" style="margin-bottom:15px;">
-                <input id="upNum" type="number" placeholder="Chapter No" style="margin-bottom:15px;">
-                <input id="upPrice" type="number" placeholder="Price (Coins)" style="margin-bottom:15px;">
-                
-                <div style="border: 2px dashed var(--border); padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 15px; position: relative;">
-                    <p id="covLabel">Cover Image</p>
-                    <input type="file" id="fC" accept="image/*" style="position:absolute; inset:0; opacity:0;" onchange="document.getElementById('covLabel').innerText='Cover Ready'">
-                </div>
-                
-                <div style="border: 2px dashed var(--border); padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 15px; position: relative;">
-                    <p id="pagLabel">Select Pages (Multiple)</p>
-                    <input type="file" id="fP" accept="image/*" multiple style="position:absolute; inset:0; opacity:0;" onchange="document.getElementById('pagLabel').innerText='Pages Ready'">
-                </div>
-
-                <button class="btn-gold" id="upBtn" onclick="handleMegaUpload()">PUBLISH CONTENT</button>
+            <div class="box" id="authBox">
+                <h4 style="margin-bottom: 15px;">LOGIN TO ACCOUNT</h4>
+                <input id="loginEmail" type="email" placeholder="Email Address">
+                <button class="btn-main" style="width: 100%;" onclick="login()">LOGIN NOW</button>
             </div>
+            
+            <button class="btn-main" style="width: 100%; background: #222; color: #fff; margin-top: 10px;" onclick="secureAdmin()">STAFF ACCESS</button>
+        </div>
+    </div>
 
-            <div style="background: var(--c); padding: 25px; border-radius: 20px; border: 1px solid var(--border);">
-                <h4 style="margin-bottom: 20px;">MANAGE DATABASE</h4>
-                <div style="overflow-x: auto;">
-                    <table class="admin-table">
-                        <thead><tr><th>TITLE</th><th>CH</th><th>ACTION</th></tr></thead>
-                        <tbody id="dbList"></tbody>
-                    </table>
-                </div>
+    <div id="adminPanel" class="full-view">
+        <div style="position:fixed; top:20px; left:20px; z-index:2200; color:var(--gold);" onclick="clP()"><i class="fa-solid fa-chevron-left fa-2xl"></i></div>
+        <div style="padding: 80px 10px;">
+            <div class="box">
+                <h2 style="margin-bottom: 20px; color: var(--gold);">UPLOAD CONTENT</h2>
+                <select id="upType"><option value="chapters">Manga</option><option value="animes">Anime</option></select>
+                <input id="upTitle" placeholder="Series Name">
+                <input id="upNum" type="number" placeholder="Chapter No">
+                <input id="upPrice" type="number" placeholder="Coins to Unlock">
+                
+                <div class="file-input"><p id="lC">Select Cover Poster</p><input type="file" id="fC" accept="image/*" onchange="document.getElementById('lC').innerText='Ready: '+this.files[0].name"></div>
+                <div class="file-input"><p id="lP">Select Pages (Multiple)</p><input type="file" id="fP" accept="image/*" multiple onchange="document.getElementById('lP').innerText=this.files.length+' Pages Selected'"></div>
+                
+                <button class="btn-main" id="upBtn" style="width: 100%;" onclick="handleUpload()">START PUBLISHING</button>
             </div>
         </div>
     </div>
 
-    <div id="vp" class="page-layer" style="background: #000;">
-        <div class="back-btn" style="top: 20px; right: 20px; left: auto; border: none; background: rgba(255,255,255,0.1); color: #fff;" onclick="clP()"><i class="fa-solid fa-xmark"></i></div>
-        <div id="readerContent" class="reader-frame"></div>
+    <div id="libPage" class="full-view">
+        <div style="padding: 80px 15px;">
+            <h2 style="margin-bottom: 20px; font-family: 'Orbitron'; color: var(--gold);">MY LIBRARY</h2>
+            <div id="libGrid" class="grid-content" style="padding: 0;"></div>
+        </div>
+    </div>
+
+    <div id="vp" class="full-view" style="background:#000;">
+        <div style="position:fixed; top:20px; right:20px; z-index:2200; color:var(--gold);" onclick="clP()"><i class="fa-solid fa-xmark fa-2xl"></i></div>
+        <div id="vView" class="reader"></div>
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" onclick="location.reload()"><i class="fa-solid fa-house"></i><span>Home</span></div>
-        <div class="nav-item" onclick="alert('Exploration Mode Coming Soon')"><i class="fa-solid fa-compass"></i><span>Explore</span></div>
-        <div class="nav-item" onclick="alert('Bookmarks Saved')"><i class="fa-solid fa-bookmark"></i><span>Library</span></div>
-        <div class="nav-item" onclick="checkUserStatus()"><i class="fa-solid fa-user-ninja"></i><span>Profile</span></div>
+        <div class="nav-tab active" onclick="location.reload()"><i class="fa-solid fa-house"></i><span>Home</span></div>
+        <div class="nav-tab" onclick="nav('libPage')"><i class="fa-solid fa-bookmark"></i><span>Library</span></div>
+        <div class="nav-tab" onclick="alert('Coming Soon')"><i class="fa-solid fa-compass"></i><span>Explore</span></div>
+        <div class="nav-tab" onclick="openProfile()"><i class="fa-solid fa-user"></i><span>Profile</span></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, query, where, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
@@ -325,225 +187,136 @@
         const db = getFirestore(app);
         const storage = getStorage(app);
 
-        // --- GLOBAL STATE ---
-        let DATA_STORE = [];
+        let MASTER_DATA = [];
         let COINS = parseInt(localStorage.getItem('m_coins') || "0");
         let USER = localStorage.getItem('m_user') || null;
+        let AVATAR = localStorage.getItem('m_avatar') || "Felix";
+        let BOOKMARKS = JSON.parse(localStorage.getItem('m_bookmarks') || "[]");
 
-        // --- NAV LOGIC ---
-        window.nav = id => {
-            document.getElementById(id).style.display = 'block';
-            history.pushState({p: id}, "", "#"+id);
-            window.scrollTo(0,0);
-        };
+        // NAVIGATION
+        window.nav = id => { document.getElementById(id).style.display='block'; history.pushState({p:id},"","#"+id); };
         window.clP = () => history.back();
-        window.onpopstate = () => document.querySelectorAll('.page-layer').forEach(p => p.style.display = 'none');
+        window.onpopstate = () => document.querySelectorAll('.full-view').forEach(p=>p.style.display='none');
 
-        // --- AUTH SYSTEM ---
-        window.checkUserStatus = () => {
-            if(!USER) nav('authPage');
-            else {
-                document.getElementById('dashEmail').innerText = USER;
-                document.getElementById('dashCoins').innerText = COINS;
-                document.getElementById('dashImg').src = `https://api.dicebear.com/7.x/bottts/svg?seed=${USER}`;
-                nav('profilePage');
-            }
-        };
-
-        window.performAuth = () => {
-            const email = document.getElementById('authEmail').value;
-            const pass = document.getElementById('authPass').value;
-            if(email && pass.length > 5) {
-                USER = email;
-                localStorage.setItem('m_user', email);
-                alert("Identity Verified. Welcome back!");
-                location.reload();
-            } else alert("Invalid credentials provided.");
-        };
-
-        window.logout = () => { localStorage.removeItem('m_user'); location.reload(); };
-
-        // --- DATA ENGINE ---
-        async function fetchSystemData() {
-            try {
-                const [m, a] = await Promise.all([
-                    getDocs(collection(db, "chapters")),
-                    getDocs(collection(db, "animes"))
-                ]);
-                
-                DATA_STORE = [
-                    ...m.docs.map(d => ({id: d.id, ...d.data(), type: 'Manga'})),
-                    ...a.docs.map(d => ({id: d.id, ...d.data(), type: 'Anime'}))
-                ];
-
-                renderMainGrid();
-                updateUIState();
-                
-                // Hide Loader
-                setTimeout(() => document.getElementById('loading-screen').style.display='none', 800);
-            } catch (err) { console.error(err); alert("Cloud Sync Failed."); }
+        // CORE ENGINE
+        async function init() {
+            const [m, a] = await Promise.all([getDocs(collection(db, "chapters")), getDocs(collection(db, "animes"))]);
+            MASTER_DATA = [...m.docs.map(d=>({id:d.id, ...d.data(), type:'Manga'})), ...a.docs.map(d=>({id:d.id, ...d.data(), type:'Anime'}))];
+            renderGrid('homePage', MASTER_DATA);
+            updateUI();
         }
 
-        function renderMainGrid() {
-            const grid = document.getElementById('mainGrid');
-            const uniqueSeries = {};
-            DATA_STORE.forEach(item => { if(item.seriesName) uniqueSeries[item.seriesName] = item; });
-            
-            grid.innerHTML = Object.values(uniqueSeries).map(v => `
-                <div class="m-card" onclick="openSeriesDetail('${v.seriesName.replace(/'/g, "\\'")}')">
-                    <img src="${v.coverUrl}" loading="lazy">
-                    <div class="m-card-meta">
-                        <h4>${v.seriesName}</h4>
-                        <span style="font-size: 10px; color: #888;">${v.type.toUpperCase()} • RATING 9.8</span>
-                    </div>
+        function renderGrid(target, items) {
+            const grid = document.getElementById(target);
+            const unique = {};
+            items.forEach(i => { if(i.seriesName) unique[i.seriesName] = i; });
+            grid.innerHTML = Object.values(unique).map(v => `
+                <div class="m-card" onclick="openDetail('${v.seriesName.replace(/'/g, "\\'")}')">
+                    <img src="${v.coverUrl}">
+                    <div class="m-card-info"><h4>${v.seriesName}</h4></div>
                 </div>
             `).join('');
         }
 
-        window.openSeriesDetail = (name) => {
-            const seriesItems = DATA_STORE.filter(d => d.seriesName === name);
-            const master = seriesItems[0];
-            
-            document.getElementById('dtBanner').src = master.coverUrl;
-            document.getElementById('dtPoster').src = master.coverUrl;
+        window.openDetail = (name) => {
+            const series = MASTER_DATA.filter(d => d.seriesName === name);
+            document.getElementById('dtBanner').src = series[0].coverUrl;
+            document.getElementById('dtPoster').src = series[0].coverUrl;
             document.getElementById('dtTitle').innerText = name;
             
-            document.getElementById('chapterList').innerHTML = seriesItems.sort((a,b) => a.chapterNo - b.chapterNo).map(ch => `
-                <div class="ch-box" onclick="attemptUnlock('${ch.id}', ${ch.price})">
-                    <div>
-                        <b style="display:block;">EPISODE ${ch.chapterNo}</b>
-                        <small style="color: #666;">English Subtitle • HD</small>
-                    </div>
-                    <div style="background: var(--g); color: var(--p); padding: 5px 12px; border-radius: 8px; font-weight: 800;">
-                        ${ch.price > 0 ? ch.price + ' COINS' : 'FREE'}
-                    </div>
+            document.getElementById('chapterList').innerHTML = series.sort((a,b)=>a.chapterNo-b.chapterNo).map(ch => `
+                <div class="ch-box" onclick="unlock('${ch.id}', ${ch.price})">
+                    <span>Chapter ${ch.chapterNo}</span>
+                    <span class="ch-price">${ch.price} Coins</span>
                 </div>
             `).join('');
             
+            const btn = document.getElementById('btnAction');
+            btn.innerHTML = BOOKMARKS.includes(name) ? '<i class="fa-solid fa-check"></i> BOOKMARKED' : '<i class="fa-solid fa-bookmark"></i> BOOKMARK';
             nav('dp');
         };
 
-        window.attemptUnlock = (id, price) => {
-            if(!USER) return nav('authPage');
-            if(COINS < price) return alert("Balance Insufficient. Please Top-up.");
-
-            if(price > 0) {
-                if(confirm(`Confirm transaction of ${price} coins for this content?`)) {
-                    COINS -= price;
-                    updateUIState();
-                } else return;
-            }
-
-            const item = DATA_STORE.find(d => d.id === id);
-            const viewer = document.getElementById('readerContent');
+        window.unlock = (id, price) => {
+            if(!USER) return openProfile();
+            if(COINS < price) return alert("Not enough coins!");
+            if(price > 0 && confirm(`Use ${price} coins?`)) { COINS -= price; updateUI(); }
             
-            if(item.type === 'Manga') {
-                viewer.innerHTML = item.pages.map(p => `<img src="${p}" loading="lazy">`).join('');
-            } else {
-                viewer.innerHTML = `<div style="padding-top:100px;"><iframe src="${item.videoUrl}" style="width:100%; height:300px; border:none;" allowfullscreen></iframe></div>`;
-            }
+            const item = MASTER_DATA.find(d => d.id === id);
+            const viewer = document.getElementById('vView');
+            viewer.innerHTML = item.pages.map(p => `<img src="${p}" loading="lazy">`).join('');
             nav('vp');
         };
 
-        // --- ADMIN PORTAL ---
-        window.secureAdmin = () => {
-            const key = prompt("STAFF ACCESS KEY:");
-            if(key === "Admin@2026") {
-                renderAdminTable();
-                nav('adm');
-            } else alert("Invalid Access Key.");
+        // PROFILE & AVATAR
+        window.openProfile = () => {
+            document.getElementById('userNameDisplay').innerText = USER || "Guest User";
+            document.getElementById('currentAvatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${AVATAR}`;
+            
+            const seeds = ["Felix", "Aria", "Jack", "Luna", "Milo", "Zoe", "Leo", "Nova"];
+            document.getElementById('avatarGrid').innerHTML = seeds.map(s => `
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${s}" class="${AVATAR === s ? 'selected' : ''}" onclick="setAvatar('${s}')">
+            `).join('');
+            nav('profilePage');
         };
 
-        window.handleMegaUpload = async () => {
-            const btn = document.getElementById('upBtn');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> SYSTEM PROCESSING...';
-            btn.disabled = true;
+        window.setAvatar = (seed) => {
+            AVATAR = seed; localStorage.setItem('m_avatar', seed);
+            openProfile();
+        };
 
+        window.login = () => {
+            const email = document.getElementById('loginEmail').value;
+            if(email.includes('@')) { USER = email; localStorage.setItem('m_user', email); openProfile(); }
+        };
+
+        // BOOKMARK
+        window.bookmark = () => {
+            const name = document.getElementById('dtTitle').innerText;
+            if(!BOOKMARKS.includes(name)) {
+                BOOKMARKS.push(name);
+                alert("Saved to Library!");
+            } else {
+                BOOKMARKS = BOOKMARKS.filter(b => b !== name);
+                alert("Removed from Library!");
+            }
+            localStorage.setItem('m_bookmarks', JSON.stringify(BOOKMARKS));
+            openDetail(name);
+            renderGrid('libGrid', MASTER_DATA.filter(d => BOOKMARKS.includes(d.seriesName)));
+        };
+
+        // UPLOAD LOGIC (FIXED)
+        window.handleUpload = async () => {
+            const btn = document.getElementById('upBtn');
+            btn.innerText = "UPLOADING..."; btn.disabled = true;
             try {
                 const cFile = document.getElementById('fC').files[0];
                 const pFiles = document.getElementById('fP').files;
                 
-                // Upload Cover
-                const cRef = ref(storage, `m_zone/covers/${Date.now()}`);
+                const cRef = ref(storage, `covers/${Date.now()}`);
                 await uploadBytes(cRef, cFile);
                 const cUrl = await getDownloadURL(cRef);
-
-                // Upload Pages
+                
                 const pUrls = [];
-                for(let i=0; i<pFiles.length; i++) {
-                    const pRef = ref(storage, `m_zone/data/${Date.now()}_${i}`);
-                    await uploadBytes(pRef, pFiles[i]);
+                for(let f of pFiles) {
+                    const pRef = ref(storage, `pages/${Date.now()}_${Math.random()}`);
+                    await uploadBytes(pRef, f);
                     pUrls.push(await getDownloadURL(pRef));
-                    btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> UPLOADING ${i+1}/${pFiles.length}`;
                 }
-
-                const col = document.getElementById('upType').value;
-                await addDoc(collection(db, col), {
+                
+                await addDoc(collection(db, document.getElementById('upType').value), {
                     seriesName: document.getElementById('upTitle').value,
                     chapterNo: parseInt(document.getElementById('upNum').value),
                     price: parseInt(document.getElementById('upPrice').value || 0),
-                    coverUrl: cUrl,
-                    pages: pUrls,
-                    timestamp: new Date().getTime()
+                    coverUrl: cUrl, pages: pUrls
                 });
-
-                alert("Data Injection Successful.");
-                location.reload();
-            } catch (err) { alert(err.message); btn.innerText = "PUBLISH CONTENT"; btn.disabled = false; }
+                alert("Success!"); location.reload();
+            } catch (e) { alert(e.message); btn.innerText = "START PUBLISHING"; btn.disabled = false; }
         };
 
-        function renderAdminTable() {
-            const list = document.getElementById('dbList');
-            list.innerHTML = DATA_STORE.map(d => `
-                <tr>
-                    <td>${d.seriesName}</td>
-                    <td>${d.chapterNo}</td>
-                    <td><i class="fa-solid fa-trash" style="color:var(--danger);" onclick="deleteEntry('${d.id}', '${d.type === 'Manga' ? 'chapters' : 'animes'}')"></i></td>
-                </tr>
-            `).join('');
-        }
+        window.secureAdmin = () => { if(prompt("Key:") === "Admin@2026") nav('adminPanel'); };
+        const updateUI = () => { document.getElementById('uCoins').innerText = COINS; localStorage.setItem('m_coins', COINS); };
 
-        window.deleteEntry = async (id, col) => {
-            if(confirm("Permanently wipe this record from cloud?")) {
-                await deleteDoc(doc(db, col, id));
-                alert("Data Purged.");
-                location.reload();
-            }
-        };
-
-        // --- WALLET SYSTEM ---
-        function updateUIState() {
-            document.getElementById('uCoins').innerText = COINS;
-            document.getElementById('uImg').src = USER ? `https://api.dicebear.com/7.x/bottts/svg?seed=${USER}` : `https://api.dicebear.com/7.x/bottts/svg?seed=Guest`;
-            localStorage.setItem('m_coins', COINS);
-        }
-
-        window.redeemGift = async () => {
-            const code = document.getElementById('giftCode').value;
-            const q = query(collection(db, "giftcards"), where("key", "==", code));
-            const snap = await getDocs(q);
-            
-            if(!snap.empty) {
-                const card = snap.docs[0];
-                COINS += card.data().amount;
-                await deleteDoc(doc(db, "giftcards", card.id));
-                updateUIState();
-                alert(`Wallet Recharged! +${card.data().amount} Coins Added.`);
-                clP();
-            } else alert("Gift card is invalid or already consumed.");
-        };
-
-        // --- STARTUP ---
-        fetchSystemData();
-
-        // SCROLL DYNAMICS
-        let prevScroll = window.pageYOffset;
-        window.onscroll = () => {
-            let curScroll = window.pageYOffset;
-            document.querySelector('header').style.top = prevScroll > curScroll ? "0" : "-80px";
-            prevScroll = curScroll;
-        };
-
+        init();
     </script>
 </body>
-    </html>
+</html>
