@@ -3,122 +3,457 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>M-ZONE | PRO SYSTEM</title>
+    <title>M-ZONE | ULTIMATE ENTERTAINMENT SYSTEM</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 
     <style>
-        :root { --p: #FFD700; --b: #050505; --c: #121212; --border: rgba(255, 215, 0, 0.2); }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--b); color: #fff; padding-top: 75px; }
+        :root {
+            --p: #FFD700; /* Gold */
+            --b: #050505; /* Black */
+            --c: #121212; /* Card */
+            --g: rgba(255, 215, 0, 0.2);
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #FFFFFF;
+            --text-sec: #A0A0A0;
+            --safe-area: 20px;
+        }
 
-        /* --- Header & Navigation --- */
-        header { position: fixed; top: 0; width: 100%; height: 75px; background: rgba(5,5,5,0.9); display: flex; align-items: center; justify-content: space-between; padding: 0 15px; border-bottom: 1px solid var(--border); z-index: 1000; backdrop-filter: blur(10px); }
-        .logo { font-family: 'Orbitron', sans-serif; color: var(--p); font-size: 20px; }
-        .nav-right { display: flex; gap: 10px; align-items: center; }
-        
-        .btn-ui { background: #111; border: 1px solid var(--p); padding: 6px 12px; border-radius: 50px; color: var(--p); font-size: 12px; font-weight: 800; cursor: pointer; }
+        /* --- GLOBAL RESET --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background: var(--b); color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            overflow-x: hidden; scroll-behavior: smooth;
+        }
 
-        /* --- Main Grid --- */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .card { background: var(--c); border-radius: 15px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); position: relative; }
-        .card img { width: 100%; height: 230px; object-fit: cover; }
-        .card-info { padding: 10px; background: linear-gradient(transparent, #000); position: absolute; bottom: 0; width: 100%; text-align: center; }
-        .card-info h4 { font-size: 13px; color: var(--p); }
+        /* --- CUSTOM SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--b); }
+        ::-webkit-scrollbar-thumb { background: var(--p); border-radius: 10px; }
 
-        /* --- Pages --- */
-        .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 2000; overflow-y: auto; }
-        .close-btn { position: fixed; top: 15px; left: 15px; width: 40px; height: 40px; background: rgba(0,0,0,0.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2100; border: 1px solid var(--p); color: var(--p); }
+        /* --- HEADER UI --- */
+        header {
+            position: fixed; top: 0; width: 100%; height: 75px; 
+            background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(25px);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 var(--safe-area); border-bottom: 1px solid var(--border);
+            z-index: 1000; transition: 0.4s;
+        }
+        header.hide { transform: translateY(-100%); }
+        .logo { 
+            font-family: 'Orbitron', sans-serif; font-size: 22px; 
+            background: linear-gradient(45deg, var(--p), #FFF);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 900; letter-spacing: 2px;
+        }
 
-        /* --- Form & Admin --- */
-        .box { background: var(--c); padding: 20px; border-radius: 15px; margin: 15px; border: 1px solid var(--border); }
-        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid #333; color: #fff; border-radius: 8px; }
-        .btn-gold { width: 100%; padding: 15px; background: var(--p); color: #000; border: none; border-radius: 10px; font-weight: 800; cursor: pointer; }
-        
-        /* File Upload Styling */
-        .file-label { display: block; padding: 15px; border: 2px dashed var(--p); text-align: center; color: var(--p); border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
-        #preview { display: flex; gap: 5px; overflow-x: auto; margin-bottom: 10px; }
-        #preview img { height: 80px; border-radius: 5px; }
+        .nav-actions { display: flex; gap: 12px; align-items: center; }
+        .nav-tool {
+            background: var(--glass); border: 1px solid var(--border);
+            height: 42px; padding: 0 15px; border-radius: 12px;
+            display: flex; align-items: center; gap: 8px; font-size: 13px;
+            font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+        .nav-tool:active { transform: scale(0.95); background: var(--g); border-color: var(--p); }
+        .nav-tool.gold { border-color: var(--p); color: var(--p); box-shadow: 0 0 15px var(--g); }
 
-        .chapter-item { background: var(--c); padding: 15px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; border-left: 4px solid var(--p); }
+        /* --- SEARCH & FILTERS --- */
+        .search-sect { padding: 90px var(--safe-area) 20px; }
+        .search-box {
+            background: var(--c); border: 1px solid var(--border);
+            height: 55px; border-radius: 15px; display: flex; align-items: center;
+            padding: 0 20px; gap: 15px;
+        }
+        .search-box input {
+            background: none; border: none; color: #fff; width: 100%;
+            font-size: 15px; outline: none;
+        }
+        .search-box i { color: var(--p); }
+
+        .filter-tags {
+            display: flex; gap: 10px; overflow-x: auto; padding: 15px 0;
+            scrollbar-width: none;
+        }
+        .filter-tags::-webkit-scrollbar { display: none; }
+        .tag {
+            white-space: nowrap; padding: 8px 18px; border-radius: 50px;
+            background: var(--glass); border: 1px solid var(--border);
+            font-size: 12px; font-weight: 600; color: var(--text-sec);
+        }
+        .tag.active { background: var(--p); color: #000; border-color: var(--p); }
+
+        /* --- CONTENT GRID --- */
+        .grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 20px; padding: 0 var(--safe-area) 100px; 
+        }
+        .card {
+            background: var(--c); border-radius: 20px; overflow: hidden;
+            border: 1px solid var(--border); position: relative;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card img { width: 100%; height: 240px; object-fit: cover; transition: 0.5s; }
+        .card:hover img { transform: scale(1.1); }
+        .card-meta {
+            position: absolute; bottom: 0; width: 100%; padding: 20px 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.95));
+            text-align: center;
+        }
+        .card-meta h4 { font-size: 14px; color: var(--p); margin-bottom: 5px; }
+        .card-meta span { font-size: 11px; color: var(--text-sec); text-transform: uppercase; }
+
+        /* --- CINEMATIC DETAIL PAGE --- */
+        .full-page {
+            display: none; position: fixed; inset: 0; background: var(--b);
+            z-index: 2000; overflow-y: auto; overflow-x: hidden;
+        }
+        .detail-banner { width: 100%; height: 480px; position: relative; }
+        .detail-banner img { width: 100%; height: 100%; object-fit: cover; }
+        .banner-mask {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, transparent 10%, var(--b) 98%);
+        }
+        .back-circle {
+            position: fixed; top: 25px; left: 25px; width: 45px; height: 45px;
+            background: rgba(0,0,0,0.6); border: 1px solid var(--p);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            z-index: 2100; color: var(--p); backdrop-filter: blur(10px);
+        }
+
+        .content-main { 
+            padding: 0 var(--safe-area); margin-top: -160px; 
+            position: relative; text-align: center; 
+        }
+        .poster-cinematic {
+            width: 170px; height: 250px; border-radius: 20px;
+            border: 5px solid var(--b); box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            object-fit: cover;
+        }
+        .detail-title { font-size: 28px; font-weight: 800; margin-top: 25px; letter-spacing: -1px; }
+
+        .action-hub {
+            display: flex; gap: 15px; margin: 30px 0;
+        }
+        .btn-prime {
+            flex: 1; height: 55px; background: var(--p); color: #000;
+            border-radius: 16px; border: none; font-weight: 800;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 10px 30px var(--g);
+        }
+        .btn-sq {
+            width: 55px; height: 55px; background: var(--glass);
+            border-radius: 16px; border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; color: #fff;
+        }
+
+        .info-pill-container {
+            display: flex; justify-content: center; gap: 10px; margin-bottom: 30px;
+        }
+        .pill {
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 8px 15px; border-radius: 50px; font-size: 11px; color: var(--p); font-weight: 700;
+        }
+
+        /* --- CHAPTER LIST --- */
+        .chapter-container { text-align: left; }
+        .chapter-card {
+            background: var(--c); padding: 20px; border-radius: 18px;
+            margin-bottom: 15px; display: flex; justify-content: space-between;
+            align-items: center; border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+        .chapter-card:active { border-color: var(--p); transform: translateX(10px); }
+        .ch-info h5 { font-size: 15px; margin-bottom: 4px; }
+        .ch-info p { font-size: 11px; color: var(--text-sec); }
+        .ch-price {
+            background: var(--g); color: var(--p); 
+            padding: 6px 15px; border-radius: 10px; font-weight: 800; font-size: 13px;
+        }
+
+        /* --- ADMIN DASHBOARD --- */
+        .admin-header {
+            padding: 100px var(--safe-area) 20px; text-align: center;
+        }
+        .admin-tabs {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            padding: 0 var(--safe-area); margin-bottom: 25px;
+        }
+        .a-tab {
+            padding: 15px; background: var(--glass); border-radius: 12px;
+            text-align: center; font-size: 13px; font-weight: 700; border: 1px solid var(--border);
+        }
+        .a-tab.active { background: var(--p); color: #000; }
+
+        .admin-panel { padding: 0 var(--safe-area) 50px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 12px; color: var(--text-sec); margin-bottom: 8px; font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; background: var(--c); border: 1px solid var(--border);
+            padding: 15px; border-radius: 12px; color: #fff; outline: none;
+            font-size: 14px;
+        }
+        .form-group input:focus { border-color: var(--p); }
+
+        .upload-zone {
+            border: 2px dashed var(--border); padding: 40px 20px;
+            border-radius: 15px; text-align: center; color: var(--text-sec);
+            position: relative; cursor: pointer; transition: 0.3s;
+        }
+        .upload-zone:hover { border-color: var(--p); color: var(--p); }
+        .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+        /* --- MANGA READER --- */
+        .reader-ui { background: #000; min-height: 100vh; }
+        .reader-ui img { width: 100%; display: block; margin-bottom: 0; }
+        .reader-controls {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(20,20,20,0.9); padding: 15px 30px; border-radius: 50px;
+            display: flex; gap: 40px; border: 1px solid var(--border); backdrop-filter: blur(15px);
+            z-index: 3000;
+        }
+
+        /* --- LOADER --- */
+        #preloader {
+            position: fixed; inset: 0; background: var(--b);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999;
+        }
+        .loader-logo { font-family: 'Orbitron'; font-size: 30px; color: var(--p); margin-bottom: 20px; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        .loader-bar { width: 150px; height: 2px; background: var(--glass); position: relative; overflow: hidden; }
+        .loader-progress { position: absolute; height: 100%; background: var(--p); width: 0%; transition: 0.4s; }
+
+        /* --- BOT BAR --- */
+        .bot-bar {
+            position: fixed; bottom: 0; width: 100%; height: 70px;
+            background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
+            display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;
+            border-top: 1px solid var(--border); z-index: 1000;
+        }
+        .bot-item {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: var(--text-sec); font-size: 10px; font-weight: 600; gap: 5px;
+        }
+        .bot-item.active { color: var(--p); }
+        .bot-item i { font-size: 20px; }
+
+        /* --- DATA MANAGER TABLE --- */
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th { text-align: left; font-size: 12px; color: var(--text-sec); padding: 10px; border-bottom: 1px solid var(--border); }
+        .data-table td { padding: 15px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
+        .btn-del { color: #ff4757; background: none; border: none; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <header>
+    <div id="preloader">
+        <div class="loader-logo">M-ZONE</div>
+        <div class="loader-bar"><div id="lp" class="loader-progress"></div></div>
+    </div>
+
+    <header id="mainHeader">
         <div class="logo">M-ZONE</div>
-        <div class="nav-right">
-            <div class="btn-ui" onclick="nav('loginPage')"><i class="fa-solid fa-user"></i> LOGIN</div>
-            <div class="btn-ui" onclick="nav('topupPage')"><i class="fa-solid fa-coins"></i> <span id="uCoins">0</span></div>
-            <i class="fa-solid fa-bars" style="color:var(--p); font-size:20px;" onclick="nav('adm')"></i>
+        <div class="nav-actions">
+            <div class="nav-tool gold" onclick="nav('topupPage')">
+                <i class="fa-solid fa-coins"></i> <span id="uCoins">0</span>
+            </div>
+            <div class="nav-tool" onclick="secureAdmin()">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
         </div>
     </header>
 
-    <div id="mainGrid" class="grid"></div>
+    <div id="homePage">
+        <div class="search-sect">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input id="searchInput" placeholder="Search Manga, Anime or Series..." oninput="handleSearch()">
+            </div>
+            <div class="filter-tags">
+                <div class="tag active" onclick="filterData('All', this)">All</div>
+                <div class="tag" onclick="filterData('Manga', this)">Manga</div>
+                <div class="tag" onclick="filterData('Anime', this)">Anime</div>
+                <div class="tag" onclick="filterData('Action', this)">Action</div>
+                <div class="tag" onclick="filterData('Romance', this)">Romance</div>
+                <div class="tag" onclick="filterData('Fantasy', this)">Fantasy</div>
+            </div>
+        </div>
 
-    <div id="loginPage" class="full-page">
-        <div class="close-btn" onclick="clP()"><i class="fa-solid fa-xmark"></i></div>
-        <div style="padding-top:100px;" class="box">
-            <h3 style="color:var(--p); margin-bottom:15px;"><i class="fa-solid fa-shield-halved"></i> USER LOGIN</h3>
-            <input id="userEmail" placeholder="Email (Admin only for now)">
-            <input id="userPass" type="password" placeholder="Password">
-            <button class="btn-gold" onclick="alert('Login feature linked to Firebase Auth')">LOGIN</button>
+        <div id="mainGrid" class="grid"></div>
+    </div>
+
+    <div id="dp" class="full-page">
+        <div class="back-circle" onclick="clP()"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="detail-banner">
+            <img id="dt-banner" src="">
+            <div class="banner-mask"></div>
+        </div>
+        <div class="content-main">
+            <img id="dt-poster" class="poster-cinematic" src="">
+            <h1 id="dt-title" class="detail-title"></h1>
+            
+            <div class="info-pill-container">
+                <div class="pill" id="dt-type">MANGA</div>
+                <div class="pill"><i class="fa-solid fa-star"></i> 9.8</div>
+                <div class="pill"><i class="fa-solid fa-eye"></i> 124K</div>
+            </div>
+
+            <div class="action-hub">
+                <button class="btn-prime" onclick="addToLibrary()"><i class="fa-solid fa-bookmark"></i> ADD TO LIBRARY</button>
+                <div class="btn-sq" onclick="share()"><i class="fa-solid fa-share-nodes"></i></div>
+            </div>
+
+            <div class="chapter-container">
+                <h3 style="margin-bottom: 20px; font-family: 'Orbitron'; font-size: 16px;">AVAILABLE EPISODES</h3>
+                <div id="chapterList"></div>
+            </div>
         </div>
     </div>
 
     <div id="topupPage" class="full-page">
-        <div class="close-btn" onclick="clP()"><i class="fa-solid fa-xmark"></i></div>
-        <div style="padding-top:100px;" class="box">
-            <h3><i class="fa-solid fa-key"></i> REDEEM COIN KEY</h3>
-            <input id="redeemKey" placeholder="Enter Gift Key">
-            <button class="btn-gold" onclick="redeem()">ACTIVATE</button>
+        <div class="back-circle" onclick="clP()"><i class="fa-solid fa-xmark"></i></div>
+        <div style="padding: 120px var(--safe-area);">
+            <div class="box">
+                <h3><i class="fa-solid fa-wallet"></i> REDEEM BALANCE</h3>
+                <p style="font-size: 13px; color: var(--text-sec); margin-bottom: 20px;">Enter your 12-digit gift card code to add coins to your account.</p>
+                <div class="form-group">
+                    <input id="giftKey" style="text-align: center; letter-spacing: 5px; font-weight: 800;" placeholder="XXXX-XXXX-XXXX">
+                </div>
+                <button class="btn-prime" style="width: 100%;" onclick="redeem()">REDEEM COINS</button>
+            </div>
+            
+            <h3 style="margin: 30px 0 20px; font-family: 'Orbitron';">TRANSACTION HISTORY</h3>
+            <div id="coinHistory">
+                <p style="text-align: center; color: var(--text-sec); font-size: 12px; margin-top: 20px;">No recent transactions.</p>
+            </div>
         </div>
     </div>
 
     <div id="adm" class="full-page">
-        <div class="close-btn" onclick="clP()"><i class="fa-solid fa-chevron-left"></i></div>
-        <div style="padding: 80px 10px;">
-            <div class="box">
-                <h3><i class="fa-solid fa-upload"></i> UPLOAD FROM DEVICE</h3>
-                <select id="upType"><option value="chapters">Manga</option><option value="animes">Anime</option></select>
-                <input id="upTitle" placeholder="Series Name">
-                <input id="upNum" placeholder="Chapter/Episode No">
-                <input id="upPrice" type="number" placeholder="Price (Coins)">
-                
-                <p style="font-size:12px; margin-bottom:5px;">Cover Image:</p>
-                <input type="file" id="fileCover" accept="image/*">
-                
-                <p style="font-size:12px; margin-bottom:5px;">Content (Multiple for Manga):</p>
-                <input type="file" id="filePages" accept="image/*" multiple>
-                <div id="preview"></div>
+        <div class="back-circle" onclick="clP()"><i class="fa-solid fa-chevron-left"></i></div>
+        <div class="admin-header">
+            <h2 style="font-family: 'Orbitron'; color: var(--p);">STAFF DASHBOARD</h2>
+            <p style="font-size: 11px; color: var(--text-sec);">Authorized Personnel Only</p>
+        </div>
 
-                <button class="btn-gold" id="upBtn" onclick="handleUpload()">START UPLOAD</button>
-            </div>
-            
+        <div class="admin-tabs">
+            <div class="a-tab active" id="tabUpload" onclick="switchAdminTab('upload')">UPLOAD CONTENT</div>
+            <div class="a-tab" id="tabManage" onclick="switchAdminTab('manage')">MANAGE DATA</div>
+        </div>
+
+        <div id="admin-upload" class="admin-panel">
             <div class="box">
-                <h3><i class="fa-solid fa-plus"></i> GEN KEY</h3>
-                <input id="genAmt" type="number" placeholder="Coins">
-                <button class="btn-gold" onclick="genGift()">GENERATE</button>
-                <p id="keyDisplay" style="text-align:center; margin-top:10px; color:var(--p); font-weight:bold;"></p>
+                <div class="form-group">
+                    <label>Content Type</label>
+                    <select id="upType">
+                        <option value="chapters">Manga Chapter</option>
+                        <option value="animes">Anime Episode</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Series Name</label>
+                    <input id="upTitle" placeholder="e.g. Solo Leveling">
+                </div>
+                <div class="form-group">
+                    <label>Chapter / Episode Number</label>
+                    <input id="upNum" type="number" placeholder="e.g. 101">
+                </div>
+                <div class="form-group">
+                    <label>Unlock Price (Coins)</label>
+                    <input id="upPrice" type="number" placeholder="0 for Free">
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    <input id="upGenre" placeholder="Action, Adventure, Fantasy">
+                </div>
+
+                <label style="font-size: 12px; color: var(--text-sec); margin-bottom: 8px; display: block;">Cover Poster</label>
+                <div class="upload-zone">
+                    <i class="fa-solid fa-image" style="font-size: 30px; margin-bottom: 10px;"></i>
+                    <p id="covLabel">Click or Drag Poster</p>
+                    <input type="file" id="fC" accept="image/*" onchange="updateLabel(this, 'covLabel')">
+                </div>
+
+                <div id="mangaOnly" style="margin-top: 20px;">
+                    <label style="font-size: 12px; color: var(--text-sec); margin-bottom: 8px; display: block;">Manga Pages</label>
+                    <div class="upload-zone">
+                        <i class="fa-solid fa-images" style="font-size: 30px; margin-bottom: 10px;"></i>
+                        <p id="pagLabel">Select Multiple Pages</p>
+                        <input type="file" id="fP" accept="image/*" multiple onchange="updateLabel(this, 'pagLabel')">
+                    </div>
+                </div>
+
+                <button class="btn-prime" style="width: 100%; margin-top: 30px;" id="upBtn" onclick="handleUpload()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> INITIALIZE UPLOAD
+                </button>
+            </div>
+
+            <div class="box">
+                <h3><i class="fa-solid fa-key"></i> GIFT CARD FACTORY</h3>
+                <div class="form-group">
+                    <input id="genAmt" type="number" placeholder="Coin Amount">
+                </div>
+                <button class="btn-prime" style="width: 100%;" onclick="genGift()">CREATE GIFT KEY</button>
+                <div id="keyOut" style="margin-top: 15px; padding: 15px; border: 1px dashed var(--p); border-radius: 10px; text-align: center; color: var(--p); font-weight: 800; display: none;"></div>
+            </div>
+        </div>
+
+        <div id="admin-manage" class="admin-panel" style="display: none;">
+            <div class="box">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>TITLE</th>
+                            <th>CH</th>
+                            <th>ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="manageList"></tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <div id="dp" class="full-page">
-        <div class="close-btn" onclick="clP()"><i class="fa-solid fa-arrow-left"></i></div>
-        <div id="detailHero" style="height:300px; overflow:hidden;"><img id="dtB" style="width:100%; height:100%; object-fit:cover;"></div>
-        <div style="padding:20px; margin-top:-50px; background:var(--b); border-radius:30px 30px 0 0; position:relative;">
-            <h2 id="dtT"></h2>
-            <div id="chapterArea" style="margin-top:20px;"></div>
+    <div id="vp" class="full-page" style="background: #000;">
+        <div class="back-circle" onclick="clP()"><i class="fa-solid fa-xmark"></i></div>
+        <div id="viewerContent" class="reader-ui"></div>
+        <div class="reader-controls" id="readerCtrl">
+            <i class="fa-solid fa-arrow-left" onclick="clP()"></i>
+            <span id="curChLabel" style="font-weight: 800; color: var(--p);">CH 1</span>
+            <i class="fa-solid fa-comment-dots"></i>
         </div>
     </div>
 
-    <div id="vp" class="full-page" style="background:#000;"><div class="close-btn" onclick="clP()"><i class="fa-solid fa-xmark"></i></div><div id="vView"></div></div>
+    <div class="bot-bar">
+        <div class="bot-item active" onclick="location.reload()">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </div>
+        <div class="bot-item" onclick="alert('Coming Soon!')">
+            <i class="fa-solid fa-compass"></i>
+            <span>Explore</span>
+        </div>
+        <div class="bot-item" onclick="showLibrary()">
+            <i class="fa-solid fa-bookmark"></i>
+            <span>Library</span>
+        </div>
+        <div class="bot-item" onclick="nav('topupPage')">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, query, where, deleteDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         const firebaseConfig = {
@@ -130,107 +465,288 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const storage = getStorage(app);
-        let data = [];
-        let coins = parseInt(localStorage.getItem('m_coins') || "0");
 
-        window.nav = id => { document.getElementById(id).style.display='block'; history.pushState({p:id},"","#"+id); };
+        let MASTER_DATA = [];
+        let USER_COINS = parseInt(localStorage.getItem('m_coins') || "0");
+        let LIBRARY = JSON.parse(localStorage.getItem('m_library') || "[]");
+
+        // --- CORE NAVIGATION ---
+        window.nav = id => {
+            document.getElementById(id).style.display = 'block';
+            history.pushState({page: id}, "", "#"+id);
+            window.scrollTo(0,0);
+        };
         window.clP = () => history.back();
-        window.onpopstate = () => document.querySelectorAll('.full-page').forEach(p=>p.style.display='none');
+        window.onpopstate = () => {
+            document.querySelectorAll('.full-page').forEach(p => p.style.display = 'none');
+        };
 
-        const updateUI = () => { document.getElementById('uCoins').innerText = coins; localStorage.setItem('m_coins', coins); };
+        // --- UTILS ---
+        window.updateLabel = (el, id) => {
+            document.getElementById(id).innerText = el.files.length + " Files Ready";
+            document.getElementById(id).style.color = "var(--p)";
+        };
 
-        // --- LOAD DATA ---
-        async function load() {
-            const [m, a] = await Promise.all([getDocs(collection(db, "chapters")), getDocs(collection(db, "animes"))]);
-            data = [...m.docs.map(d=>({id:d.id, ...d.data(), type:'Manga'})), ...a.docs.map(d=>({id:d.id, ...d.data(), type:'Anime'}))];
-            
-            const grid = document.getElementById('mainGrid');
-            const unique = {};
-            data.forEach(i => { if(i.seriesName) unique[i.seriesName] = i; });
-            grid.innerHTML = Object.values(unique).map(v => `
-                <div class="card" onclick="openD('${v.seriesName.replace(/'/g, "\\'")}')">
-                    <img src="${v.coverUrl}">
-                    <div class="card-info"><h4>${v.seriesName}</h4></div>
-                </div>
-            `).join('');
-            updateUI();
+        const setLoader = (p) => {
+            document.getElementById('lp').style.width = p + "%";
+            if(p >= 100) setTimeout(() => document.getElementById('preloader').style.display='none', 500);
+        };
+
+        // --- INITIALIZE DATA ---
+        async function init() {
+            setLoader(30);
+            try {
+                const [m, a] = await Promise.all([
+                    getDocs(collection(db, "chapters")),
+                    getDocs(collection(db, "animes"))
+                ]);
+                
+                MASTER_DATA = [
+                    ...m.docs.map(d => ({id: d.id, ...d.data(), type: 'Manga'})),
+                    ...a.docs.map(d => ({id: d.id, ...d.data(), type: 'Anime'}))
+                ];
+                
+                setLoader(70);
+                renderGrid(MASTER_DATA);
+                updateCoinUI();
+                setLoader(100);
+            } catch (e) { console.error(e); alert("Network Error!"); }
         }
 
-        window.openD = (name) => {
-            const series = data.filter(d => d.seriesName === name);
-            document.getElementById('dtB').src = series[0].coverUrl;
-            document.getElementById('dtT').innerText = name;
-            document.getElementById('chapterArea').innerHTML = series.map(ch => `
-                <div class="chapter-item" onclick="unlock('${ch.id}', ${ch.price})">
-                    <span>Chapter ${ch.chapterNo}</span>
-                    <span style="color:var(--p)">${ch.price} Coins</span>
+        // --- RENDER GRID ---
+        function renderGrid(items) {
+            const grid = document.getElementById('mainGrid');
+            const unique = {};
+            items.forEach(i => { if(i.seriesName) unique[i.seriesName] = i; });
+            
+            grid.innerHTML = Object.values(unique).map(v => `
+                <div class="card" onclick="openDetail('${v.seriesName.replace(/'/g, "\\'")}')">
+                    <img src="${v.coverUrl}" loading="lazy">
+                    <div class="card-meta">
+                        <h4>${v.seriesName}</h4>
+                        <span>${v.genre || 'Trending'} • ${v.type}</span>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        // --- SEARCH & FILTER ---
+        window.handleSearch = () => {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = MASTER_DATA.filter(i => i.seriesName.toLowerCase().includes(q));
+            renderGrid(filtered);
+        };
+
+        window.filterData = (type, el) => {
+            document.querySelectorAll('.tag').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            if(type === 'All') renderGrid(MASTER_DATA);
+            else {
+                const filtered = MASTER_DATA.filter(i => i.type === type || (i.genre && i.genre.includes(type)));
+                renderGrid(filtered);
+            }
+        };
+
+        // --- DETAIL & UNLOCK ---
+        window.openDetail = (name) => {
+            const series = MASTER_DATA.filter(d => d.seriesName === name);
+            const master = series[0];
+            
+            document.getElementById('dt-banner').src = master.coverUrl;
+            document.getElementById('dt-poster').src = master.coverUrl;
+            document.getElementById('dt-title').innerText = name;
+            document.getElementById('dt-type').innerText = master.type.toUpperCase();
+            
+            document.getElementById('chapterList').innerHTML = series.sort((a,b) => a.chapterNo - b.chapterNo).map(ch => `
+                <div class="chapter-card" onclick="unlock('${ch.id}', ${ch.price || 0})">
+                    <div class="ch-info">
+                        <h5>Chapter ${ch.chapterNo}</h5>
+                        <p>${master.type} • English Release</p>
+                    </div>
+                    <div class="ch-price">${ch.price > 0 ? ch.price + ' COINS' : 'FREE'}</div>
+                </div>
+            `).join('');
+            
             nav('dp');
         };
 
         window.unlock = (id, price) => {
-            if(coins < price) return alert("Low Coins!");
-            if(price > 0 && confirm(`Buy for ${price}?`)) { coins -= price; updateUI(); }
-            const item = data.find(d => d.id === id);
-            const v = document.getElementById('vView');
-            v.innerHTML = item.type === 'Manga' ? item.pages.map(p => `<img src="${p}" style="width:100%;">`).join('') : `<iframe src="${item.videoUrl}" style="width:100%; height:300px;"></iframe>`;
+            if(USER_COINS < price) return alert("Insufficient Coins! Please Top-up.");
+            
+            if(price > 0) {
+                if(confirm(`Unlock this chapter for ${price} coins?`)) {
+                    USER_COINS -= price;
+                    updateCoinUI();
+                } else return;
+            }
+            
+            const item = MASTER_DATA.find(d => d.id === id);
+            const viewer = document.getElementById('viewerContent');
+            document.getElementById('curChLabel').innerText = "CH " + item.chapterNo;
+            
+            if(item.type === 'Manga') {
+                viewer.innerHTML = item.pages.map(p => `<img src="${p}" loading="lazy">`).join('');
+            } else {
+                viewer.innerHTML = `<div style="padding-top:100px;"><iframe src="${item.videoUrl}" style="width:100%; height:300px; border:none;" allowfullscreen></iframe></div>`;
+            }
             nav('vp');
         };
 
-        // --- UPLOAD LOGIC ---
+        // --- ADMIN SECURE ---
+        window.secureAdmin = () => {
+            const p = prompt("Enter Security Key:");
+            if(p === "Admin@2026") {
+                renderManageList();
+                nav('adm');
+            } else alert("Unauthorized Access!");
+        };
+
+        window.switchAdminTab = (tab) => {
+            document.querySelectorAll('.a-tab').forEach(t => t.classList.remove('active'));
+            if(tab === 'upload') {
+                document.getElementById('tabUpload').classList.add('active');
+                document.getElementById('admin-upload').style.display = 'block';
+                document.getElementById('admin-manage').style.display = 'none';
+            } else {
+                document.getElementById('tabManage').classList.add('active');
+                document.getElementById('admin-upload').style.display = 'none';
+                document.getElementById('admin-manage').style.display = 'block';
+            }
+        };
+
+        // --- ADVANCED UPLOADER ---
         window.handleUpload = async () => {
             const btn = document.getElementById('upBtn');
-            btn.innerText = "UPLOADING..."; btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> UPLOADING...';
+            btn.disabled = true;
 
             try {
-                const coverFile = document.getElementById('fileCover').files[0];
-                const pageFiles = document.getElementById('filePages').files;
+                const coverFile = document.getElementById('fC').files[0];
+                const pageFiles = document.getElementById('fP').files;
                 
-                // Upload Cover
+                // Upload Cover Image
                 const cRef = ref(storage, `covers/${Date.now()}_${coverFile.name}`);
                 await uploadBytes(cRef, coverFile);
                 const coverUrl = await getDownloadURL(cRef);
 
                 // Upload Pages
                 const pagesUrls = [];
-                for(let f of pageFiles) {
-                    const pRef = ref(storage, `pages/${Date.now()}_${f.name}`);
-                    await uploadBytes(pRef, f);
-                    pagesUrls.push(await getDownloadURL(pRef));
+                if(pageFiles.length > 0) {
+                    for(let i=0; i<pageFiles.length; i++) {
+                        const pRef = ref(storage, `pages/${Date.now()}_${i}`);
+                        await uploadBytes(pRef, pageFiles[i]);
+                        const url = await getDownloadURL(pRef);
+                        pagesUrls.push(url);
+                        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> UPLOADING ${i+1}/${pageFiles.length}`;
+                    }
                 }
 
-                const col = document.getElementById('upType').value;
-                await addDoc(collection(db, col), {
+                const type = document.getElementById('upType').value;
+                const payload = {
                     seriesName: document.getElementById('upTitle').value,
-                    chapterNo: document.getElementById('upNum').value,
+                    chapterNo: parseInt(document.getElementById('upNum').value),
                     price: parseInt(document.getElementById('upPrice').value || 0),
+                    genre: document.getElementById('upGenre').value,
                     coverUrl: coverUrl,
-                    pages: pagesUrls
-                });
+                    pages: pagesUrls,
+                    uploadedAt: new Date().getTime()
+                };
 
-                alert("Done!"); location.reload();
-            } catch (e) { alert("Error: " + e.message); btn.innerText = "START UPLOAD"; btn.disabled = false; }
+                await addDoc(collection(db, type), payload);
+                alert("Mission Success! Content Published.");
+                location.reload();
+
+            } catch (e) {
+                alert("Upload Failed: " + e.message);
+                btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> INITIALIZE UPLOAD';
+                btn.disabled = false;
+            }
+        };
+
+        // --- DATA MANAGEMENT ---
+        function renderManageList() {
+            const list = document.getElementById('manageList');
+            list.innerHTML = MASTER_DATA.map(d => `
+                <tr>
+                    <td>${d.seriesName}</td>
+                    <td>${d.chapterNo}</td>
+                    <td><button class="btn-del" onclick="deleteData('${d.id}', '${d.type === 'Manga' ? 'chapters' : 'animes'}')"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        window.deleteData = async (id, col) => {
+            if(confirm("Confirm deletion of this record?")) {
+                await deleteDoc(doc(db, col, id));
+                alert("Record Wiped.");
+                location.reload();
+            }
+        };
+
+        // --- COIN SYSTEM ---
+        window.updateCoinUI = () => {
+            document.getElementById('uCoins').innerText = USER_COINS;
+            localStorage.setItem('m_coins', USER_COINS);
         };
 
         window.genGift = async () => {
-            const k = "KEY-" + Math.random().toString(36).substring(2,10).toUpperCase();
-            await addDoc(collection(db, "gifts"), { key: k, amt: parseInt(document.getElementById('genAmt').value) });
-            document.getElementById('keyDisplay').innerText = k;
+            const amt = parseInt(document.getElementById('genAmt').value);
+            if(!amt) return alert("Enter amount!");
+            const k = "MZ-" + Math.random().toString(36).substring(2,10).toUpperCase() + "-" + amt;
+            await addDoc(collection(db, "giftcards"), { key: k, amount: amt, status: "active" });
+            const out = document.getElementById('keyOut');
+            out.innerText = k;
+            out.style.display = 'block';
         };
 
         window.redeem = async () => {
-            const k = document.getElementById('redeemKey').value;
-            const q = query(collection(db, "gifts"), where("key", "==", k));
-            const s = await getDocs(q);
-            if(!s.empty) {
-                coins += s.docs[0].data().amt;
-                await deleteDoc(doc(db, "gifts", s.docs[0].id));
-                updateUI(); alert("Coins Added!"); clP();
-            } else alert("Invalid Key");
+            const k = document.getElementById('giftKey').value;
+            const q = query(collection(db, "giftcards"), where("key", "==", k));
+            const snap = await getDocs(q);
+            
+            if(!snap.empty) {
+                const card = snap.docs[0];
+                USER_COINS += card.data().amount;
+                await deleteDoc(doc(db, "giftcards", card.id));
+                updateCoinUI();
+                alert(`Balance Updated! +${card.data().amount} Coins.`);
+                clP();
+            } else alert("Invalid or Expired Gift Card.");
         };
 
-        load();
+        // --- LIBRARY & UTILS ---
+        window.addToLibrary = () => {
+            const name = document.getElementById('dt-title').innerText;
+            if(!LIBRARY.includes(name)) {
+                LIBRARY.push(name);
+                localStorage.setItem('m_library', JSON.stringify(LIBRARY));
+                alert("Added to My Library!");
+            } else alert("Already in Library!");
+        };
+
+        window.showLibrary = () => {
+            const libData = MASTER_DATA.filter(d => LIBRARY.includes(d.seriesName));
+            if(libData.length === 0) return alert("Library is empty!");
+            renderGrid(libData);
+        };
+
+        window.share = () => {
+            if(navigator.share) {
+                navigator.share({ title: 'M-ZONE', text: 'Read this amazing series!', url: window.location.href });
+            } else alert("Copied to Clipboard!");
+        };
+
+        // Scroll Effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const cur = window.pageYOffset;
+            const header = document.getElementById('mainHeader');
+            if(cur > lastScroll && cur > 100) header.classList.add('hide');
+            else header.classList.remove('hide');
+            lastScroll = cur;
+        });
+
+        init();
     </script>
 </body>
 </html>
