@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>M-ZONE | ULTIMATE</title>
+    <title>M-ZONE | ULTIMATE PRO MAX</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -15,33 +15,34 @@
         .search-container { flex-grow: 1; max-width: 400px; }
         .search-box { background: var(--g); border-radius: 8px; display: flex; align-items: center; padding: 0 12px; border: 1px solid rgba(255,255,255,0.1); height: 38px; }
         .search-box input { background: none; border: none; color: #fff; padding: 0 10px; width: 100%; outline: none; font-size: 13px; }
-        .nav-icons { display: flex; gap: 18px; align-items: center; }
-        .nav-icons i { font-size: 18px; cursor: pointer; }
+
+        .sidebar { position: fixed; top: 0; right: -310px; width: 300px; height: 100%; background: #0a0a0a; z-index: 2001; padding: 25px 20px; transition: 0.4s; border-left: 1px solid var(--g); overflow-y: auto; }
+        .sidebar.active { right: 0; }
+        
+        .u-card { background: var(--g); padding: 15px; border-radius: 12px; border: 1px solid var(--g); margin-bottom: 20px; }
+        .menu-item { display: flex; align-items: center; padding: 12px 0; font-size: 13px; color: #ccc; cursor: pointer; transition: 0.3s; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .menu-item i { width: 30px; color: var(--p); }
+        
+        .staff-section { border-top: 2px solid var(--g); margin-top: 15px; padding-top: 15px; }
+        .staff-label { font-size: 10px; color: #555; letter-spacing: 1px; font-weight: 800; margin-bottom: 10px; }
 
         .slider { width: 94%; height: 180px; margin: 15px auto; border-radius: 15px; overflow: hidden; position: relative; }
         .track { display: flex; transition: 0.8s; height: 100%; }
-        .slide { min-width: 100%; position: relative; }
+        .slide { min-width: 100%; }
         .slide img { width: 100%; height: 100%; object-fit: cover; }
-
-        .genre-bar { display: flex; gap: 10px; overflow-x: auto; padding: 10px 15px; scrollbar-width: none; }
-        .genre-btn { background: var(--g); border: 1px solid rgba(255,255,255,0.1); padding: 6px 15px; border-radius: 20px; font-size: 11px; white-space: nowrap; cursor: pointer; color: #888; }
-        .genre-btn.active { background: var(--p); color: #000; border-color: var(--p); font-weight: 700; }
 
         .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 10px 15px 100px; }
         .card { background: var(--c); border-radius: 12px; overflow: hidden; border: 1px solid var(--g); position: relative; }
         .card img { width: 100%; height: 220px; object-fit: cover; }
         .card-title { padding: 10px; font-size: 12px; font-weight: 500; text-align: center; }
-        .type-tag { position: absolute; top: 8px; left: 8px; background: rgba(0,0,0,0.6); font-size: 9px; padding: 3px 8px; border-radius: 4px; border: 0.5px solid var(--p); color: var(--p); font-weight: 800; }
-
-        .sidebar { position: fixed; top: 0; right: -310px; width: 300px; height: 100%; background: #0a0a0a; z-index: 2001; padding: 30px 20px; transition: 0.4s; border-left: 1px solid var(--g); }
-        .sidebar.active { right: 0; }
-        .chat-area { background: #000; border-radius: 12px; height: 180px; margin-top: 20px; border: 1px solid var(--g); display: flex; flex-direction: column; overflow: hidden; }
-        #chatMsgs { flex: 1; overflow-y: auto; padding: 10px; font-size: 11px; }
 
         .full-page { display: none; position: fixed; inset: 0; background: var(--b); z-index: 4000; overflow-y: auto; padding: 20px; }
-        .btn-p { background: var(--p); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 800; width: 100%; cursor: pointer; margin-top: 10px; }
-        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #111; border: 1px solid var(--g); color: #fff; border-radius: 8px; outline: none; }
-        
+        .btn-p { background: var(--p); color: #000; border: none; padding: 12px; border-radius: 8px; font-weight: 800; width: 100%; cursor: pointer; margin-top: 10px; font-size: 13px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #111; border: 1px solid var(--g); color: #fff; border-radius: 8px; }
+
+        .del-item { background: #111; padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--g); }
+        .del-btn { color: #ff4d4d; cursor: pointer; font-size: 14px; }
+
         @media (min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } .slider { height: 320px; } }
     </style>
 </head>
@@ -50,40 +51,49 @@
     <header>
         <div class="logo" onclick="location.reload()">M-ZONE <i class="fa-solid fa-bolt-lightning"></i></div>
         <div class="search-container"><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="gSearch" placeholder="Search..." oninput="hSearch()"></div></div>
-        <div class="nav-icons"><i class="fa-regular fa-square-plus" onclick="cA()"></i><i class="fa-solid fa-bars-staggered" onclick="tgS()"></i></div>
+        <div class="nav-icons"><i class="fa-solid fa-bars-staggered" onclick="tgS()" style="font-size:20px; cursor:pointer;"></i></div>
     </header>
 
     <div class="sidebar" id="sb">
-        <div id="uCard" style="display:none; margin-bottom: 20px;">
-            <p id="uName" style="font-weight:800; font-size:16px; color:var(--p)"></p>
+        <div id="uCard" style="display:none;" class="u-card">
+            <p id="uName" style="font-weight:800; font-size:15px; color:var(--p)"></p>
             <p style="font-size:11px; opacity:0.6;"><i class="fa-solid fa-coins"></i> <span id="uCoins">0</span> Gold</p>
-            <div style="display:flex; gap:6px; margin-top:10px;"><input id="vKey" placeholder="Redeem Key" style="margin:0; font-size:11px; height:35px;"><button onclick="rk()" style="background:var(--p); border:0; padding:0 12px; border-radius:8px;"><i class="fa-solid fa-check"></i></button></div>
+            <div style="display:flex; gap:5px; margin-top:10px;"><input id="vKey" placeholder="VIP Key" style="margin:0; font-size:10px; height:32px;"><button onclick="rk()" style="background:var(--p); border:0; padding:0 10px; border-radius:6px;"><i class="fa-solid fa-check"></i></button></div>
         </div>
-        <button id="lBtn" class="btn-p" onclick="tgM('authModal')">LOGIN</button>
-        <div class="chat-area"><div id="chatMsgs"></div><div style="display:flex; padding:8px; gap:5px; background: #0d0d0d;"><input id="ci" placeholder="Chat..." style="margin:0; font-size:11px; height:32px;"><button onclick="sc()" style="background:var(--p); border:none; width:35px; border-radius:6px;"><i class="fa-solid fa-paper-plane" style="font-size:10px;"></i></button></div></div>
-        <nav style="margin-top:25px; display:flex; flex-direction:column; gap:18px;"><p onclick="showList()" style="font-size:13px; cursor:pointer;"><i class="fa-regular fa-bookmark" style="margin-right:12px; color:var(--p)"></i> MY LIBRARY</p><p onclick="fType('Anime')" style="font-size:13px; cursor:pointer;"><i class="fa-regular fa-circle-play" style="margin-right:12px;"></i> PREMIUM ANIME</p></nav>
+        
+        <button id="lBtn" class="btn-p" onclick="tgM('authModal')">JOIN COMMUNITY</button>
+        <div class="menu-item" onclick="showList()"><i class="fa-regular fa-bookmark"></i> My Library</div>
+        <div class="menu-item" onclick="fType('Anime')"><i class="fa-regular fa-circle-play"></i> Premium Anime</div>
+
+        <div class="staff-section" id="staffZone" style="display:none;">
+            <p class="staff-label">STAFF PANEL</p>
+            <div class="menu-item" onclick="oAdm('m')"><i class="fa-solid fa-plus"></i> Add Manga</div>
+            <div class="menu-item" onclick="oAdm('a')"><i class="fa-solid fa-film"></i> Add Anime</div>
+            <div class="menu-item" onclick="oAdm('k')"><i class="fa-solid fa-key"></i> Key Gen</div>
+            <div class="menu-item" onclick="oAdm('d')"><i class="fa-solid fa-trash-can"></i> Manage Content</div>
+        </div>
+        <div class="menu-item" onclick="checkStaff()" style="opacity:0.3; margin-top:20px;"><i class="fa-solid fa-user-shield"></i> Staff Login</div>
     </div>
 
     <div class="slider"><div class="track" id="st"></div></div>
-    <div class="genre-bar"><div class="genre-btn active" onclick="fGenre('All')">All</div><div class="genre-btn" onclick="fGenre('Action')">Action</div><div class="genre-btn" onclick="fGenre('Romance')">Romance</div><div class="genre-btn" onclick="fGenre('Hentai')">Hentai</div></div>
     <div id="mg" class="grid"></div>
 
     <div id="dp" class="full-page"><i class="fa-solid fa-arrow-left" onclick="clP('dp')" style="font-size:22px; color:var(--p)"></i><div id="dh"></div><div id="cl"></div></div>
     <div id="vp" class="full-page" style="padding:0; background:#000;"><div style="padding:15px; display:flex; justify-content:space-between; background:rgba(0,0,0,0.9); position:sticky; top:0; z-index:100;"><i class="fa-solid fa-xmark" onclick="clP('vp')"></i><span id="vt"></span><i class="fa-regular fa-heart" onclick="tB()"></i></div><div id="vc"></div></div>
 
     <div id="adm" class="full-page">
-        <div style="display:flex; gap:10px;"><button class="btn-p" onclick="sTab('m')">Manga</button><button class="btn-p" onclick="sTab('a')">Anime</button><button class="btn-p" onclick="sTab('k')">Key</button></div>
-        <div id="mT"><input id="mt" placeholder="Manga Title"><input id="mc" type="number" placeholder="Ch No"><input id="mp" type="number" placeholder="Gold Price"><select id="mgS"><option>Action</option><option>Romance</option><option>Hentai</option></select><input type="file" id="mCv"><input type="file" id="mPs" multiple><button class="btn-p" onclick="uM()">UPLOAD MANGA</button></div>
-        <div id="aT" style="display:none;"><input id="at" placeholder="Anime Title"><input type="file" id="acV"><div id="epA"></div><button onclick="aE()" style="background:#111; color:#fff; padding:12px; width:100%; border-radius:8px; margin-bottom:10px; border:1px solid var(--g);">+ Add Episode</button><button class="btn-p" onclick="uA()">UPLOAD ANIME</button></div>
-        <div id="kT" style="display:none;"><input id="ka" type="number" placeholder="Gold Amount"><button class="btn-p" onclick="gk()">GEN KEY</button><p id="kr" style="margin-top:15px; color:var(--p); text-align:center; font-family:monospace;"></p></div>
-        <button class="btn-p" onclick="clP('adm')" style="background:#222;">BACK</button>
+        <div id="mT" style="display:none;"><h3>New Manga</h3><input id="mt" placeholder="Title"><input id="mc" type="number" placeholder="Ch"><input id="mp" type="number" placeholder="Price"><select id="mgS"><option>Action</option><option>Romance</option><option>Hentai</option></select><input type="file" id="mCv"><input type="file" id="mPs" multiple><button class="btn-p" onclick="uM()">UPLOAD</button></div>
+        <div id="aT" style="display:none;"><h3>New Anime</h3><input id="at" placeholder="Anime Title"><input type="file" id="acV"><div id="epA"></div><button onclick="aE()" class="btn-p" style="background:#111;">+ Ep</button><button class="btn-p" onclick="uA()">UPLOAD</button></div>
+        <div id="kT" style="display:none;"><h3>Key Gen</h3><input id="ka" type="number" placeholder="Gold"><button class="btn-p" onclick="gk()">GENERATE</button><p id="kr" style="margin-top:20px; color:var(--p); font-family:monospace; font-size:20px; text-align:center;"></p></div>
+        <div id="dT" style="display:none;"><h3>Manage / Delete</h3><div id="delList" style="margin-top:15px;"></div></div>
+        <button class="btn-p" onclick="clP('adm')" style="background:#222; margin-top:30px;">CLOSE</button>
     </div>
 
     <div id="authModal" class="full-page" style="display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.9);"><div style="background:#0a0a0a; padding:30px; border-radius:20px; width:320px; border:1px solid var(--g);"><input id="em" placeholder="Email"><input id="ps" type="password" placeholder="Password"><button class="btn-p" onclick="hA()">CONTINUE</button></div></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc, serverTimestamp, query, orderBy, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, addDoc, deleteDoc, serverTimestamp, query, orderBy, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
         const cfg = { apiKey: "AIzaSyDQlYCcHLrUoyjLGzk9hjrQUAE_q5fLWHs", authDomain: "mangabyax.firebaseapp.com", projectId: "mangabyax", storageBucket: "mangabyax.firebasestorage.app", appId: "1:974159756281:web:228c23b929f377544b1b28" };
@@ -93,7 +103,7 @@
         onAuthStateChanged(auth, async (user) => {
             if(user) { u = user; const dS = await getDoc(doc(db,"users",u.uid)); if(!dS.exists()) await setDoc(doc(db,"users",u.uid),{coins:0,bookmarks:[]});
                 document.getElementById('uCard').style.display='block'; document.getElementById('lBtn').style.display='none';
-                document.getElementById('uName').innerText = u.email.split('@')[0].toUpperCase(); ug(); lc();
+                document.getElementById('uName').innerText = u.email.split('@')[0].toUpperCase(); ug();
             }
         });
 
@@ -106,30 +116,24 @@
 
         function rh(data) {
             const un = {}; data.forEach(i => { const k = i.seriesName || i.title; if(!un[k]) un[k] = i; });
-            document.getElementById('mg').innerHTML = Object.values(un).map(v => `<div class="card" onclick="oD('${(v.seriesName||v.title).replace(/'/g,"\\'")}', '${v.type}')"><div class="type-tag">${v.genre || v.type}</div><img src="${v.coverUrl||v.cover}"><div class="card-title">${v.seriesName||v.title}</div></div>`).join('');
+            document.getElementById('mg').innerHTML = Object.values(un).map(v => `<div class="card" onclick="oD('${(v.seriesName||v.title).replace(/'/g,"\\'")}', '${v.type}')"><img src="${v.coverUrl||v.cover}"><div class="card-title">${v.seriesName||v.title}</div></div>`).join('');
         }
 
         window.hSearch = () => { const q = document.getElementById('gSearch').value.toLowerCase(); rh(ad.filter(i => (i.seriesName || i.title).toLowerCase().includes(q))); };
-        window.fGenre = (g) => { document.querySelectorAll('.genre-btn').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); rh(g === 'All' ? ad : ad.filter(i => i.genre === g)); };
-        window.fType = (t) => { rh(ad.filter(i => i.type === t)); tgS(); };
-
         window.oD = (n, t) => { cID=n; const its = ad.filter(i=>(i.seriesName||i.title)===n);
-            document.getElementById('dh').innerHTML = `<div style="display:flex; gap:15px; margin-top:20px;"><img src="${its[0].coverUrl||its[0].cover}" style="width:110px; border-radius:10px; border:1px solid var(--g);"><div><h2 style="font-weight:600">${n}</h2><p style="color:var(--p); font-size:11px;">${its[0].genre||t}</p><button class="btn-p" onclick="tB()" style="padding:8px 15px; width:auto; font-size:11px;"><i class="fa-regular fa-heart"></i> MY LIST</button></div></div>`;
-            document.getElementById('cl').innerHTML = t==='Manga' ? its.map(c=>`<div onclick="rM('${c.id}')" style="background:var(--g); padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between;"><span>Chapter ${c.chapterNum}</span><i class="fa-solid fa-lock" style="opacity:0.3"></i></div>`).join('') : its[0].episodes.map(e=>`<div onclick="wA('${e.url}','${e.name}')" style="background:var(--g); padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between;"><span>${e.name}</span><i class="fa-regular fa-circle-play" style="color:var(--p)"></i></div>`).join('');
+            document.getElementById('dh').innerHTML = `<div style="display:flex; gap:15px; margin-top:20px;"><img src="${its[0].coverUrl||its[0].cover}" style="width:110px; border-radius:10px; border:1px solid var(--g);"><div><h2 style="font-weight:600">${n}</h2><p style="color:var(--p); font-size:11px;">${its[0].genre||t}</p><button class="btn-p" onclick="tB()" style="padding:8px 15px; width:auto; font-size:11px;">+ MY LIST</button></div></div>`;
+            document.getElementById('cl').innerHTML = t==='Manga' ? its.map(c=>`<div onclick="rM('${c.id}')" style="background:var(--g); padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between;"><span>Chapter ${c.chapterNum}</span><i class="fa-solid fa-lock" style="opacity:0.2"></i></div>`).join('') : its[0].episodes.map(e=>`<div onclick="wA('${e.url}','${e.name}')" style="background:var(--g); padding:15px; border-radius:10px; margin-bottom:10px; display:flex; justify-content:space-between;"><span>${e.name}</span><i class="fa-regular fa-circle-play" style="color:var(--p)"></i></div>`).join('');
             document.getElementById('dp').style.display='block';
         };
 
         window.rM = async (id) => { if(!u) return tgM('authModal'); const c = ad.find(x=>x.id===id); const uR = doc(db,"users",u.uid); const uS = await getDoc(uR);
-            if(uS.data().coins < (c.coinPrice||0)) return alert("No Gold!"); if(c.coinPrice>0) await updateDoc(uR,{coins:uS.data().coins-c.coinPrice});
+            if(uS.data().coins < (c.coinPrice||0)) return alert("Gold!"); if(c.coinPrice>0) await updateDoc(uR,{coins:uS.data().coins-c.coinPrice});
             document.getElementById('vt').innerText = `CH ${c.chapterNum}`; document.getElementById('vc').innerHTML = c.chapterImages.map(img=>`<img src="${img}" style="width:100%; display:block;">`).join('');
             document.getElementById('vp').style.display='block'; ug();
         };
 
         window.wA = (url, n) => { document.getElementById('vt').innerText=n; document.getElementById('vc').innerHTML = `<iframe src="${url}" style="width:100%; height:250px; border:none;" allowfullscreen></iframe>`; document.getElementById('vp').style.display='block'; };
 
-        window.sc = async () => { const m = document.getElementById('ci').value; if(m&&u){await addDoc(collection(db,"chats"),{name:u.email.split('@')[0],msg:m,timestamp:serverTimestamp()});document.getElementById('ci').value="";}};
-        function lc() { onSnapshot(query(collection(db,"chats"),orderBy("timestamp","desc")),s=>{document.getElementById('chatMsgs').innerHTML=s.docs.slice(0,15).map(d=>`<div><b style="color:var(--p)">${d.data().name}:</b> ${d.data().msg}</div>`).reverse().join('');}); }
-        
         async function ucl(f) { const fd = new FormData(); fd.append("file",f); fd.append("upload_preset","ml_default"); const r = await fetch("https://api.cloudinary.com/v1_1/dqdqg2ac/upload",{method:"POST",body:fd}); return (await r.json()).secure_url; }
         window.uM = async () => { const c = await ucl(document.getElementById('mCv').files[0]); const ps = await Promise.all(Array.from(document.getElementById('mPs').files).map(f=>ucl(f)));
             await addDoc(collection(db,"chapters"),{seriesName:document.getElementById('mt').value, chapterNum:parseFloat(document.getElementById('mc').value), coinPrice:parseInt(document.getElementById('mp').value), genre:document.getElementById('mgS').value, coverUrl:c, chapterImages:ps, timestamp:serverTimestamp()}); location.reload();
@@ -140,21 +144,25 @@
             await updateDoc(doc(db,"keys",qS.docs[0].id),{used:true}); location.reload();
         };
 
-        window.aE = () => { const d = document.createElement('div'); d.innerHTML = `<input class="en" placeholder="Ep Name"><input class="eu" placeholder="URL">`; document.getElementById('epA').appendChild(d); };
         window.uA = async () => { const c = await ucl(document.getElementById('acV').files[0]); const eps = Array.from(document.querySelectorAll('.en')).map((el, i) => ({ name: el.value, url: document.querySelectorAll('.eu')[i].value }));
             await addDoc(collection(db,"animes"), { title: document.getElementById('at').value, cover: c, episodes: eps, timestamp: serverTimestamp() }); location.reload();
         };
 
-        window.tB = async () => { if(!u) return; const uR = doc(db,"users",u.uid); let bks = (await getDoc(uR)).data().bookmarks || []; bks = bks.includes(cID) ? bks.filter(i=>i!==cID) : [...bks, cID]; await updateDoc(uR,{bookmarks:bks}); alert("Library Updated!"); };
-        window.showList = async () => { const bks = (await getDoc(doc(db,"users",u.uid))).data().bookmarks || []; rh(ad.filter(i=>bks.includes(i.seriesName||i.title))); tgS(); };
-        window.gk = async () => { const k = "VIP-" + Math.random().toString(36).substr(2, 6).toUpperCase(); await addDoc(collection(db,"keys"),{key:k, amount:parseInt(document.getElementById('ka').value), used:false}); document.getElementById('kr').innerText = k; };
-        
+        window.delM = async (id) => { if(confirm("Manga ဖျက်မလား?")) { await deleteDoc(doc(db,"chapters",id)); location.reload(); } };
+        window.delA = async (id) => { if(confirm("Anime ဖျက်မလား?")) { await deleteDoc(doc(db,"animes",id)); location.reload(); } };
+
         window.tgS = () => document.getElementById('sb').classList.toggle('active');
-        window.tgM = (id) => { const m = document.getElementById(id); m.style.display=m.style.display==='none'?'flex':'none'; };
         window.clP = (id) => document.getElementById(id).style.display='none';
-        window.cA = () => { if(prompt("Admin Key:")==="Admin@2026") document.getElementById('adm').style.display='block'; };
-        window.sTab = (id) => { document.getElementById('mT').style.display=id==='m'?'block':'none'; document.getElementById('aT').style.display=id==='a'?'block':'none'; document.getElementById('kT').style.display=id==='k'?'block':'none'; };
-        window.hA = async () => { const e=document.getElementById('em').value, p=document.getElementById('ps').value; try{await signInWithEmailAndPassword(auth,e,p);location.reload();}catch{await createUserWithEmailAndPassword(auth,e,p);location.reload();} };
+        window.checkStaff = () => { if(prompt("Pass:")==="Admin@2026") { document.getElementById('staffZone').style.display='block'; alert("Staff Mode On!"); } };
+        window.oAdm = (type) => { 
+            document.getElementById('mT').style.display = type==='m'?'block':'none';
+            document.getElementById('aT').style.display = type==='a'?'block':'none';
+            document.getElementById('kT').style.display = type==='k'?'block':'none';
+            document.getElementById('dT').style.display = type==='d'?'block':'none';
+            if(type==='d') document.getElementById('delList').innerHTML = ad.map(x=>`<div class="del-item"><span>${x.seriesName||x.title} [${x.type}]</span><i class="fa-solid fa-trash del-btn" onclick="x.type==='Manga'?delM('${x.id}'):delA('${x.id}')"></i></div>`).join('');
+            document.getElementById('adm').style.display='block'; tgS();
+        };
+        window.hA = async () => { try{await signInWithEmailAndPassword(auth,document.getElementById('em').value,document.getElementById('ps').value);location.reload();}catch{await createUserWithEmailAndPassword(auth,document.getElementById('em').value,document.getElementById('ps').value);location.reload();} };
         function rs(s) { document.getElementById('st').innerHTML=s.map(x=>`<div class="slide"><img src="${x.coverUrl}"></div>`).join(''); let i=0; setInterval(()=>{i=(i+1)%s.length; document.getElementById('st').style.transform=`translateX(-${i*100}%)`},5000); }
         init();
     </script>
